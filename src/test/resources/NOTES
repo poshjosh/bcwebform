@@ -1,0 +1,33 @@
+thymeleaf missing default selection in <select 
+thymeleaf no truncate in several places
+thymeleaf no hidden password
+thymeleaf javascript not yet working
+
+CSS
+----
+
+<select class="bwf_select">
+<input class="bwf_input">
+<textarea class="bwf_textarea">
+
+<div class="bwf_table">
+
+<!-- Each form field/input is represented by 2 rows as indicated below -->
+
+    <div class="bwf_row">
+        <span class="bwf_column_0">
+            <label></label>
+        </span>
+        <span class="bwf_column_1">
+            <input class="bwf_input"/>
+        </span>
+        <span class="bwf_column_2">
+            <span id="${formField.name}Message">
+            </span>
+        </span>
+    </div>
+    <div class="bwf_row">
+        <span id="${formField.name}AjaxMessage">
+        </span>
+    </div>
+</div>    
