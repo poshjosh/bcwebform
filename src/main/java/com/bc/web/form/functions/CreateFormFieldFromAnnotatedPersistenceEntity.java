@@ -73,10 +73,10 @@ public class CreateFormFieldFromAnnotatedPersistenceEntity extends CreateFormFie
         if(basic != null && !basic.optional()) {
             return false;
         }
-//        final Size size = field.getAnnotation(Size.class);
-//        if(size != null && size.min() > 0) {
-//            return false;
-//        }
+        final Size size = field.getAnnotation(Size.class);
+        if(size != null && size.min() > 0) {
+            return false;
+        }
         return true;
     }
 }
