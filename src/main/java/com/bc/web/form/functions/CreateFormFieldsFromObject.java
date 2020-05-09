@@ -17,7 +17,6 @@
 package com.bc.web.form.functions;
 
 import com.bc.reflection.ReflectionUtil;
-import com.bc.web.form.DefaultFormField;
 import com.bc.web.form.Form;
 import com.bc.web.form.FormField;
 import com.bc.web.form.FormFieldBuilder;
@@ -26,7 +25,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +48,8 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     private transient volatile Object object;
     
     private transient volatile Method [] methods;
+    
+    private final Predicate<Field> isContainerField;
 
     public CreateFormFieldsFromObject() {
         this((field) -> true, -1);
@@ -58,6 +58,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     public CreateFormFieldsFromObject(Predicate<Field> isFormField, int maxDepth) {
         this.isFormField = Objects.requireNonNull(isFormField);
         this.maxDepth = maxDepth;
+        this.isContainerField = new IsContainerField();
     }
     
     @Override
@@ -77,7 +78,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
             
             final Field [] fields = objectType.getDeclaredFields();
 
-            LOG.log(Level.FINE, "Declared fields: {0}", fields.length);
+            LOG.log(Level.FINE, "Declared fields: {0}", (Arrays.toString(fields)));
 
             Arrays.asList(fields).stream()
                     .filter(isFormField)
@@ -96,9 +97,11 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
         final int maxLen = this.getMaxLength(form, field);
         final int lineMaxLen = getLineMaxLength(form, field);
         final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
+        LOG.log(Level.FINER, () -> "MaxLen: " + maxLen + 
+                ", lineMaxLen: " + lineMaxLen + ", numOfLines: " + numberOfLines);
         
         final FormFieldBuilder builder = new FormField.Builder()
-                .apply(new DefaultFormField(form, field.getName()))
+                .withDefaults(form, field.getName())
                 .choices(this.getChoices(form, field))
                 .value(this.getValue(form, field))
                 .maxLength(maxLen)
@@ -113,7 +116,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     }
     
     public int getLineMaxLength(Form form, Field field) {
-        return 256;
+        return 128;
     }
     
     public Form getReferencedForm(Form form, Field field) {
@@ -125,12 +128,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     }
 
     public boolean isMultiValue(Form form, Field field) {
-        final Class type = field.getType();
-        final boolean output = Collection.class.isAssignableFrom(type) || 
-                Map.class.isAssignableFrom(type) ||
-                Object[].class.isAssignableFrom(type);
-        LOG.finer(() -> "Multivalue: " + output + ", field type: " + type + ", field: " + field);
-        return output;
+        return this.isContainerField.test(field);
     }
 
     public Map getChoices(Form form, Field field) {
@@ -210,6 +208,8 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     }
 
     protected FormField buildFormField(Form form, Field field, FormFieldBuilder builder) {
-        return builder.build();
+        final FormField formField = builder.build();
+        LOG.log(Level.FINER, "{0}", formField);
+        return formField;
     }
 }

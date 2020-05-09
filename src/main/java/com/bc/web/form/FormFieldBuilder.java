@@ -51,6 +51,10 @@ public class FormFieldBuilder<V> implements Builder<FormField<V>>{
         return this;
     }
     
+    public FormFieldBuilder withDefaults(Form form, String name) {
+        return this.apply(new DefaultFormField(form, name));
+    }
+    
     @Override
     public FormFieldBuilder apply(FormField<V> formField) {
         delegate = new FormFieldBean(formField);

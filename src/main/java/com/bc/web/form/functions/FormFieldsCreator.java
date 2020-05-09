@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 public interface FormFieldsCreator<E, e> extends BiFunction<Form, E, List<FormField>>{
 
     @Override
-    List<FormField> apply(Form form, E object);
+    List<FormField> apply(Form form, E source);
 
-    FormField newFormField(Form form, e field);
+    FormField newFormField(Form form, e child_of_source);
 }

@@ -27,9 +27,7 @@ import java.sql.ResultSetMetaData;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.WeakHashMap;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,45 +40,22 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
 
 //    private static final Logger LOG = Logger.getLogger(CreateFormFieldsFromDatabaseTable.class.getName());
     
-    public static class ColumnNameIsFormFieldTest implements BiPredicate<String, String>{
-        private final WeakHashMap<TableMetadata, String> tableMetadata;
-        private final MetaDataAccess mda;
-        public ColumnNameIsFormFieldTest(EntityManagerFactory emf) {
-            this(new MetaDataAccessImpl(emf));
-        }
-        public ColumnNameIsFormFieldTest(MetaDataAccess mda) {
-            this.tableMetadata = new WeakHashMap();
-            this.mda = Objects.requireNonNull(mda);
-        }
-        @Override
-        public boolean test(String table, String columnName) {
-            TableMetadata tmeta = null;
-            for(Entry<TableMetadata, String> entry : tableMetadata.entrySet()) {
-                if(entry.getValue().equals(table)) {
-                    tmeta = entry.getKey();
-                    break;
-                }
-            }
-            if(tmeta == null) {
-                tmeta = new TableMetadataImpl(mda, null, null, table);
-                tableMetadata.put(tmeta, table);
-            }
-            return ! (tmeta.isAutoIncrement(columnName) || tmeta.isGeneratedColumn(columnName));
-        }
-    } 
-
     private final MetaDataAccess metaDataAccess;
     private final String catalog;
     private final String schema;
     private TableMetadata tableMetadata;
     private final BiPredicate<String, String> isFormField;
-    
+
     public CreateFormFieldsFromDatabaseTable(EntityManagerFactory emf) {
-        this(new MetaDataAccessImpl(emf));
+        this(new MetaDataAccessImpl(emf), new ColumnNameIsFormFieldTest(emf));
+    }
+        
+    public CreateFormFieldsFromDatabaseTable(EntityManagerFactory emf, BiPredicate<String, String> isFormField) {
+        this(new MetaDataAccessImpl(emf), isFormField);
     }
     
-    public CreateFormFieldsFromDatabaseTable(MetaDataAccess mda) {
-        this(mda, null, null, new ColumnNameIsFormFieldTest(mda));
+    public CreateFormFieldsFromDatabaseTable(MetaDataAccess mda, BiPredicate<String, String> isFormField) {
+        this(mda, null, null, isFormField);
     }
     
     public CreateFormFieldsFromDatabaseTable(MetaDataAccess metaDataAccess, 

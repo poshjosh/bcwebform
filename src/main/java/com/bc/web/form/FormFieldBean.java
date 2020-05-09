@@ -53,6 +53,7 @@ public class FormFieldBean<V> implements FormField<V>, Serializable {
         this.choices = f.getChoices();
         this.maxLength = f.getMaxLength();
         this.size = f.getSize();
+        this.numberOfLines = f.getNumberOfLines();
         this.type = f.getType();
         this.form = f.getForm();
         this.referencedForm = f.getReferencedForm();
@@ -250,8 +251,17 @@ public class FormFieldBean<V> implements FormField<V>, Serializable {
         return true;
     }
 
+//    @Override
+//    public String toString() {
+//        return "FormField{" + name + '=' + value + '}';
+//    }
+
     @Override
     public String toString() {
-        return "FormField{" + name + '=' + value + '}';
+        return "FormField{" + "name=" + name + ", advice=" + advice + 
+                ", value=" + value + ", choices=" + (choices==null?null:choices.size()) + 
+                ", maxLength=" + maxLength + ", size=" + size + 
+                ", numberOfLines=" + numberOfLines + ", type=" + type + 
+                ", optional=" + optional + ", multiChoice=" + multiChoice + ", multiValue=" + multiValue + '}';
     }
 }

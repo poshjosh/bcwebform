@@ -18,41 +18,41 @@ package com.bc.web.form.functions;
 
 import com.bc.db.meta.access.MetaDataAccess;
 import com.bc.db.meta.access.MetaDataAccessImpl;
-import java.sql.Types;
+import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
+import java.util.WeakHashMap;
+import java.util.function.BiPredicate;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * @author Chinomso Bassey Ikwuagwu on Apr 8, 2019 2:25:42 PM
+ * @author Chinomso Bassey Ikwuagwu on May 8, 2020 4:37:42 PM
  */
-public class ColumnNameIsFormFieldTest implements Predicate<String> {
-
-//    private static final Logger LOG = Logger.getLogger(ColumnNameIsFormFieldTest.class.getName());
-
-    private final TableMetadata tableMetadata;
+public class ColumnNameIsFormFieldTest implements BiPredicate<String, String>{
     
-    public ColumnNameIsFormFieldTest(EntityManagerFactory emf, String table) {
-        this(new MetaDataAccessImpl(emf), table);
-    }
+    private final WeakHashMap<TableMetadata, String> tableMetadata;
     
-    public ColumnNameIsFormFieldTest(MetaDataAccess mda, String table) {
-        this(mda, null, null, table);
-    }
+    private final MetaDataAccess dbMetaDataAccess;
     
-    public ColumnNameIsFormFieldTest(MetaDataAccess metaDataAccess, 
-            String catalog, String schema, String table) {
-        this(new TableMetadataImpl(metaDataAccess, catalog, schema, table));
+    public ColumnNameIsFormFieldTest(EntityManagerFactory emf) {
+        this(new MetaDataAccessImpl(emf));
     }
-    
-    public ColumnNameIsFormFieldTest(TableMetadata tableMetadata) {
-        this.tableMetadata = Objects.requireNonNull(tableMetadata);
+    public ColumnNameIsFormFieldTest(MetaDataAccess dbMetaDataAccess) {
+        this.tableMetadata = new WeakHashMap();
+        this.dbMetaDataAccess = Objects.requireNonNull(dbMetaDataAccess);
     }
-
     @Override
-    public boolean test(String columnName) {
-        return !(this.tableMetadata.isAutoIncrement(columnName) ||  
-                this.tableMetadata.isGeneratedColumn(columnName) ||
-                this.tableMetadata.getColumnDataType(columnName) == Types.TIMESTAMP);
+    public boolean test(String table, String columnName) {
+        TableMetadata tmeta = null;
+        for(Map.Entry<TableMetadata, String> entry : tableMetadata.entrySet()) {
+            if(entry.getValue().equals(table)) {
+                tmeta = entry.getKey();
+                break;
+            }
+        }
+        if(tmeta == null) {
+            tmeta = new TableMetadataImpl(dbMetaDataAccess, null, null, table);
+            tableMetadata.put(tmeta, table);
+        }
+        return ! (tmeta.isAutoIncrement(columnName) || tmeta.isGeneratedColumn(columnName));
     }
 }

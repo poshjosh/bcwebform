@@ -76,6 +76,10 @@ public class FormBuilder implements Builder<Form>{
         return this;
     }
     
+    public FormBuilder withDefault(String name) {
+        return this.apply(new DefaultForm(name));
+    }
+
     @Override
     public FormBuilder apply(Form form) {
         delegate = new FormBean(form);

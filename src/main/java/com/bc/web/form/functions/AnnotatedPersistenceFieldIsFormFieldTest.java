@@ -18,24 +18,34 @@ package com.bc.web.form.functions;
 
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 8, 2019 1:33:15 PM
  */
 public class AnnotatedPersistenceFieldIsFormFieldTest implements Predicate<Field>{
+    
+    private final IsContainerField isContainerField;
+
+    public AnnotatedPersistenceFieldIsFormFieldTest() {
+        this.isContainerField = new IsContainerField();
+    }
 
     @Override
     public boolean test(Field field) {
         if("serialVersionUID".equalsIgnoreCase(field.getName()) 
                 || field.getName().startsWith("_persistence") 
                 || field.getAnnotation(GeneratedValue.class) != null){ 
-//                || Collection.class.isAssignableFrom(field.getType()) 
-//                || Map.class.isAssignableFrom(field.getType())) {
+            return false;
+        }else if(this.isContainerField.test(field) && ! this.isEnumerated(field)){    
             return false;
         }else{
             return true;
         }
     }
 
+    public boolean isEnumerated(Field field) {
+        return field.getAnnotation(Enumerated.class) != null;
+    }
 }
