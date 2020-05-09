@@ -1,5 +1,6 @@
 package com.bc.web.form;
 
+import com.bc.webform.FormFieldBean;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.function.Predicate;

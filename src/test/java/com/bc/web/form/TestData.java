@@ -1,5 +1,8 @@
 package com.bc.web.form;
 
+import com.bc.webform.FormFieldBean;
+import com.bc.webform.FormBean;
+import com.bc.webform.Form;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;

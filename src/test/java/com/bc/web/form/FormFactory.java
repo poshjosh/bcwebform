@@ -1,9 +1,12 @@
 package com.bc.web.form;
 
+import com.bc.webform.Form;
+import com.bc.webform.PreferMandatoryField;
+import com.bc.webform.FormField;
 import com.bc.reflection.ReflectionUtil;
 import com.bc.reflection.function.FindClassesInPackage;
 import com.bc.web.form.domain.Blog;
-import com.bc.web.form.functions.CreateFormFieldsFromAnnotatedPersistenceEntity;
+import com.bc.webform.functions.CreateFormFieldsFromAnnotatedPersistenceEntity;
 import java.lang.reflect.Field;
 import java.util.Comparator;
 import java.util.List;
@@ -59,7 +62,7 @@ public class FormFactory {
                         @Override
                         public Form getReferencedForm(Form form, Field field) {
                             final boolean isRef = false;
-                            final com.bc.web.form.Form output;
+                            final com.bc.webform.Form output;
                             if(isRef) {
                                 final String fieldName = field.getName();
                                 final Object dto = new EntityFactory().newInstance(field.getType());
