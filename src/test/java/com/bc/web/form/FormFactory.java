@@ -60,7 +60,7 @@ public class FormFactory {
 //                    .fieldsCreator(new CreateFormFieldsFromDatabaseTable(emf){
                     .fieldsCreator(new CreateFormFieldsFromAnnotatedPersistenceEntity(){
                         @Override
-                        public Form getReferencedForm(Form form, Field field) {
+                        public Form getReferencedForm(Form form, Object object, Field field) {
                             final boolean isRef = false;
                             final com.bc.webform.Form output;
                             if(isRef) {
@@ -72,7 +72,7 @@ public class FormFactory {
                                         .fieldsComparator(comparator)
                                         .fieldDataSource(dto).build();
                             }else{
-                                output = super.getReferencedForm(form, field);
+                                output = super.getReferencedForm(form, object, field);
                             }
                             return output;
                         }

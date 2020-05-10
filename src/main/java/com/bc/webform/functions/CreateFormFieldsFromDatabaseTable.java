@@ -71,81 +71,81 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
         this.tableMetadata = new TableMetadataImpl(metaDataAccess, catalog, schema, table);
         return Collections.unmodifiableList(tableMetadata.getColumnNames().stream()
                 .filter((col) -> this.isFormField.test(table, col))
-                .map((name) -> this.newFormField(form, name))
+                .map((name) -> this.newFormField(form, table, name))
                 .collect(Collectors.toList()));
     }
     
     @Override
-    public FormField newFormField(Form form, String field) {
+    public FormField newFormField(Form form, String table, String field) {
         
-        final int maxLen = this.getMaxLength(form, field);
-        final int lineMaxLen = getLineMaxLength(form, field);
+        final int maxLen = this.getMaxLength(form, table, field);
+        final int lineMaxLen = getLineMaxLength(form, table, field);
         final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
         
         final FormFieldBuilder builder = new FormField.Builder()
                 .apply(new DefaultFormField(form, field))
-                .choices(this.getChoices(form, field))
-                .value(this.getValue(form, field))
+                .choices(this.getChoices(form, table, field))
+                .value(this.getValue(form, table, field))
                 .maxLength(maxLen)
                 .numberOfLines(numberOfLines)
-                .optional(this.isOptional(form, field))
-                .multiChoice(this.isMultiChoice(form, field))
-                .multiValue(this.isMultiValue(form, field))
-                .referencedForm(this.getReferencedForm(form, field))
-                .type(this.getType(form, field));
+                .optional(this.isOptional(form, table, field))
+                .multiChoice(this.isMultiChoice(form, table, field))
+                .multiValue(this.isMultiValue(form, table, field))
+                .referencedForm(this.getReferencedForm(form, table, field))
+                .type(this.getType(form, table, field));
                 
-        return this.buildFormField(field, builder);
+        return this.buildFormField(form, table, field, builder);
     }
     
-    public int getLineMaxLength(Form form, String field) {
+    public int getLineMaxLength(Form form, String table, String field) {
         return 256;
     }
     
-    public Form getReferencedForm(Form form, String field) {
+    public Form getReferencedForm(Form form, String table, String field) {
         return null;
     }
     
-    public boolean isMultiChoice(Form form, String field) {
+    public boolean isMultiChoice(Form form, String table, String field) {
         return false;
     }
     
-    public boolean isMultiValue(Form form, String field) {
+    public boolean isMultiValue(Form form, String table, String field) {
         return false;
     }
     
-    public Map getChoices(Form form, String field) {
+    public Map getChoices(Form form, String table, String field) {
         return Collections.EMPTY_MAP;
     }
 
-    public Object getValue(Form form, String field) {
+    public Object getValue(Form form, String table, String field) {
         return null;
     }
     
-    public int getMaxLength(Form form, String field) {
+    public int getMaxLength(Form form, String table, String field) {
         return this.tableMetadata.getColumnDisplaySize(field);
     }
     
-    public boolean isOptional(Form form, String field) {
+    public boolean isOptional(Form form, String table, String field) {
         final int sqlNullable = this.tableMetadata.getColumnNullable(field);
         return sqlNullable == ResultSetMetaData.columnNullable;
     }
 
-    public String getType(Form form, String field) {
+    public String getType(Form form, String table, String field) {
         final String type;
         if(new IsPasswordField().test(field)) {
             type = StandardFormFieldTypes.PASSWORD; 
         }else{
             final int sqlDataType = this.tableMetadata.getColumnDataType(field);
-            type = this.getFieldTypeFunctor().apply(sqlDataType);
+            type = this.getFieldTypeFunctor(form, table, field).apply(sqlDataType);
         }
         return type;
     }    
     
-    public Function<Integer, String> getFieldTypeFunctor() {
+    public Function<Integer, String> getFieldTypeFunctor(Form form, String table, String field) {
         return new GetFormFieldTypeForSqlType(StandardFormFieldTypes.TEXT);
     }
         
-    protected FormField buildFormField(String fieldName, FormFieldBuilder builder) {
+    protected FormField buildFormField(Form form, String table, String fieldName, FormFieldBuilder builder) {
         return builder.build();
     }
 }

@@ -82,7 +82,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
 
             Arrays.asList(fields).stream()
                     .filter(isFormField)
-                    .map((field) -> this.newFormField(form, field))
+                    .map((field) -> this.newFormField(form, object, field))
                     .forEach((formField) -> result.add(formField));
             
             objectType = objectType.getSuperclass();
@@ -92,58 +92,58 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     }
     
     @Override
-    public FormField newFormField(Form form, Field field) {
+    public FormField newFormField(Form form, Object obj, Field field) {
         
-        final int maxLen = this.getMaxLength(form, field);
-        final int lineMaxLen = getLineMaxLength(form, field);
+        final int maxLen = this.getMaxLength(form, object, field);
+        final int lineMaxLen = getLineMaxLength(form, object, field);
         final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
         LOG.log(Level.FINER, () -> "MaxLen: " + maxLen + 
                 ", lineMaxLen: " + lineMaxLen + ", numOfLines: " + numberOfLines);
         
         final FormFieldBuilder builder = new FormField.Builder()
                 .withDefaults(form, field.getName())
-                .choices(this.getChoices(form, field))
-                .value(this.getValue(form, field))
+                .choices(this.getChoices(form, object, field))
+                .value(this.getValue(form, object, field))
                 .maxLength(maxLen)
                 .numberOfLines(numberOfLines)
-                .optional(this.isOptional(form, field))
-                .multiChoice(this.isMultiChoice(form, field))
-                .multiValue(this.isMultiValue(form, field))
-                .referencedForm(this.getReferencedForm(form, field))
-                .type(this.getType(form, field));
+                .optional(this.isOptional(form, object, field))
+                .multiChoice(this.isMultiChoice(form, object, field))
+                .multiValue(this.isMultiValue(form, object, field))
+                .referencedForm(this.getReferencedForm(form, object, field))
+                .type(this.getType(form, object, field));
                     
-        return this.buildFormField(form, field, builder);
+        return this.buildFormField(form, object, field, builder);
     }
     
-    public int getLineMaxLength(Form form, Field field) {
+    public int getLineMaxLength(Form form, Object object, Field field) {
         return 128;
     }
     
-    public Form getReferencedForm(Form form, Field field) {
+    public Form getReferencedForm(Form form, Object object, Field field) {
         return null;
     }
 
-    public boolean isMultiChoice(Form form, Field field) {
+    public boolean isMultiChoice(Form form, Object object, Field field) {
         return false;
     }
 
-    public boolean isMultiValue(Form form, Field field) {
+    public boolean isMultiValue(Form form, Object object, Field field) {
         return this.isContainerField.test(field);
     }
 
-    public Map getChoices(Form form, Field field) {
+    public Map getChoices(Form form, Object object, Field field) {
         return Collections.EMPTY_MAP;
     }
 
-    public Object getValue(Form form, Field field) {
-        Object value = this.getValueFromField(form, field);
+    public Object getValue(Form form, Object object, Field field) {
+        Object value = this.getValueFromField(form, object, field);
         if(value == null) {
-            value = this.getValueFromMethod(form, field);
+            value = this.getValueFromMethod(form, object, field);
         }
         return value;
     }
 
-    public Object getValueFromField(Form form, Field field) {
+    public Object getValueFromField(Form form, Object object, Field field) {
         Object fieldValue = null;
         if(object != null) {
             final boolean flag = field.isAccessible();
@@ -166,7 +166,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
         return fieldValue;
     }
     
-    public Object getValueFromMethod(Form form, Field field) {
+    public Object getValueFromMethod(Form form, Object object, Field field) {
         Object methodValue = null;
         if(object != null) {
             final Class objectType = object.getClass();
@@ -185,29 +185,29 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
         return methodValue;
     }
 
-    public int getMaxLength(Form form, Field field) {
+    public int getMaxLength(Form form, Object object, Field field) {
         return -1;
     }
     
-    public boolean isOptional(Form form, Field field) {
+    public boolean isOptional(Form form, Object object, Field field) {
         return false;
     }
 
-    public String getType(Form form, Field field) {
+    public String getType(Form form, Object object, Field field) {
         final String type;
         if(new IsPasswordField().test(field.getName())) {
             type = StandardFormFieldTypes.PASSWORD; 
         }else{
-            type = this.getFieldTypeFunctor().apply(field);
+            type = this.getFieldTypeFunctor(form, object, field).apply(field);
         }
         return type;
     }    
 
-    public Function<Field, String> getFieldTypeFunctor() {
+    public Function<Field, String> getFieldTypeFunctor(Form form, Object object, Field field) {
         return new GetFormFieldTypeForField(StandardFormFieldTypes.TEXT);
     }
 
-    protected FormField buildFormField(Form form, Field field, FormFieldBuilder builder) {
+    protected FormField buildFormField(Form form, Object object, Field field, FormFieldBuilder builder) {
         final FormField formField = builder.build();
         LOG.log(Level.FINER, "{0}", formField);
         return formField;

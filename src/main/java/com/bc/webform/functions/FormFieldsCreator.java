@@ -29,5 +29,5 @@ public interface FormFieldsCreator<E, e> extends BiFunction<Form, E, List<FormFi
     @Override
     List<FormField> apply(Form form, E source);
 
-    FormField newFormField(Form form, e child_of_source);
+    FormField newFormField(Form form, E source, e child_of_source);
 }

@@ -58,8 +58,8 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
     }
 
     @Override
-    public Form getReferencedForm(Form form, Field field) {
-        final Optional<Class> optional = this.getReferenceType(form, field);
+    public Form getReferencedForm(Form form, Object object, Field field) {
+        final Optional<Class> optional = this.getReferenceType(form, object, field);
         final Class targetType = optional.orElse(null);
         if(targetType == null) {
             return null;
@@ -94,9 +94,9 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
         return name;
     }
     
-    public Optional<Class> getReferenceType(Form form, Field field) {
+    public Optional<Class> getReferenceType(Form form, Object object, Field field) {
         Class output;
-        if(this.isEnumerated(field) || this.isMultiValue(form, field)) {
+        if(this.isEnumerated(form, object, field) || this.isMultiValue(form, object, field)) {
             output = null;
         }else{
             final Class fieldType = field.getType();
@@ -112,8 +112,8 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
     }
 
     @Override
-    public Map getChoices(Form form, Field field) {
-        if(this.isMultiChoice(form, field)) {
+    public Map getChoices(Form form, Object object, Field field) {
+        if(this.isMultiChoice(form, object, field)) {
             final Class fieldType = field.getType();
             if(fieldType.isEnum()) {
                 final Object [] enums = fieldType.getEnumConstants();
@@ -126,7 +126,7 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
                 }
             }
         }
-        return super.getChoices(form, field); 
+        return super.getChoices(form, object, field); 
     }
     
     private Object newInstance(Class type) {
@@ -134,25 +134,25 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
     }
 
     @Override
-    public boolean isMultiChoice(Form form, Field field) {
-        return this.isEnumerated(field);
+    public boolean isMultiChoice(Form form, Object object, Field field) {
+        return this.isEnumerated(form, object, field);
     }
     
     public boolean isDomainType(Class type) {
         return type.getAnnotation(Entity.class) != null || type.getAnnotation(Table.class) != null;
     }
     
-    public boolean isEnumerated(Field field) {
+    public boolean isEnumerated(Form form, Object object, Field field) {
         return field.getAnnotation(Enumerated.class) != null;
     }
 
     @Override
-    public Function<Field, String> getFieldTypeFunctor() {
+    public Function<Field, String> getFieldTypeFunctor(Form form, Object object, Field field) {
         return new GetFormFieldTypeForAnnotatedPersistenceField(StandardFormFieldTypes.TEXT);
     }
     
     @Override
-    public int getMaxLength(Form form, Field field) {
+    public int getMaxLength(Form form, Object object, Field field) {
         final Size size = field.getAnnotation(Size.class);
         int maxLen = -1;
         if(size != null) {
@@ -168,7 +168,7 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
     }
     
     @Override
-    public boolean isOptional(Form form, Field field) {
+    public boolean isOptional(Form form, Object object, Field field) {
         final Null nul = field.getAnnotation(Null.class);
         if(nul != null) {
             return true;
