@@ -45,11 +45,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     
     private final int maxDepth;
     
-    private transient volatile Object object;
-    
-    private transient volatile Method [] methods;
-    
-    private final Predicate<Field> isContainerField;
+    private final Predicate<Class> isContainerType;
 
     public CreateFormFieldsFromObject() {
         this((field) -> true, -1);
@@ -58,13 +54,11 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     public CreateFormFieldsFromObject(Predicate<Field> isFormField, int maxDepth) {
         this.isFormField = Objects.requireNonNull(isFormField);
         this.maxDepth = maxDepth;
-        this.isContainerField = new IsContainerField();
+        this.isContainerType = new IsContainerType();
     }
     
     @Override
     public List<FormField> apply(Form form, Object object) {
-        
-        this.object = object;
         
         final List<FormField> result = new ArrayList<>();
         
@@ -92,7 +86,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     }
     
     @Override
-    public FormField newFormField(Form form, Object obj, Field field) {
+    public FormField newFormField(Form form, Object object, Field field) {
         
         final int maxLen = this.getMaxLength(form, object, field);
         final int lineMaxLen = getLineMaxLength(form, object, field);
@@ -128,7 +122,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
     }
 
     public boolean isMultiValue(Form form, Object object, Field field) {
-        return this.isContainerField.test(field);
+        return this.isContainerType.test(field.getType());
     }
 
     public Map getChoices(Form form, Object object, Field field) {
@@ -139,6 +133,13 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
         Object value = this.getValueFromField(form, object, field);
         if(value == null) {
             value = this.getValueFromMethod(form, object, field);
+        }
+        if(LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "{0}.{1} = {2}", 
+                    new Object[]{
+                        (object==null?null:object.getClass().getSimpleName()),
+                        field.getName(),
+                        value});
         }
         return value;
     }
@@ -170,9 +171,7 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
         Object methodValue = null;
         if(object != null) {
             final Class objectType = object.getClass();
-            if(methods == null) {
-                methods = objectType.getDeclaredMethods();
-            }
+            final Method [] methods = this.getMethods(objectType);
             if(methods != null && methods.length > 0) {
                 try{
                     methodValue = new ReflectionUtil().getValue(objectType, object, methods, field.getName());
@@ -183,6 +182,18 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
             }
         }
         return methodValue;
+    }
+    
+    private transient Method [] _methods;
+    public Method [] getMethods(Class type) {
+        if(this._methods == null || this._methods.length == 0) {
+            this._methods = type.getDeclaredMethods();
+        }else{
+            if( ! this._methods[0].getDeclaringClass().equals(type)) {
+                this._methods = type.getDeclaredMethods();
+            }
+        }
+        return _methods;
     }
 
     public int getMaxLength(Form form, Object object, Field field) {

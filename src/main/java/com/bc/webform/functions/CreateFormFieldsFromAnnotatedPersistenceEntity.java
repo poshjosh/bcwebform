@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -33,8 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -48,13 +47,22 @@ import javax.validation.constraints.Size;
 public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFieldsFromObject{
 
     private static final Logger LOG = Logger.getLogger(CreateFormFieldsFromAnnotatedPersistenceEntity.class.getName());
+    
+    private final TypeTests typeTests;
 
     public CreateFormFieldsFromAnnotatedPersistenceEntity() {
-        super(new AnnotatedPersistenceFieldIsFormFieldTest(), -1);
+        this(new AnnotatedPersistenceFieldIsFormFieldTest(), -1);
     }
 
-    public CreateFormFieldsFromAnnotatedPersistenceEntity(Predicate<Field> isFormField, int maxDepth) {
+    public CreateFormFieldsFromAnnotatedPersistenceEntity(
+            Predicate<Field> isFormField, int maxDepth) {
+        this(isFormField, maxDepth, new TypeTestsImpl());
+    }
+
+    public CreateFormFieldsFromAnnotatedPersistenceEntity(
+            Predicate<Field> isFormField, int maxDepth, TypeTests typeTests) {
         super(isFormField, maxDepth);
+        this.typeTests = Objects.requireNonNull(typeTests);
     }
 
     @Override
@@ -67,7 +75,7 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
             try{
                 final Object dto = this.newInstance(targetType);
                 return new Form.Builder()
-                        .withDefault(this.getFormFieldName(form, field))
+                        .withDefault(this.getFormFieldReferenceName(form, field))
                         .fieldsCreator(this)
                         .fieldsComparator(this.getComparatorForReferenceFormFields())
                         .fieldDataSource(dto).build();
@@ -82,7 +90,7 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
         return new PreferMandatoryField();
     }
     
-    public String getFormFieldName(Form form, Field field) {
+    public String getFormFieldReferenceName(Form form, Field field) {
         final Class fieldType = field.getType();
         final Table table = (Table)fieldType.getAnnotation(Table.class);
         final String name;
@@ -96,11 +104,11 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
     
     public Optional<Class> getReferenceType(Form form, Object object, Field field) {
         Class output;
-        if(this.isEnumerated(form, object, field) || this.isMultiValue(form, object, field)) {
+        final Class fieldType = field.getType();
+        if(this.typeTests.isEnumType(fieldType) || this.isMultiValue(form, object, field)) {
             output = null;
         }else{
-            final Class fieldType = field.getType();
-            if(this.isDomainType(fieldType)) {
+            if(this.typeTests.isDomainType(fieldType)) {
                 output = fieldType;
             }else{
                 output = null;
@@ -115,18 +123,25 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
     public Map getChoices(Form form, Object object, Field field) {
         if(this.isMultiChoice(form, object, field)) {
             final Class fieldType = field.getType();
-            if(fieldType.isEnum()) {
-                final Object [] enums = fieldType.getEnumConstants();
-                if(enums != null) {
-                    final Map choices = new HashMap<>(enums.length, 1.0f);
-                    for(int i = 0; i<enums.length; i++) {
-                        choices.put((i + 1), enums[i]);
-                    }
-                    return Collections.unmodifiableMap(choices);
-                }
+            if(this.typeTests.isEnumType(fieldType)) {
+                return this.getEnumChoices(fieldType);
             }
         }
         return super.getChoices(form, object, field); 
+    }
+    
+    public Map getEnumChoices(Class type) {
+        if(this.typeTests.isEnumType(type)) {
+            final Object [] enums = type.getEnumConstants();
+            if(enums != null) {
+                final Map choices = new HashMap<>(enums.length, 1.0f);
+                for(int i = 0; i<enums.length; i++) {
+                    choices.put((i + 1), ((Enum)enums[i]).name());
+                }
+                return Collections.unmodifiableMap(choices);
+            }
+        }
+        return Collections.EMPTY_MAP;
     }
     
     private Object newInstance(Class type) {
@@ -135,17 +150,9 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
 
     @Override
     public boolean isMultiChoice(Form form, Object object, Field field) {
-        return this.isEnumerated(form, object, field);
+        return this.typeTests.isEnumType(field.getType());
     }
     
-    public boolean isDomainType(Class type) {
-        return type.getAnnotation(Entity.class) != null || type.getAnnotation(Table.class) != null;
-    }
-    
-    public boolean isEnumerated(Form form, Object object, Field field) {
-        return field.getAnnotation(Enumerated.class) != null;
-    }
-
     @Override
     public Function<Field, String> getFieldTypeFunctor(Form form, Object object, Field field) {
         return new GetFormFieldTypeForAnnotatedPersistenceField(StandardFormFieldTypes.TEXT);
@@ -198,5 +205,9 @@ public class CreateFormFieldsFromAnnotatedPersistenceEntity extends CreateFormFi
             return false;
         }
         return true;
+    }
+
+    public TypeTests getTypeTests() {
+        return typeTests;
     }
 }

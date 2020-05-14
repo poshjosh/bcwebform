@@ -17,8 +17,9 @@
 package com.bc.webform.functions;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Objects;
 import java.util.function.Predicate;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 
 /**
@@ -26,26 +27,34 @@ import javax.persistence.GeneratedValue;
  */
 public class AnnotatedPersistenceFieldIsFormFieldTest implements Predicate<Field>{
     
-    private final IsContainerField isContainerField;
+    private final TypeTests typeTests;
 
     public AnnotatedPersistenceFieldIsFormFieldTest() {
-        this.isContainerField = new IsContainerField();
+        this(new TypeTestsImpl());
+    }
+
+    public AnnotatedPersistenceFieldIsFormFieldTest(TypeTests typeTests) {
+        this.typeTests = Objects.requireNonNull(typeTests);
     }
 
     @Override
     public boolean test(Field field) {
-        if("serialVersionUID".equalsIgnoreCase(field.getName()) 
-                || field.getName().startsWith("_persistence") 
-                || field.getAnnotation(GeneratedValue.class) != null){ 
+        
+        if(Modifier.isStatic(field.getModifiers())
+                || field.getAnnotation(GeneratedValue.class) != null
+                || "serialVersionUID".equalsIgnoreCase(field.getName()) 
+                || field.getName().startsWith("_persistence")){ 
+
             return false;
-        }else if(this.isContainerField.test(field) && ! this.isEnumerated(field)){    
+
+        }else if(this.typeTests.isContainerType(field.getType()) 
+                && ! this.typeTests.isEnumType(field.getType())){    
+
             return false;
+
         }else{
+
             return true;
         }
-    }
-
-    public boolean isEnumerated(Field field) {
-        return field.getAnnotation(Enumerated.class) != null;
     }
 }
