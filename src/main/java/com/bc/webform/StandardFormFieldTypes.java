@@ -17,32 +17,34 @@
 package com.bc.webform;
 
 /**
+ * @see https://www.w3schools.com/tags/tag_input.asp
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 12:44:59 AM
  */
 public interface StandardFormFieldTypes {
 
     /**
+     * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio
+     */
+    String RADIO = "radio";
+    
+    /**
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
-     * @see https://www.w3schools.com/tags/tag_input.asp
      */
     String CHECKBOX = "checkbox";
     
     /**
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
-     * @see https://www.w3schools.com/tags/tag_input.asp
      */
     String DATE = "date";
     
     /**
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time
-     * @see https://www.w3schools.com/tags/tag_input.asp
      */
     String TIME = "time";
     
     /**
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime
      * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
-     * @see https://www.w3schools.com/tags/tag_input.asp
      */
     String DATETIME = "datetime-local";
     String FILE = "file";
@@ -50,6 +52,10 @@ public interface StandardFormFieldTypes {
     String NUMBER = "number";
     String PASSWORD = "password";
     String TEXT = "text";
+    
+    default boolean isRadioType(String type) {
+        return RADIO.equalsIgnoreCase(type);
+    }
     
     default boolean isCheckboxType(String type) {
         return CHECKBOX.equalsIgnoreCase(type);
