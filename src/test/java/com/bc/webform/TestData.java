@@ -1,4 +1,4 @@
-package com.bc.web.form;
+package com.bc.webform;
 
 import com.bc.webform.FormFieldBean;
 import com.bc.webform.FormBean;
@@ -51,7 +51,7 @@ public class TestData {
         final FormBean instance = this.newFormBean();
         instance.setDatePatterns(Arrays.asList("MM-dd-yyyy"));
         instance.setDatetimePatterns(Arrays.asList("yyyy-MM-ddTHH:mm:ss"));
-        instance.setDisplayName("Sample Form");
+        instance.setLabel("Sample Form");
         instance.setFormFields(Arrays.asList(this.newFormFieldBeanWithTestData(instance, true)));
         instance.setId("sampleform");
         instance.setName("SampleForm");

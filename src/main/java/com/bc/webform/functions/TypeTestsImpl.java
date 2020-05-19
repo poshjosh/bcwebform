@@ -8,9 +8,9 @@ import java.util.function.Predicate;
  */
 public class TypeTestsImpl implements TypeTests{
     
-    private final Predicate<Class> isContainerType;
-    private final Predicate<Class> isDomainType;
-    private final Predicate<Class> isEnumType;
+    private final Predicate<Class> containerTypeTest;
+    private final Predicate<Class> domainTypeTest;
+    private final Predicate<Class> enumTypeTest;
 
     public TypeTestsImpl() {
         this(new IsContainerType(), new IsDomainType(), new IsEnumType());
@@ -20,23 +20,35 @@ public class TypeTestsImpl implements TypeTests{
             Predicate<Class> isContainerType, 
             Predicate<Class> isDomainType, 
             Predicate<Class> isEnumType) {
-        this.isContainerType = Objects.requireNonNull(isContainerType);
-        this.isDomainType = Objects.requireNonNull(isDomainType);
-        this.isEnumType = Objects.requireNonNull(isEnumType);
+        this.containerTypeTest = Objects.requireNonNull(isContainerType);
+        this.domainTypeTest = Objects.requireNonNull(isDomainType);
+        this.enumTypeTest = Objects.requireNonNull(isEnumType);
     }
 
     @Override
     public boolean isContainerType(Class type) {
-        return this.isContainerType.test(type);
+        return this.containerTypeTest.test(type);
     }
 
     @Override
     public boolean isDomainType(Class type) {
-        return this.isDomainType.test(type);
+        return this.domainTypeTest.test(type);
     }
     
     @Override
     public boolean isEnumType(Class type) {
-        return this.isEnumType.test(type);
+        return this.enumTypeTest.test(type);
+    }
+
+    public Predicate<Class> getContainerTypeTest() {
+        return containerTypeTest;
+    }
+
+    public Predicate<Class> getDomainTypeTest() {
+        return domainTypeTest;
+    }
+
+    public Predicate<Class> getEnumTypeTest() {
+        return enumTypeTest;
     }
 }

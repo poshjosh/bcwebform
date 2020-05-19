@@ -1,4 +1,4 @@
-package com.bc.web.form.domain;
+package com.bc.webform.domain;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -49,6 +49,17 @@ public class Post implements Serializable {
     @Column(name = "time_created")
     private Date timeCreated;
     
+    @Basic(optional = false)
+    //@NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+//    @javax.persistence.Convert(converter=com.bc.jpa.dateconverter.DateConverterJpa.class)
+    @Column(name = "time_modified")
+    private Date timeModified;
+    
+    @Size(max = 255)
+    @Column(name = "image", length = 255)
+    private String image;
+    
     @JoinColumn(name = "blog", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Blog blog;
@@ -98,6 +109,22 @@ public class Post implements Serializable {
         this.timeCreated = timeCreated;
     }
 
+    public Date getTimeModified() {
+        return timeModified;
+    }
+
+    public void setTimeModified(Date timeModified) {
+        this.timeModified = timeModified;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Blog getBlog() {
         return blog;
     }
@@ -138,6 +165,6 @@ public class Post implements Serializable {
 
     @Override
     public String toString() {
-        return "com.bc.form.web.demo.domain.Post[ id=" + id + " ]";
+        return "com.looseboxes.webform.thym.domain.Post[ id=" + id + " ]";
     }
 }

@@ -9,6 +9,7 @@ import javax.persistence.Table;
  */
 public class IsDomainType implements Predicate<Class>{
     
+    @Override
     public boolean test(Class type) {
         return type.getAnnotation(Entity.class) != null || type.getAnnotation(Table.class) != null;
     }

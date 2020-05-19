@@ -10,25 +10,58 @@ import java.util.Map;
  * NUROX Ltd PROPRIETARY/CONFIDENTIAL. Use is subject to license 
  * terms found at http://www.looseboxes.com/legal/licenses/software.html
  */
-public interface FormField<VALUE_TYPE> extends StandardFormFieldTypes {
+public interface FormField<VALUE_TYPE> 
+        extends Identifiable, StandardFormFieldTypes {
     
-    class Builder<VALUE_TYPE> extends FormFieldBuilder<VALUE_TYPE>{ }
+    class Builder<VALUE_TYPE> extends FormFieldBuilderImpl<VALUE_TYPE>{ }
+
+    /**
+     * @return A new builder with this Form's values applied via the
+     * {@link com.bc.webform.Builder#apply(java.lang.Object)} method.
+     * @see #builder() 
+     */
+    default FormFieldBuilderImpl building() {
+        return builder().apply(this);
+    }
+    
+    /**
+     * @return A new builder.
+     * @see #building() 
+     */
+    default FormFieldBuilderImpl builder() {
+        return new FormFieldBuilderImpl();
+    }
+    
+    // We override this here because some templating engines cannot 
+    // access it from the super type
+    /**
+     * Alias for {@link #getLabel() }
+     * @return The display name
+     * @see #getLabel() 
+     */
+    @Override
+    public default String getDisplayName() {
+        return Identifiable.super.getDisplayName();
+    }
+
+    @Override
+    public String getLabel();
+
+    @Override
+    public String getName();
+
+    @Override
+    public String getId();
     
     FormField<VALUE_TYPE> withValue(VALUE_TYPE value);
-    
-    String getId();
-
-    String getName();
-
-    String getLabel();
     
     String getAdvice();
 
     VALUE_TYPE getValue();
 
     /**
-     * Choices are represented by &lt;select&gt; HTML tag
-     * @return A copy of the choices.
+     * Choices are represented by &lt;select&gt; HTML element
+     * @return Map of the choices, usually id=display_value mappings.
      */
     Map getChoices();
 
@@ -47,14 +80,36 @@ public interface FormField<VALUE_TYPE> extends StandardFormFieldTypes {
      * @return The form which contains this form field
      */
     Form getForm();
+    
+    /**
+     * If a form represents a <code>Person</code> and one of the fields of the 
+     * form is <code>primaryAddress</code>, it is possible for this field
+     * to refer to a form also and the <code>primaryAddress</code> form is the
+     * referenced form.
+     * 
+     * Use this method to display the referenced form in the browser. When the
+     * reference form completes, it should return to the form which led to it
+     * in the first place.
+     * 
+     * @return A link to the form which encapsulates this form field or <code>null</code>
+     * @see #isFormReference() 
+     * @see #getReferencedForm() 
+     */
+    String getReferencedFormHref();
 
     /**
      * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>. It is possible for this field
-     * to refer to a form also. The <code>primaryAddress</code> form is the
+     * form is <code>primaryAddress</code>, it is possible for this field
+     * to refer to a form also and the <code>primaryAddress</code> form is the
      * referenced form.
-     * @return The form which encapsulates this form field. 
+     * 
+     * Use this method to display the referenced form in-line. However, it is
+     * recommended to display the referenced form in a different process via
+     * {@link #getReferencedFormHref()}. 
+     * 
+     * @return The form which encapsulates this form field or <code>null</code>
      * @see #isFormReference() 
+     * @see #getReferencedFormHref() 
      */
     Form getReferencedForm();
 

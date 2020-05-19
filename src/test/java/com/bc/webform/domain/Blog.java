@@ -1,18 +1,18 @@
-package com.bc.web.form.domain;
+package com.bc.webform.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -20,33 +20,45 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author hp
  */
 @Entity
-@Table(name = "tag")
+@Table(name = "blog")
 @XmlRootElement
-public class Tag implements Serializable {
+public class Blog implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     private Integer id;
-    
-    private String name;
-    
+
+    @Size(max = 64)
     @Basic(optional = false)
-    @Column(name = "time_created")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date timeCreated;
+    private String handle;
+
+    @Size(max = 512)
+    private String description;
+
+    @NotNull
+    @Enumerated
+    @Column(name = "type", nullable = false)
+    private BlogType type;
+
+    @Basic(optional = false)
+    private boolean enabled;
     
-    @ManyToMany(mappedBy = "tagList")
+    @Size(max = 255)
+    @Column(name = "image", length = 255)
+    private String image;
+    
+    @OneToMany(mappedBy = "blog")
     private List<Post> postList;
 
-    public Tag() { }
-
-    public Tag(Integer id) {
+    public Blog() { }
+    
+    public Blog(Integer id) {
         this.id = id;
     }
-
+    
     public Integer getId() {
         return id;
     }
@@ -55,20 +67,44 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getHandle() {
+        return handle;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHandle(String handle) {
+        this.handle = handle;
     }
 
-    public Date getTimeCreated() {
-        return timeCreated;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTimeCreated(Date timeCreated) {
-        this.timeCreated = timeCreated;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BlogType getType() {
+        return type;
+    }
+
+    public void setType(BlogType type) {
+        this.type = type;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @XmlTransient
@@ -90,10 +126,10 @@ public class Tag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tag)) {
+        if (!(object instanceof Blog)) {
             return false;
         }
-        Tag other = (Tag) object;
+        Blog other = (Blog) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -102,7 +138,6 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.bc.form.web.demo.domain.Tag[ id=" + id + " ]";
+        return "com.looseboxes.webform.thym.domain.Blog[ id=" + id + " ]";
     }
-    
 }

@@ -113,6 +113,11 @@ public class DefaultFormField<V> implements FormField<V>, Serializable {
     }
 
     @Override
+    public String getReferencedFormHref() {
+        return null;
+    }
+
+    @Override
     public Form getReferencedForm() {
         return null;
     }

@@ -29,6 +29,7 @@ import java.util.Optional;
  */
 public class DefaultForm implements Form {
 
+    private final Form parent;
     private final String id;
     private final String name;
     private final String displayName;
@@ -46,6 +47,7 @@ public class DefaultForm implements Form {
     }
 
     public DefaultForm(String id, String name, String displayName, List<String> datePatterns, List<String> timePatterns, List<String> datetimePatterns) {
+        this.parent = null;
         this.id = Objects.requireNonNull(id);
         this.name = Objects.requireNonNull(name);
         this.displayName = Objects.requireNonNull(displayName);
@@ -85,6 +87,11 @@ public class DefaultForm implements Form {
     }
 
     @Override
+    public Form getParent() {
+        return parent;
+    }
+
+    @Override
     public String getId() {
         return id;
     }
@@ -95,7 +102,7 @@ public class DefaultForm implements Form {
     }
 
     @Override
-    public String getDisplayName() {
+    public String getLabel() {
         return displayName;
     }
 

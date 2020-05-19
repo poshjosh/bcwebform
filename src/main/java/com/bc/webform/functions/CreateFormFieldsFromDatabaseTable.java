@@ -18,10 +18,10 @@ package com.bc.webform.functions;
 
 import com.bc.db.meta.access.MetaDataAccess;
 import com.bc.db.meta.access.MetaDataAccessImpl;
-import com.bc.webform.DefaultFormField;
 import com.bc.webform.Form;
 import com.bc.webform.FormField;
-import com.bc.webform.FormFieldBuilder;
+import com.bc.webform.FormFieldBuilderImpl;
+import com.bc.webform.ReferenceFormCreator;
 import com.bc.webform.StandardFormFieldTypes;
 import java.sql.ResultSetMetaData;
 import java.util.Collections;
@@ -43,8 +43,9 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
     private final MetaDataAccess metaDataAccess;
     private final String catalog;
     private final String schema;
-    private TableMetadata tableMetadata;
     private final BiPredicate<String, String> isFormField;
+    private final ReferenceFormCreator<String, String> referenceFormCreator;
+    private TableMetadata tableMetadata;
 
     public CreateFormFieldsFromDatabaseTable(EntityManagerFactory emf) {
         this(new MetaDataAccessImpl(emf), new ColumnNameIsFormFieldTest(emf));
@@ -55,15 +56,20 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
     }
     
     public CreateFormFieldsFromDatabaseTable(MetaDataAccess mda, BiPredicate<String, String> isFormField) {
-        this(mda, null, null, isFormField);
+        this(mda, null, null, isFormField, (form, source, field) -> null);
     }
     
-    public CreateFormFieldsFromDatabaseTable(MetaDataAccess metaDataAccess, 
-            String catalog, String schema, BiPredicate<String, String> isFormField) {
+    public CreateFormFieldsFromDatabaseTable(
+            MetaDataAccess metaDataAccess, 
+            String catalog, 
+            String schema, 
+            BiPredicate<String, String> isFormField,
+            ReferenceFormCreator<String, String> referenceFormCreator) {
         this.metaDataAccess = Objects.requireNonNull(metaDataAccess);
         this.catalog = catalog;
         this.schema = schema;
         this.isFormField = Objects.requireNonNull(isFormField);
+        this.referenceFormCreator = Objects.requireNonNull(referenceFormCreator);
     }
 
     @Override
@@ -82,8 +88,12 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
         final int lineMaxLen = getLineMaxLength(form, table, field);
         final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
         
-        final FormFieldBuilder builder = new FormField.Builder()
-                .apply(new DefaultFormField(form, field))
+        final FormFieldBuilderImpl builder = new FormField.Builder()
+                .applyDefaults(form, field)
+                .form(form);
+                
+                builder.getDelegate()
+                .form(form)        
                 .choices(this.getChoices(form, table, field))
                 .value(this.getValue(form, table, field))
                 .maxLength(maxLen)
@@ -91,6 +101,7 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
                 .optional(this.isOptional(form, table, field))
                 .multiChoice(this.isMultiChoice(form, table, field))
                 .multiValue(this.isMultiValue(form, table, field))
+                .referencedFormHref(this.getReferencedFormHref(form, table, field))
                 .referencedForm(this.getReferencedForm(form, table, field))
                 .type(this.getType(form, table, field));
                 
@@ -100,9 +111,13 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
     public int getLineMaxLength(Form form, String table, String field) {
         return 256;
     }
+
+    public String getReferencedFormHref(Form form, String table, String field) {
+        return null;
+    }
     
     public Form getReferencedForm(Form form, String table, String field) {
-        return null;
+        return this.referenceFormCreator.createReferenceForm(form, table, field).orElse(null);
     }
     
     public boolean isMultiChoice(Form form, String table, String field) {
@@ -145,7 +160,7 @@ public class CreateFormFieldsFromDatabaseTable implements FormFieldsCreator<Stri
         return new GetFormFieldTypeForSqlType(StandardFormFieldTypes.TEXT);
     }
         
-    protected FormField buildFormField(Form form, String table, String fieldName, FormFieldBuilder builder) {
+    protected FormField buildFormField(Form form, String table, String fieldName, FormFieldBuilderImpl builder) {
         return builder.build();
     }
 }

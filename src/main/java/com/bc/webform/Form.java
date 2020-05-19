@@ -10,15 +10,49 @@ import java.util.Optional;
  * NUROX Ltd PROPRIETARY/CONFIDENTIAL. Use is subject to license 
  * terms found at http://www.looseboxes.com/legal/licenses/software.html
  */
-public interface Form {
+public interface Form extends Identifiable {
     
     class Builder extends FormBuilder{}
+    
+    /**
+     * @return A new builder with this Form's values applied via the
+     * {@link com.bc.webform.Builder#apply(java.lang.Object)} method.
+     * @see #builder() 
+     */
+    default FormBuilder building() {
+        return builder().apply(this);
+    }
+    
+    /**
+     * @return A new builder.
+     * @see #building() 
+     */
+    default FormBuilder builder() {
+        return new FormBuilder();
+    }
 
-    String getId();
+    // We override this here because some templating engines cannot 
+    // access it from the super type
+    /**
+     * Alias for {@link #getLabel() }
+     * @return The display name
+     * @see #getLabel() 
+     */
+    @Override
+    public default String getDisplayName() {
+        return Identifiable.super.getDisplayName();
+    }
+
+    @Override
+    public String getLabel();
+
+    @Override
+    public String getName();
+
+    @Override
+    public String getId();
     
-    String getName();
-    
-    String getDisplayName();
+    Form getParent();
 
     List<FormField> getFormFields();
 

@@ -1,39 +1,52 @@
-package com.bc.web.form.domain;
+package com.bc.webform.domain;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author hp
  */
 @Entity
-@Table(name = "blog")
+@Table(name = "tag")
 @XmlRootElement
-public class Blog implements Serializable {
+public class Tag implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     private Integer id;
-
-    @Size(max = 64)
-    @Basic(optional = false)
-    private String handle;
-
-    @Size(max = 512)
-    private String description;
-
-    @Basic(optional = false)
-    private boolean enabled;
     
+    private String name;
+    
+    @Basic(optional = false)
+    @Column(name = "time_created")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timeCreated;
+    
+    @ManyToMany(mappedBy = "tagList")
+    private List<Post> postList;
+
+    public Tag() { }
+
+    public Tag(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -42,28 +55,29 @@ public class Blog implements Serializable {
         this.id = id;
     }
 
-    public String getHandle() {
-        return handle;
+    public String getName() {
+        return name;
     }
 
-    public void setHandle(String handle) {
-        this.handle = handle;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public Date getTimeCreated() {
+        return timeCreated;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTimeCreated(Date timeCreated) {
+        this.timeCreated = timeCreated;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    @XmlTransient
+    public List<Post> getPostList() {
+        return postList;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
     }
 
     @Override
@@ -76,10 +90,10 @@ public class Blog implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Blog)) {
+        if (!(object instanceof Tag)) {
             return false;
         }
-        Blog other = (Blog) object;
+        Tag other = (Tag) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -88,6 +102,7 @@ public class Blog implements Serializable {
 
     @Override
     public String toString() {
-        return "com.bc.form.web.demo.domain.Blog[ id=" + id + " ]";
+        return "com.looseboxes.webform.thym.domain.Tag[ id=" + id + " ]";
     }
+    
 }

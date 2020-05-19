@@ -16,20 +16,16 @@
 
 package com.bc.webform.functions;
 
-import com.bc.reflection.ReflectionUtil;
 import com.bc.webform.Form;
 import com.bc.webform.FormField;
-import com.bc.webform.FormFieldBuilder;
-import com.bc.webform.StandardFormFieldTypes;
+import com.bc.webform.FormFieldBuilderFromSource;
+import com.bc.webform.FormFieldBuilderImpl;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,40 +39,68 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
 
     private final Predicate<Field> isFormField;
     
-    private final int maxDepth;
+    private final FormFieldBuilderFromSource formFieldBuilder;
     
-    private final Predicate<Class> isContainerType;
+    /**
+     * How far up the class inheritance hierarchy to check for form fields
+     */
+    private final int maxLevelOfClassHierarchyToCheckForFields;
 
     public CreateFormFieldsFromObject() {
-        this((field) -> true, -1);
+        this((field) -> true, -1, new FormFieldBuilderImpl());
     }
     
-    public CreateFormFieldsFromObject(Predicate<Field> isFormField, int maxDepth) {
+    public CreateFormFieldsFromObject(
+            Predicate<Field> isFormField, 
+            int maxLevelOfClassHierarchyToCheckForFields,
+            FormFieldBuilderFromSource formFieldBuilder) {
         this.isFormField = Objects.requireNonNull(isFormField);
-        this.maxDepth = maxDepth;
-        this.isContainerType = new IsContainerType();
+        this.maxLevelOfClassHierarchyToCheckForFields = maxLevelOfClassHierarchyToCheckForFields;
+        this.formFieldBuilder = Objects.requireNonNull(formFieldBuilder);
     }
     
     @Override
-    public List<FormField> apply(Form form, Object object) {
+    public List<FormField> apply(Form form, Object source) {
         
         final List<FormField> result = new ArrayList<>();
         
-        Class objectType = object.getClass();
+        Class objectType = source.getClass();
         
         int depth = 0;
         
-        while( ! Object.class.equals(objectType) && (maxDepth < 0 || depth < maxDepth)) {
+        while( ! Object.class.equals(objectType) && 
+                this.isWithinMaxLevelOfClassHierarchyToCheckForFields(depth)) {
         
             ++depth;
+            
+            if(LOG.isLoggable(Level.FINE)) {
+                final int d = depth;
+                LOG.log(Level.FINE, () -> "Depth: " + d + ", object: " + 
+                        source.getClass().getSimpleName() + 
+                        ", form: name=" + form.getName() + ", parent name=" + 
+                        (form.getParent()==null?null:form.getParent().getName()));            
+            }
             
             final Field [] fields = objectType.getDeclaredFields();
 
             LOG.log(Level.FINE, "Declared fields: {0}", (Arrays.toString(fields)));
-
+            
+            final String name = form.getParent() == null ? null : form.getParent().getName();
+            
+            final Predicate<FormField> formFieldTest = (ff) -> {
+                
+                final boolean accept = ! ff.getName().equalsIgnoreCase(name);
+                final Level level = accept ? Level.FINER : Level.FINE;
+                LOG.log(level, () -> "Rejecting form field: " + 
+                        source.getClass().getSimpleName() + '.' + ff.getName() +
+                        ", because the field's name is same as it's formField.form.parent.name, i.e: " + name);
+                return accept;
+            };
+            
             Arrays.asList(fields).stream()
                     .filter(isFormField)
-                    .map((field) -> this.newFormField(form, object, field))
+                    .map((field) -> this.newFormField(form, source, field))
+                    .filter(formFieldTest)
                     .forEach((formField) -> result.add(formField));
             
             objectType = objectType.getSuperclass();
@@ -85,141 +109,25 @@ public class CreateFormFieldsFromObject implements FormFieldsCreator<Object, Fie
         return Collections.unmodifiableList(result);
     }
     
+    public boolean isWithinMaxLevelOfClassHierarchyToCheckForFields(int level) {
+        return (maxLevelOfClassHierarchyToCheckForFields < 0 || 
+                level < maxLevelOfClassHierarchyToCheckForFields);
+    }
+    
     @Override
-    public FormField newFormField(Form form, Object object, Field field) {
+    public FormField newFormField(Form form, Object source, Field field) {
         
-        final int maxLen = this.getMaxLength(form, object, field);
-        final int lineMaxLen = getLineMaxLength(form, object, field);
-        final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
-        LOG.log(Level.FINER, () -> "MaxLen: " + maxLen + 
-                ", lineMaxLen: " + lineMaxLen + ", numOfLines: " + numberOfLines);
+        formFieldBuilder.reset().form(form).source(source).field(field);
         
-        final FormFieldBuilder builder = new FormField.Builder()
-                .withDefaults(form, field.getName())
-                .choices(this.getChoices(form, object, field))
-                .value(this.getValue(form, object, field))
-                .maxLength(maxLen)
-                .numberOfLines(numberOfLines)
-                .optional(this.isOptional(form, object, field))
-                .multiChoice(this.isMultiChoice(form, object, field))
-                .multiValue(this.isMultiValue(form, object, field))
-                .referencedForm(this.getReferencedForm(form, object, field))
-                .type(this.getType(form, object, field));
-                    
-        return this.buildFormField(form, object, field, builder);
-    }
-    
-    public int getLineMaxLength(Form form, Object object, Field field) {
-        return 128;
-    }
-    
-    public Form getReferencedForm(Form form, Object object, Field field) {
-        return null;
+        return this.buildFormField(form, source, field, formFieldBuilder);
     }
 
-    public boolean isMultiChoice(Form form, Object object, Field field) {
-        return false;
-    }
-
-    public boolean isMultiValue(Form form, Object object, Field field) {
-        return this.isContainerType.test(field.getType());
-    }
-
-    public Map getChoices(Form form, Object object, Field field) {
-        return Collections.EMPTY_MAP;
-    }
-
-    public Object getValue(Form form, Object object, Field field) {
-        Object value = this.getValueFromField(form, object, field);
-        if(value == null) {
-            value = this.getValueFromMethod(form, object, field);
-        }
-        if(LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "{0}.{1} = {2}", 
-                    new Object[]{
-                        (object==null?null:object.getClass().getSimpleName()),
-                        field.getName(),
-                        value});
-        }
-        return value;
-    }
-
-    public Object getValueFromField(Form form, Object object, Field field) {
-        Object fieldValue = null;
-        if(object != null) {
-            final boolean flag = field.isAccessible();
-            try{
-                if( ! flag) {
-                    field.setAccessible(true);
-                }
-                fieldValue = field.get(object);
-                if(LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, "Retreived value: {0}, from field: {1}", new Object[]{fieldValue, field});
-                }
-            }catch(IllegalArgumentException | IllegalAccessException e) {
-                LOG.log(Level.WARNING, "Failed to access value for field: " + field, e);
-            }finally{
-                if( ! flag) {
-                    field.setAccessible(flag);
-                }
-            }
-        }
-        return fieldValue;
-    }
-    
-    public Object getValueFromMethod(Form form, Object object, Field field) {
-        Object methodValue = null;
-        if(object != null) {
-            final Class objectType = object.getClass();
-            final Method [] methods = this.getMethods(objectType);
-            if(methods != null && methods.length > 0) {
-                try{
-                    methodValue = new ReflectionUtil().getValue(objectType, object, methods, field.getName());
-                }catch(RuntimeException ignored) { }
-            }
-            if(LOG.isLoggable(Level.FINER)) {
-                LOG.log(Level.FINER, "Retreived from associated method, value: {0}, field: {1}", new Object[]{methodValue, field});
-            }
-        }
-        return methodValue;
-    }
-    
-    private transient Method [] _methods;
-    public Method [] getMethods(Class type) {
-        if(this._methods == null || this._methods.length == 0) {
-            this._methods = type.getDeclaredMethods();
-        }else{
-            if( ! this._methods[0].getDeclaringClass().equals(type)) {
-                this._methods = type.getDeclaredMethods();
-            }
-        }
-        return _methods;
-    }
-
-    public int getMaxLength(Form form, Object object, Field field) {
-        return -1;
-    }
-    
-    public boolean isOptional(Form form, Object object, Field field) {
-        return false;
-    }
-
-    public String getType(Form form, Object object, Field field) {
-        final String type;
-        if(new IsPasswordField().test(field.getName())) {
-            type = StandardFormFieldTypes.PASSWORD; 
-        }else{
-            type = this.getFieldTypeFunctor(form, object, field).apply(field);
-        }
-        return type;
-    }    
-
-    public Function<Field, String> getFieldTypeFunctor(Form form, Object object, Field field) {
-        return new GetFormFieldTypeForField(StandardFormFieldTypes.TEXT);
-    }
-
-    protected FormField buildFormField(Form form, Object object, Field field, FormFieldBuilder builder) {
+    protected FormField buildFormField(
+            Form form, Object source, Field field, 
+            FormFieldBuilderFromSource builder) {
+        
         final FormField formField = builder.build();
+        
         LOG.log(Level.FINER, "{0}", formField);
         return formField;
     }
