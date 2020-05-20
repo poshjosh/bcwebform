@@ -8,7 +8,7 @@ import java.util.function.Predicate;
  * @author hp
  */
 public class FormInputTypeProviderForDatabaseTable 
-        extends FormMemberTypeForSqlTypeProvider
+        extends FormInputTypeForSqlTypeProvider
         implements FormInputTypeProvider<String, String>{
 
     private final TableMetadata tableMetadata;

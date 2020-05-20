@@ -4,13 +4,16 @@ package com.bc.webform.functions;
  * @author hp
  */
 public interface FormInputContext<S, F, V> extends 
-        FormInputTypeProvider<S, F>, FormInputValueProvider<S, F, V>{
+        FormInputTypeProvider<S, F>, 
+        FormInputNameProvider<S, F>,
+        FormInputValueProvider<S, F, V>{
     
     boolean isOptional(S formDataSource, F dataSourceField);
     
     @Override
     String getType(S formDataSource, F dataSourceField);
     
+    @Override
     String getName(S dataSource, F dataSourceField);
 
     @Override

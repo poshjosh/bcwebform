@@ -24,17 +24,17 @@ import java.util.logging.Logger;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 1:20:57 PM
  */
-public class FormMemberTypeForSqlTypeProvider implements Function<Integer, String>{
+public class FormInputTypeForSqlTypeProvider implements Function<Integer, String>{
 
-    private static final Logger LOG = Logger.getLogger(FormMemberTypeForSqlTypeProvider.class.getName());
+    private static final Logger LOG = Logger.getLogger(FormInputTypeForSqlTypeProvider.class.getName());
 
     private final String resultIfNone;
 
-    public FormMemberTypeForSqlTypeProvider() {
+    public FormInputTypeForSqlTypeProvider() {
         this(StandardFormFieldTypes.TEXT);
     }
     
-    public FormMemberTypeForSqlTypeProvider(String resultIfNone) {
+    public FormInputTypeForSqlTypeProvider(String resultIfNone) {
         this.resultIfNone = resultIfNone;
     }
     
