@@ -34,7 +34,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
     private List<String> datePatterns;
     private List<String> timePatterns;
     private List<String> datetimePatterns;
-    private List<FormField> formFields;
+    private List<FormMember> formFields;
 
     public FormBean() { }
     
@@ -46,7 +46,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         this.datePatterns = form.getDatePatterns();
         this.timePatterns = form.getTimePatterns();
         this.datetimePatterns = form.getDatetimePatterns();
-        this.formFields = form.getFormFields();
+        this.formFields = form.getMembers();
     }
 
     // We override this here because some templating engines cannot 
@@ -66,7 +66,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         return (this.getParent() != null || this.getId() != null ||
                 this.getName() != null || this.getLabel() != null ||
                 this.getDatePatterns() != null || this.getTimePatterns() != null || 
-                this.getDatetimePatterns() != null || this.getFormFields() != null);
+                this.getDatetimePatterns() != null || this.getMembers() != null);
     }
     
     @Override
@@ -77,7 +77,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         Objects.requireNonNull(this.getDatePatterns());
         Objects.requireNonNull(this.getTimePatterns());
         Objects.requireNonNull(this.getDatetimePatterns());
-        Objects.requireNonNull(this.getFormFields());
+        Objects.requireNonNull(this.getMembers());
     }
     
     @Override
@@ -86,36 +86,36 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
     }
 
     @Override
-    public Optional<FormField> getFormField(String name) {
-        return this.getFormFields().stream().filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
+    public Optional<FormMember> getMember(String name) {
+        return this.getMembers().stream().filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
     }
     
     @Override
-    public List<String> getFieldNames() {
-        return this.getFormFields().stream()
+    public List<String> getMemberNames() {
+        return this.getMembers().stream()
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }
     
     @Override
-    public List<String> getRequiredFieldNames() {
-        return this.getFormFields().stream()
+    public List<String> getRequiredMemberNames() {
+        return this.getMembers().stream()
                 .filter((ff) -> !ff.isOptional())
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }
     
     @Override
-    public List<String> getOptionalFieldNames() {
-        return this.getFormFields().stream()
+    public List<String> getOptionalMemberNames() {
+        return this.getMembers().stream()
                 .filter((ff) -> ff.isOptional())
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }
     
     @Override
-    public List<String> getFileFieldNames() {
-        return this.getFormFields().stream()
+    public List<String> getFileTypeMemberNames() {
+        return this.getMembers().stream()
                 .filter((ff) -> StandardFormFieldTypes.FILE.equalsIgnoreCase(ff.getType()))
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
@@ -145,7 +145,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         return this;
     }
 
-    public FormBean formFields(List<FormField> formFields) {
+    public FormBean formFields(List<FormMember> formFields) {
         this.setFormFields(formFields);
         return this;
     }
@@ -233,11 +233,11 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
     }
 
     @Override
-    public List<FormField> getFormFields() {
+    public List<FormMember> getMembers() {
         return formFields;
     }
 
-    public void setFormFields(List<FormField> formFields) {
+    public void setFormFields(List<FormMember> formFields) {
         this.formFields = formFields;
     }
 
@@ -272,7 +272,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         builder.append(this.getClass().getName()).append("{\n");
         builder.append("ID: ").append(this.getId());
         builder.append(", parent: ").append(parent==null?null:parent.getName());
-        builder.append("\nfield names : ").append(this.getFieldNames());
+        builder.append("\nfield names : ").append(this.getMemberNames());
         builder.append("\n}");
         return builder.toString();
     }

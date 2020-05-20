@@ -17,17 +17,17 @@
 package com.bc.webform.functions;
 
 import com.bc.webform.Form;
-import com.bc.webform.FormField;
 import java.util.List;
 import java.util.function.BiFunction;
+import com.bc.webform.FormMember;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:50:09 PM
  */
-public interface FormFieldsCreator<E, e> extends BiFunction<Form, E, List<FormField>>{
+public interface FormFieldsCreator<E, e> extends BiFunction<Form, E, List<FormMember>>{
 
     @Override
-    List<FormField> apply(Form form, E source);
+    List<FormMember> apply(Form form, E source);
 
-    FormField newFormField(Form form, E source, e child_of_source);
+    FormMember newFormField(Form form, E source, e child_of_source);
 }

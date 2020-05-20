@@ -19,14 +19,14 @@ import java.util.logging.Level;
  * @version  2.0
  * @since    2.0
  */
-public class PreferMandatoryField implements Comparator<FormField>, Serializable {
+public class PreferMandatory implements Comparator<FormMember>, Serializable {
     
-    private transient static final Logger LOG = Logger.getLogger(PreferMandatoryField.class.getName());
+    private transient static final Logger LOG = Logger.getLogger(PreferMandatory.class.getName());
     
-    public PreferMandatoryField() { }
+    public PreferMandatory() { }
     
     @Override
-    public int compare(FormField lhs, FormField rhs) {
+    public int compare(FormMember lhs, FormMember rhs) {
         
         final boolean lhsOptional = lhs.isOptional();
 

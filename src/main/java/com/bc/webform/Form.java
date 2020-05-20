@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public interface Form extends Identifiable {
     
-    class Builder extends FormBuilder{}
+    class Builder extends FormBuilderImpl{}
     
     /**
      * @return A new builder with this Form's values applied via the
@@ -28,7 +28,7 @@ public interface Form extends Identifiable {
      * @see #building() 
      */
     default FormBuilder builder() {
-        return new FormBuilder();
+        return new FormBuilderImpl();
     }
 
     // We override this here because some templating engines cannot 
@@ -54,17 +54,17 @@ public interface Form extends Identifiable {
     
     Form getParent();
 
-    List<FormField> getFormFields();
+    List<FormMember> getMembers();
 
-    Optional<FormField> getFormField(String name);
+    Optional<FormMember> getMember(String name);
     
-    List<String> getFieldNames();
+    List<String> getMemberNames();
     
-    List<String> getRequiredFieldNames();
+    List<String> getRequiredMemberNames();
     
-    List<String> getOptionalFieldNames();
+    List<String> getOptionalMemberNames();
     
-    List<String> getFileFieldNames();
+    List<String> getFileTypeMemberNames();
 
     List<String> getDatePatterns();
 

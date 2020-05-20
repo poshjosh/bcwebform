@@ -18,29 +18,30 @@ package com.bc.webform.functions;
 
 import com.bc.webform.StandardFormFieldTypes;
 import java.lang.reflect.Field;
+import java.util.function.Predicate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 20, 2019 4:32:48 PM
  */
-public class GetFormFieldTypeForAnnotatedPersistenceField 
-        extends GetFormFieldTypeForField {
+public class FormInputTypeProviderForJpaField 
+        extends FormInputTypeProviderForPojo {
 
-    public GetFormFieldTypeForAnnotatedPersistenceField() {
-    }
+    public FormInputTypeProviderForJpaField() { }
 
-    public GetFormFieldTypeForAnnotatedPersistenceField(String resultIfNone) {
-        super(resultIfNone);
+    public FormInputTypeProviderForJpaField(
+            Predicate<String> passwordInputTest, String resultIfNone) {
+        super(passwordInputTest, resultIfNone);
     }
 
     @Override
-    public String apply(Field field) {
+    public String getType(Object source, Field field) {
         final String type;
         final Temporal temporal = field.getAnnotation(Temporal.class);
         final TemporalType tt = temporal == null ? null : temporal.value();
         if(tt == null) {
-            type = super.apply(field);
+            type = super.getType(source, field);
         }else{
             switch (tt) {
                 case DATE:
@@ -53,7 +54,7 @@ public class GetFormFieldTypeForAnnotatedPersistenceField
                     type = StandardFormFieldTypes.TIME;
                     break;
                 default:
-                    type = super.apply(field);
+                    type = super.getType(source, field);
                     break;
             }
         }

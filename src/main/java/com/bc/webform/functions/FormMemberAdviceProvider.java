@@ -16,28 +16,28 @@
 
 package com.bc.webform.functions;
 
-import com.bc.webform.FormField;
 import com.bc.webform.StandardFormFieldTypes;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import com.bc.webform.FormMember;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 2:38:34 PM
  */
-public class GetFormFieldAdvice implements Function<FormField, String> {
+public class FormMemberAdviceProvider implements Function<FormMember, String> {
 
     private final String resultIfNone;
 
-    public GetFormFieldAdvice() {
+    public FormMemberAdviceProvider() {
         this(null);
     }
     
-    public GetFormFieldAdvice(String resultIfNone) {
+    public FormMemberAdviceProvider(String resultIfNone) {
         this.resultIfNone = resultIfNone;
     }
     
     @Override
-    public String apply(FormField formField) {
+    public String apply(FormMember formField) {
         final String result;
         if(formField.isMultiChoice()) {
             result = formField.getChoices().values().stream().limit(3).collect(Collectors.joining("", ", ", "... etc")).toString();

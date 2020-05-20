@@ -16,7 +16,7 @@
 
 package com.bc.webform;
 
-import com.bc.webform.functions.GetFormFieldAdvice;
+import com.bc.webform.functions.FormMemberAdviceProvider;
 import com.bc.webform.functions.IdFromName;
 import com.bc.webform.functions.LabelFromName;
 import java.io.Serializable;
@@ -28,7 +28,7 @@ import java.util.Objects;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 3:02:13 PM
  */
-public class DefaultFormField<V> implements FormField<V>, Serializable {
+public class DefaultFormMember<V> implements FormMember<V>, Serializable {
 
     private final Form form;
     private final String id;
@@ -38,23 +38,23 @@ public class DefaultFormField<V> implements FormField<V>, Serializable {
     private final int size;
     private final String advice;
 
-    public DefaultFormField(Form form, String name) {
+    public DefaultFormMember(Form form, String name) {
         this(form, new IdFromName().apply(name), name, new LabelFromName().apply(name), null, 35);
     }
     
-    public DefaultFormField(Form form, String id, String name, String label, V value, int size) {
+    public DefaultFormMember(Form form, String id, String name, String label, V value, int size) {
         this.form = Objects.requireNonNull(form);
         this.id = Objects.requireNonNull(id);
         this.name = Objects.requireNonNull(name);
         this.label = Objects.requireNonNull(label);
         this.value = value;
         this.size = size;
-        this.advice = new GetFormFieldAdvice().apply(this);
+        this.advice = new FormMemberAdviceProvider().apply(this);
     }
 
     @Override
-    public FormField<V> withValue(V value) {
-        return new DefaultFormField(form, id, name, label, value, size);
+    public FormMember<V> withValue(V value) {
+        return new DefaultFormMember(form, id, name, label, value, size);
     }
 
     @Override

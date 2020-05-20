@@ -10,17 +10,17 @@ import java.util.Map;
  * NUROX Ltd PROPRIETARY/CONFIDENTIAL. Use is subject to license 
  * terms found at http://www.looseboxes.com/legal/licenses/software.html
  */
-public interface FormField<VALUE_TYPE> 
+public interface FormMember<V> 
         extends Identifiable, StandardFormFieldTypes {
     
-    class Builder<VALUE_TYPE> extends FormFieldBuilderImpl<VALUE_TYPE>{ }
+    class Builder<S, F, V> extends FormMemberBuilderImpl<S, F, V>{ }
 
     /**
      * @return A new builder with this Form's values applied via the
      * {@link com.bc.webform.Builder#apply(java.lang.Object)} method.
      * @see #builder() 
      */
-    default FormFieldBuilderImpl building() {
+    default FormMemberBuilder building() {
         return builder().apply(this);
     }
     
@@ -28,8 +28,8 @@ public interface FormField<VALUE_TYPE>
      * @return A new builder.
      * @see #building() 
      */
-    default FormFieldBuilderImpl builder() {
-        return new FormFieldBuilderImpl();
+    default FormMemberBuilder builder() {
+        return new FormMemberBuilderImpl();
     }
     
     // We override this here because some templating engines cannot 
@@ -53,11 +53,11 @@ public interface FormField<VALUE_TYPE>
     @Override
     public String getId();
     
-    FormField<VALUE_TYPE> withValue(VALUE_TYPE value);
+    FormMember<V> withValue(V value);
     
     String getAdvice();
 
-    VALUE_TYPE getValue();
+    V getValue();
 
     /**
      * Choices are represented by &lt;select&gt; HTML element

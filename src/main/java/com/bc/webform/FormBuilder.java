@@ -17,82 +17,17 @@
 package com.bc.webform;
 
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
-import java.util.List;
-import java.util.Objects;
-import com.bc.webform.functions.FormFieldsCreator;
-import java.util.ArrayList;
+import com.bc.webform.functions.SourceFieldsProvider;
 import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.Predicate;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:51:00 PM
  */
-public class FormBuilder implements Builder<Form>{
+public interface FormBuilder<S, F, V> extends Builder<Form>{
 
-    private static final Logger LOG = Logger.getLogger(FormBuilder.class.getName());
-    
-    private FormBean delegate;
-    
-    private FormFieldsCreator fieldsCreator;
-    
-    private Comparator<FormField> fieldsComparator;
-    
-    private Object fieldDataSource;
-
-    public FormBuilder() { 
-        delegate = new FormBean();
-    }
-    
     @Override
-    public FormBuilder reset() {
-        delegate = new FormBean();
-        return this;
-    }
-    
-    @Override
-    public Form build() {
-        
-        try{
-            
-            delegate.checkRequiredFieldsAreSet();
-
-            if(delegate.getFormFields() == null || delegate.getFormFields().isEmpty()) {
-
-                Objects.requireNonNull(fieldsCreator);
-
-                LOG.log(Level.FINE, () -> "Field data source: " + 
-                        (fieldDataSource == null ? null : fieldDataSource.getClass().getSimpleName()) + 
-                        ", form: name=" + delegate.getName() + ", parent name=" + 
-                        (delegate.getParent()==null?null:delegate.getParent().getName()));            
-
-                final List<FormField> fieldList = new ArrayList<>(fieldsCreator.apply(delegate, fieldDataSource));
-
-                if(fieldsComparator != null) {
-                    fieldList.sort(fieldsComparator);
-                }
-
-                delegate.setFormFields(fieldList);
-            }
-
-            this.building(delegate);
-            
-            // Always return a copy to shield us from any, after the fact, 
-            // changes to the original
-            //
-            final Form result = delegate.copy();
-
-            return result;
-
-        }finally{
-            
-            this.reset();
-        }
-    }
-    
-    protected FormBean building(FormBean builder) {
-        return builder;
-    }
+    Form build();
     
     /**
      * Apply default values.
@@ -105,86 +40,24 @@ public class FormBuilder implements Builder<Form>{
      * after any value has been set will lead to IllegalStateException 
      * @param name The name of the {@link com.bc.webform.DefaultForm DefaultForm} 
      * to build and whose values will be used to update the current build.
-     * @throws java.lang.IllegalStateException
+     * @throws com.bc.webform.exceptions.ValuesOverwriteByDefaultException
      * @return this object
      */
-    public FormBuilder applyDefaults(String name) throws IllegalStateException{
-        if(delegate.isAnyFieldSet()) {
-            throw new ValuesOverwriteByDefaultException(delegate);
-        }
-        return this.apply(new DefaultForm(name));
-    }
+    FormBuilder<S, F, V> applyDefaults(String name) throws ValuesOverwriteByDefaultException;
 
     @Override
-    public FormBuilder apply(Form form) {
-        delegate = new FormBean(form);
-        return this;
-    }
+    FormBuilder<S, F, V> apply(Form form);
     
-    public FormBuilder fieldDataSource(Object source) {
-        this.fieldDataSource = source;
-        return this;
-    }
-
-    public FormBuilder fieldsCreator(FormFieldsCreator formFieldsCreator) {
-        this.fieldsCreator = formFieldsCreator;
-        return this;
-    }
+    FormBuilder<S, F, V> formDataSource(S source);
     
-    public FormBuilder fieldsComparator(Comparator<FormField> comparator) {
-        this.fieldsComparator = comparator;
-        return this;
-    }
+    FormBuilder<S, F, V> sourceFieldsProvider(
+            SourceFieldsProvider<S, F> sourceFieldsProvider);
 
-    public FormBuilder parent(Form form) {
-        this.delegate.setParent(form);
-        return this;
-    }
+    FormBuilder<S, F, V> formMemberBuilder(FormMemberBuilder<S, F, V> formFieldBuilder);
+
+    FormBuilder<S, F, V> formMemberTest(Predicate<FormMember> test);
+    
+    FormBuilder<S, F, V> formMemberComparator(Comparator<FormMember> comparator);
+
+    FormBuilder<S, F, V> parent(Form form);
 }
-/**
- * 
-
-    public FormBuilder parent(Form form) {
-        this.delegate.setParent(form);
-        return this;
-    }
-    
-    public FormBuilder id(String id) {
-        this.delegate.setId(id);
-        return this;
-    }
-
-    public FormBuilder name(String name) {
-        delegate.setName(name);
-        return this;
-    }
-
-    public FormBuilder displayName(String displayName) {
-        delegate.setLabel(displayName);
-        return this;
-    }
-
-    public FormBuilder formFields(List<FormField> formFields) {
-        this.delegate.setFormFields(formFields);
-        return this;
-    }
-
-    public FormBuilder datePatterns(List<String> patterns) {
-        delegate.setDatePatterns(patterns);
-        return this;
-    }
-
-    public FormBuilder timePatterns(List<String> patterns) {
-        delegate.setTimePatterns(patterns); 
-        return this;
-    }
-
-    public FormBuilder datetimePatterns(List<String> patterns) {
-        delegate.setDatetimePatterns(patterns);
-        return this;
-    }
- * 
- */
-
-
-

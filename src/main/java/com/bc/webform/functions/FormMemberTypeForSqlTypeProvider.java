@@ -24,17 +24,17 @@ import java.util.logging.Logger;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 1:20:57 PM
  */
-public class GetFormFieldTypeForSqlType implements Function<Integer, String>{
+public class FormMemberTypeForSqlTypeProvider implements Function<Integer, String>{
 
-    private static final Logger LOG = Logger.getLogger(GetFormFieldTypeForSqlType.class.getName());
+    private static final Logger LOG = Logger.getLogger(FormMemberTypeForSqlTypeProvider.class.getName());
 
     private final String resultIfNone;
 
-    public GetFormFieldTypeForSqlType() {
+    public FormMemberTypeForSqlTypeProvider() {
         this(StandardFormFieldTypes.TEXT);
     }
     
-    public GetFormFieldTypeForSqlType(String resultIfNone) {
+    public FormMemberTypeForSqlTypeProvider(String resultIfNone) {
         this.resultIfNone = resultIfNone;
     }
     
@@ -76,5 +76,9 @@ public class GetFormFieldTypeForSqlType implements Function<Integer, String>{
         LOG.finer(() -> "SQL Type: " + sqlType + ", output: " + result);
         
         return result;
+    }
+
+    public String getResultIfNone() {
+        return resultIfNone;
     }
 }

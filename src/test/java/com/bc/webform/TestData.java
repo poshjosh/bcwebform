@@ -1,6 +1,6 @@
 package com.bc.webform;
 
-import com.bc.webform.FormFieldBean;
+import com.bc.webform.FormMemberBean;
 import com.bc.webform.FormBean;
 import com.bc.webform.Form;
 import java.util.Arrays;
@@ -14,12 +14,12 @@ public class TestData {
     
     private static final AtomicInteger count = new AtomicInteger();
 
-    public FormFieldBean newFormFieldBeanWithTestData(boolean multichoice) {
+    public FormMemberBean newFormFieldBeanWithTestData(boolean multichoice) {
         return this.newFormFieldBeanWithTestData(this.newFormBeanWithTestData(), multichoice);
     }
     
-    public FormFieldBean newFormFieldBeanWithTestData(Form form, boolean multichoice) {
-        final FormFieldBean instance = this.newFormFieldBean();
+    public FormMemberBean newFormFieldBeanWithTestData(Form form, boolean multichoice) {
+        final FormMemberBean instance = this.newFormFieldBean();
         instance.setAdvice("Sample advice");
         if(multichoice) {
             instance.setChoices(Collections.singletonMap("1", "Choice 1"));
@@ -43,8 +43,8 @@ public class TestData {
         return instance;
     }
     
-    public FormFieldBean newFormFieldBean() {
-        return new FormFieldBean();
+    public FormMemberBean newFormFieldBean() {
+        return new FormMemberBean();
     }
     
     public FormBean newFormBeanWithTestData() {

@@ -6,12 +6,12 @@ import static org.junit.Assert.*;
 /**
  * @author hp
  */
-public class FormFieldBeanTest extends FieldSetTest<FormFieldBean>{
+public class FormMemberBeanTest extends FieldSetTest<FormMemberBean>{
     
     private final TestData testData = new TestData();
     
-    public FormFieldBeanTest() { 
-        super(FormFieldBean.class);
+    public FormMemberBeanTest() { 
+        super(FormMemberBean.class);
     }
 
     @Test
@@ -24,9 +24,9 @@ public class FormFieldBeanTest extends FieldSetTest<FormFieldBean>{
     public void withValue_ShouldBeIdempotent() {
         System.out.println("withValue");
         final Object value = new Object();
-        final FormFieldBean instance = newInstance();
-        final FormField expResult = instance.withValue(value);
-        final FormField result = instance.withValue(value);
+        final FormMemberBean instance = newInstance();
+        final FormMember expResult = instance.withValue(value);
+        final FormMember result = instance.withValue(value);
         assertEquals(expResult, result);
         assertEquals(expResult, result.withValue(value));
     }

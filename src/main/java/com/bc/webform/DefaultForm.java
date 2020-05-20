@@ -57,32 +57,32 @@ public class DefaultForm implements Form {
     }
 
     @Override
-    public Optional<FormField> getFormField(String name) {
+    public Optional<FormMember> getMember(String name) {
         return Optional.empty();
     }
 
     @Override
-    public List<String> getFieldNames() {
+    public List<String> getMemberNames() {
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<String> getRequiredFieldNames() {
+    public List<String> getRequiredMemberNames() {
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<String> getOptionalFieldNames() {
+    public List<String> getOptionalMemberNames() {
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<String> getFileFieldNames() {
+    public List<String> getFileTypeMemberNames() {
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<FormField> getFormFields() {
+    public List<FormMember> getMembers() {
         return Collections.EMPTY_LIST;
     }
 

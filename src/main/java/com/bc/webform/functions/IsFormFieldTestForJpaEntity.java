@@ -25,15 +25,11 @@ import javax.persistence.GeneratedValue;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 8, 2019 1:33:15 PM
  */
-public class AnnotatedPersistenceFieldIsFormFieldTest implements Predicate<Field>{
+public class IsFormFieldTestForJpaEntity implements Predicate<Field>{
     
     private final TypeTests typeTests;
 
-    public AnnotatedPersistenceFieldIsFormFieldTest() {
-        this(new TypeTestsImpl());
-    }
-
-    public AnnotatedPersistenceFieldIsFormFieldTest(TypeTests typeTests) {
+    public IsFormFieldTestForJpaEntity(TypeTests typeTests) {
         this.typeTests = Objects.requireNonNull(typeTests);
     }
 
