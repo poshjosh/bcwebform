@@ -52,7 +52,7 @@ public interface Form<S> extends Identifiable {
     @Override
     public String getId();
     
-    Form getParent();
+    Form<S> getParent();
 
     List<FormMember> getMembers();
 
