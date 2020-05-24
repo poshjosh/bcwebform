@@ -1,5 +1,6 @@
 package com.bc.webform;
 
+import com.bc.webform.functions.FormMemberTypeMatchesParentFormType;
 import com.bc.webform.functions.SourceFieldsProviderForPojo;
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
@@ -18,6 +19,10 @@ public class FormBuilderForPojo extends FormBuilderImpl<Object, Field, Object>{
 
     @Override
     public Form build() {
+        
+        if(this.getFormMemberTest() == null) {
+            this.formMemberTest(new FormMemberTypeMatchesParentFormType().negate());
+        }
         
         if(this.getFormMemberBuilder() == null) {
             this.formMemberBuilder(new FormMemberBuilderForPojo());

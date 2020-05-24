@@ -19,14 +19,14 @@ import java.util.logging.Level;
  * @version  2.0
  * @since    2.0
  */
-public class PreferMandatory implements Comparator<FormMember>, Serializable {
+public class PreferMandatory<F, V> implements Comparator<FormMember<F, V>>, Serializable {
     
     private transient static final Logger LOG = Logger.getLogger(PreferMandatory.class.getName());
     
     public PreferMandatory() { }
     
     @Override
-    public int compare(FormMember lhs, FormMember rhs) {
+    public int compare(FormMember<F, V> lhs, FormMember<F, V> rhs) {
         
         final boolean lhsOptional = lhs.isOptional();
 

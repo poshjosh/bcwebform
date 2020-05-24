@@ -8,16 +8,16 @@ import com.bc.webform.FormMember;
 /**
  * @author hp
  */
-public class FormMemberNameMatchesParentFormName implements FormMemberTest{
+public class FormMemberNameMatchesParentFormName<F, V> implements FormMemberTest<F, V>{
     
     private static final Logger LOG = Logger.getLogger(FormMemberNameMatchesParentFormName.class.getName());
     
     public FormMemberNameMatchesParentFormName() { }
 
     @Override
-    public boolean test(FormMember formMember) {
+    public boolean test(FormMember<F, V> formMember) {
         
-        final String formParentName = this.getFormParentName(formMember);
+        final String formParentName = this.getParentFormName(formMember);
 
         final boolean accept = formMember.getName().equalsIgnoreCase(formParentName);
 
@@ -29,7 +29,7 @@ public class FormMemberNameMatchesParentFormName implements FormMemberTest{
         return accept;
     }
     
-    public String getFormParentName(FormMember formField){
+    public String getParentFormName(FormMember formField){
     
         final Form form = formField.getForm();
         

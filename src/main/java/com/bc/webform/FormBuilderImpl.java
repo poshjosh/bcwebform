@@ -23,11 +23,11 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     
     private SourceFieldsProvider<S, F> sourceFieldsProvider;
     
-    private FormMemberBuilder formMemberBuilder;
+    private FormMemberBuilder<S, F, V> formMemberBuilder;
     
-    private Predicate<FormMember> formFieldTest;
+    private Predicate<FormMember<F, V>> formMemberTest;
     
-    private Comparator<FormMember> formFieldComparator;
+    private Comparator<FormMember<F, V>> formMemberComparator;
 
     public FormBuilderImpl() { 
         delegate = new FormBean();
@@ -44,12 +44,12 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
             final S formDataSource = 
                     Objects.requireNonNull(delegate.getDataSource());
             
-            if(formFieldTest == null) {
-                formFieldTest = new FormMemberNameMatchesParentFormName().negate();
+            if(this.getFormMemberTest() == null) {
+                this.formMemberTest(new FormMemberNameMatchesParentFormName().negate());
             }
             
-            if(formFieldComparator == null){
-                formFieldComparator = new PreferMandatory();
+            if(this.getFormMemberComparator() == null){
+                this.formMemberComparator(new PreferMandatory());
             }
             
             delegate.checkRequiredFieldsAreSet();
@@ -68,8 +68,8 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
                         .dataSource(fieldSource)
                         .build();
 
-            }).filter(this.formFieldTest)
-                    .sorted(this.formFieldComparator)
+            }).filter(this.formMemberTest)
+                    .sorted(this.formMemberComparator)
                     .collect(Collectors.toList());
 
             delegate.setFormFields(fieldList);
@@ -151,28 +151,28 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     }
 
     @Override
-    public FormBuilderImpl<S, F, V> formMemberBuilder(FormMemberBuilder formFieldBuilder) {
+    public FormBuilderImpl<S, F, V> formMemberBuilder(FormMemberBuilder<S, F, V> formFieldBuilder) {
         this.formMemberBuilder = formFieldBuilder;
         return this;
     }
 
-    public Predicate<FormMember> getFormFieldTest() {
-        return formFieldTest;
+    public Predicate<FormMember<F, V>> getFormMemberTest() {
+        return formMemberTest;
     }
 
     @Override
-    public FormBuilderImpl<S, F, V> formMemberTest(Predicate<FormMember> test) {
-        this.formFieldTest = test;
+    public FormBuilderImpl<S, F, V> formMemberTest(Predicate<FormMember<F, V>> test) {
+        this.formMemberTest = test;
         return this;
     }
 
-    public Comparator<FormMember> getFormFieldComparator() {
-        return formFieldComparator;
+    public Comparator<FormMember<F, V>> getFormMemberComparator() {
+        return formMemberComparator;
     }
     
     @Override
-    public FormBuilderImpl<S, F, V> formMemberComparator(Comparator<FormMember> comparator) {
-        this.formFieldComparator = comparator;
+    public FormBuilderImpl<S, F, V> formMemberComparator(Comparator<FormMember<F, V>> comparator) {
+        this.formMemberComparator = comparator;
         return this;
     }
     

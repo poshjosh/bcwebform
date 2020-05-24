@@ -55,9 +55,9 @@ public interface FormBuilder<S, F, V> extends Builder<Form<S>>{
 
     FormBuilder<S, F, V> formMemberBuilder(FormMemberBuilder<S, F, V> formFieldBuilder);
 
-    FormBuilder<S, F, V> formMemberTest(Predicate<FormMember> test);
+    FormBuilder<S, F, V> formMemberTest(Predicate<FormMember<F, V>> test);
     
-    FormBuilder<S, F, V> formMemberComparator(Comparator<FormMember> comparator);
+    FormBuilder<S, F, V> formMemberComparator(Comparator<FormMember<F, V>> comparator);
     
     FormBuilder<S, F, V> id(String id);
 
