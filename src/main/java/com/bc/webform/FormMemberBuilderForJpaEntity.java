@@ -21,7 +21,7 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
     public FormMemberBuilderForJpaEntity() { }
 
     @Override
-    public FormMember<Object> build() {
+    public FormMember<Field, Object> build() {
         
         if(this.getFormInputContext() == null) {
             this.formInputContext(new FormInputContextForJpaEntity());
@@ -47,7 +47,7 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
     
     @Override
     public int initMaxLength() {
-        final Field field = this.getDataSourceField();
+        final Field field = this.getDataSource();
         final Size size = field.getAnnotation(Size.class);
         int maxLen = -1;
         if(size != null) {
@@ -58,7 +58,8 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
             maxLen = column == null ? -1 : column.length();
         }
         final int n = maxLen;
-        LOG.log(Level.FINER, () -> getFormDataSource().getClass().getName() + 
+        
+        LOG.log(Level.FINER, () -> getForm().getDataSource().getClass().getName() + 
                 '.' + field.getName() + ".maxLength = " + n);
         return maxLen;
     }

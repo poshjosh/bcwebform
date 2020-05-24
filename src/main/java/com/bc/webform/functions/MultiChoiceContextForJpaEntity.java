@@ -38,11 +38,15 @@ public class MultiChoiceContextForJpaEntity implements MultiChoiceContext<Object
             if(enums != null) {
                 final Map choices = new HashMap<>(enums.length, 1.0f);
                 for(int i = 0; i<enums.length; i++) {
-                    choices.put((i + 1), ((Enum)enums[i]).name());
+                    choices.put(i, ((Enum)enums[i]).name());
                 }
                 return Collections.unmodifiableMap(choices);
             }
         }
         return null;
+    }
+
+    public TypeTests getTypeTests() {
+        return typeTests;
     }
 }

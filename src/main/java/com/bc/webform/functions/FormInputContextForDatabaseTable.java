@@ -45,6 +45,11 @@ public class FormInputContextForDatabaseTable implements FormInputContext<String
         // SELECT columnName FROM tableName WHERE [ID_COLUMN_NAME] = [ID_COLUMN_VALUE]
         // We can easily get the ID_COLUMN_NAME, given the tableName
         // What about the ID_COLUMN_VALUE ?
-        throw new UnsupportedOperationException("Not yet implemented");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean setValue(String dataSource, String dataSourceField, Object fieldValue) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

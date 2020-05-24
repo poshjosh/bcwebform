@@ -10,8 +10,7 @@ import java.util.Map;
  * NUROX Ltd PROPRIETARY/CONFIDENTIAL. Use is subject to license 
  * terms found at http://www.looseboxes.com/legal/licenses/software.html
  */
-public interface FormMember<V> 
-        extends Identifiable, StandardFormFieldTypes {
+public interface FormMember<F, V> extends Identifiable {
     
     class Builder<S, F, V> extends FormMemberBuilderImpl<S, F, V>{ }
 
@@ -53,7 +52,7 @@ public interface FormMember<V>
     @Override
     public String getId();
     
-    FormMember<V> withValue(V value);
+    FormMember<F, V> withValue(V value);
     
     String getAdvice();
 
@@ -77,21 +76,21 @@ public interface FormMember<V>
     String getType();
 
     /**
-     * @return The form which contains this form field
+     * @return The form which contains this form dataSource
      */
     Form getForm();
     
     /**
      * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>, it is possible for this field
-     * to refer to a form also and the <code>primaryAddress</code> form is the
+     * form is <code>primaryAddress</code>, it is possible for this dataSource
+ to refer to a form also and the <code>primaryAddress</code> form is the
      * referenced form.
      * 
      * Use this method to display the referenced form in the browser. When the
      * reference form completes, it should return to the form which led to it
      * in the first place.
      * 
-     * @return A link to the form which encapsulates this form field or <code>null</code>
+     * @return A link to the form which encapsulates this form dataSource or <code>null</code>
      * @see #isFormReference() 
      * @see #getReferencedForm() 
      */
@@ -99,15 +98,15 @@ public interface FormMember<V>
 
     /**
      * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>, it is possible for this field
-     * to refer to a form also and the <code>primaryAddress</code> form is the
+     * form is <code>primaryAddress</code>, it is possible for this dataSource
+ to refer to a form also and the <code>primaryAddress</code> form is the
      * referenced form.
      * 
      * Use this method to display the referenced form in-line. However, it is
      * recommended to display the referenced form in a different process via
      * {@link #getReferencedFormHref()}. 
      * 
-     * @return The form which encapsulates this form field or <code>null</code>
+     * @return The form which encapsulates this form dataSource or <code>null</code>
      * @see #isFormReference() 
      * @see #getReferencedFormHref() 
      */
@@ -122,8 +121,10 @@ public interface FormMember<V>
     boolean isMultiValue();
 
     /**
-     * @return <code>true</code> if this field refers to a form with one/more other fields 
+     * @return <code>true</code> if this dataSource refers to a form with one/more other fields 
      * @see #getReferencedForm() 
      */
     boolean isFormReference();
+    
+    F getDataSource();
 }

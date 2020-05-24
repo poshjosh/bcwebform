@@ -19,17 +19,15 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
 
     private static final Logger LOG = Logger.getLogger(FormBuilderImpl.class.getName());
     
-    private FormBean delegate;
+    private FormBean<S> delegate;
     
     private SourceFieldsProvider<S, F> sourceFieldsProvider;
     
-    private FormMemberBuilder formFieldBuilder;
+    private FormMemberBuilder formMemberBuilder;
     
     private Predicate<FormMember> formFieldTest;
     
     private Comparator<FormMember> formFieldComparator;
-    
-    private S formDataSource;
 
     public FormBuilderImpl() { 
         delegate = new FormBean();
@@ -42,8 +40,9 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
             
             Objects.requireNonNull(delegate);
             Objects.requireNonNull(sourceFieldsProvider);
-            Objects.requireNonNull(formFieldBuilder);
-            Objects.requireNonNull(formDataSource);
+            Objects.requireNonNull(formMemberBuilder);
+            final S formDataSource = 
+                    Objects.requireNonNull(delegate.getDataSource());
             
             if(formFieldTest == null) {
                 formFieldTest = new FieldNameMatchesFormParentName().negate();
@@ -64,10 +63,9 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
 
             final List fieldList = sourceSet.stream().map((fieldSource) -> {
 
-                return formFieldBuilder
+                return formMemberBuilder
                         .form(delegate)
-                        .formDataSource(formDataSource)
-                        .field(fieldSource)
+                        .dataSource(fieldSource)
                         .build();
 
             }).filter(this.formFieldTest)
@@ -128,12 +126,12 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     }
 
     public S getFormDataSource() {
-        return formDataSource;
+        return delegate.getDataSource();
     }
     
     @Override
-    public FormBuilderImpl formDataSource(S source) {
-        this.formDataSource = source;
+    public FormBuilderImpl dataSource(S source) {
+        delegate.setDataSource(source);
         return this;
     }
 
@@ -141,6 +139,7 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
         return sourceFieldsProvider;
     }
 
+    @Override
     public FormBuilderImpl<S, F, V> sourceFieldsProvider(
             SourceFieldsProvider<S, F> sourceFieldsProvider) {
         this.sourceFieldsProvider = sourceFieldsProvider;
@@ -148,11 +147,12 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     }
 
     public FormMemberBuilder getFormMemberBuilder() {
-        return formFieldBuilder;
+        return formMemberBuilder;
     }
 
+    @Override
     public FormBuilderImpl<S, F, V> formMemberBuilder(FormMemberBuilder formFieldBuilder) {
-        this.formFieldBuilder = formFieldBuilder;
+        this.formMemberBuilder = formFieldBuilder;
         return this;
     }
 
@@ -176,6 +176,16 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
         return this;
     }
     
+    public String getId() {
+        return delegate.getId();
+    }
+
+    @Override
+    public FormBuilderImpl<S, F, V> id(String id) {
+        this.delegate.setId(id);
+        return this;
+    }
+
     public Form getParent() {
         return delegate.getParent();
     }
@@ -184,5 +194,9 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     public FormBuilderImpl<S, F, V> parent(Form form) {
         this.delegate.setParent(form);
         return this;
+    }
+
+    public FormBean getDelegate() {
+        return delegate;
     }
 }

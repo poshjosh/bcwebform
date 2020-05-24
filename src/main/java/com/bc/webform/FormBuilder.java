@@ -24,10 +24,10 @@ import java.util.function.Predicate;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:51:00 PM
  */
-public interface FormBuilder<S, F, V> extends Builder<Form>{
+public interface FormBuilder<S, F, V> extends Builder<Form<S>>{
 
     @Override
-    Form build();
+    Form<S> build();
     
     /**
      * Apply default values.
@@ -48,7 +48,7 @@ public interface FormBuilder<S, F, V> extends Builder<Form>{
     @Override
     FormBuilder<S, F, V> apply(Form form);
     
-    FormBuilder<S, F, V> formDataSource(S source);
+    FormBuilder<S, F, V> dataSource(S source);
     
     FormBuilder<S, F, V> sourceFieldsProvider(
             SourceFieldsProvider<S, F> sourceFieldsProvider);
@@ -58,6 +58,8 @@ public interface FormBuilder<S, F, V> extends Builder<Form>{
     FormBuilder<S, F, V> formMemberTest(Predicate<FormMember> test);
     
     FormBuilder<S, F, V> formMemberComparator(Comparator<FormMember> comparator);
+    
+    FormBuilder<S, F, V> id(String id);
 
     FormBuilder<S, F, V> parent(Form form);
 }

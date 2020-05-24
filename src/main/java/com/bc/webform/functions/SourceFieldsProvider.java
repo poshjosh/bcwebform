@@ -10,5 +10,5 @@ import java.util.Set;
  */
 public interface SourceFieldsProvider<S, F> {
 
-    Set<F> apply(Form form, S formSource);
+    Set<F> apply(Form<S> form, S formSource);
 }

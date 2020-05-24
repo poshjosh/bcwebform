@@ -18,4 +18,8 @@ public class MultiValueTestForPojo implements IsMultiValueField<Object, Field>{
     public boolean isMultiValue(Object formDataSource, Field dataSourceField) {
         return this.typeTests.isContainerType(dataSourceField.getDeclaringClass());
     }
+
+    public TypeTests getTypeTests() {
+        return typeTests;
+    }
 }

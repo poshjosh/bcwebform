@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 10:53:17 AM
  */
-public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, Serializable {
+public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F, V>, Serializable {
     
     private String id;
     private String name;
@@ -41,10 +41,11 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
     private boolean optional;
     private boolean multiChoice;
     private boolean multiValue;
+    private F dataSource;
     
     public FormMemberBean() { }
 
-    public FormMemberBean(FormMember<V> f) {
+    public FormMemberBean(FormMember<F, V> f) {
         this.id = f.getId();
         this.name = f.getName();
         this.label = f.getLabel();
@@ -61,6 +62,7 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
         this.optional = f.isOptional();
         this.multiChoice = f.isMultiChoice();
         this.multiValue = f.isMultiValue();
+        this.dataSource = f.getDataSource();
     }
 
     // We override this here because some templating engines cannot 
@@ -84,7 +86,8 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
                 this.getNumberOfLines() != 0 || this.getType() != null ||
                 this.getForm() != null || this.getReferencedFormHref() != null ||
                 this.getReferencedForm() != null || this.isOptional() || 
-                this.isMultiChoice() || this.isMultiValue();
+                this.isMultiChoice() || this.isMultiValue() ||
+                this.getDataSource() != null;
     }
     
     @Override
@@ -93,16 +96,17 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
         Objects.requireNonNull(this.getId());
         Objects.requireNonNull(this.getName());
         Objects.requireNonNull(this.getLabel());
+        Objects.requireNonNull(this.getDataSource());
     }
     
     @Override
-    public FormMemberBean copy() {
+    public FormMemberBean<F, V> copy() {
         return new FormMemberBean(this);
     }
     
     @Override
-    public FormMember<V> withValue(V value) {
-        final FormMemberBean<V> copy = this.copy();
+    public FormMember<F, V> withValue(V value) {
+        final FormMemberBean<F, V> copy = this.copy();
         copy.setValue(value);
         return copy;
     }
@@ -111,88 +115,93 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
     // builder methods
     ///////////////////////////////////////////
     
-    public FormMemberBean id(String id) {
+    public FormMemberBean<F, V> id(String id) {
         this.setId(id);
         return this;
     }
 
-    public FormMemberBean name(String name) {
+    public FormMemberBean<F, V> name(String name) {
         this.setName(name);
         return this;
     }
 
-    public FormMemberBean label(String label) {
+    public FormMemberBean<F, V> label(String label) {
         this.setLabel(label);
         return this;
     }
 
-    public FormMemberBean advice(String advice) {
+    public FormMemberBean<F, V> advice(String advice) {
         this.setAdvice(advice);
         return this;
     }
 
-    public FormMemberBean value(V value) {
+    public FormMemberBean<F, V> value(V value) {
         this.setValue(value);
         return this;
     }
 
-    public FormMemberBean choices(Map choices) {
+    public FormMemberBean<F, V> choices(Map choices) {
         this.setChoices(choices);
         return this;
     }
 
-    public FormMemberBean maxLength(int maxLength) {
+    public FormMemberBean<F, V> maxLength(int maxLength) {
         this.setMaxLength(maxLength);
         return this;
     }
 
-    public FormMemberBean size(int size) {
+    public FormMemberBean<F, V> size(int size) {
         this.setSize(size);
         return this;
     }
 
-    public FormMemberBean numberOfLines(int n) {
+    public FormMemberBean<F, V> numberOfLines(int n) {
         this.setNumberOfLines(n);
         return this;
     }
 
-    public FormMemberBean type(String type) {
+    public FormMemberBean<F, V> type(String type) {
         this.setType(type);
         return this;
     }
     
-    public FormMemberBean form(Form form) {
+    public FormMemberBean<F, V> form(Form form) {
         this.setForm(form);
         return this;
     }
 
-    public FormMemberBean referencedFormHref(String referencedFormHref) {
+    public FormMemberBean<F, V> referencedFormHref(String referencedFormHref) {
         this.setReferencedFormHref(referencedFormHref);
         return this;
     }
     
-    public FormMemberBean referencedForm(Form referencedForm) {
+    public FormMemberBean<F, V> referencedForm(Form referencedForm) {
         this.setReferencedForm(referencedForm);
         return this;
     }
     
-    public FormMemberBean optional(boolean optional) {
+    public FormMemberBean<F, V> optional(boolean optional) {
         this.setOptional(optional);
         return this;
     }
 
-    public FormMemberBean required(boolean required) {
+    public FormMemberBean<F, V> required(boolean required) {
         this.setRequired(required);
         return this;
     }
 
-    public FormMemberBean multiChoice(boolean multiChoice) {
+    public FormMemberBean<F, V> multiChoice(boolean multiChoice) {
         this.setMultiChoice(multiChoice);
         return this;
     }
 
-    public FormMemberBean multiValue(boolean multiValue) {
+    public FormMemberBean<F, V> multiValue(boolean multiValue) {
         this.setMultiValue(multiValue);
+        return this;
+    }
+
+    public FormMemberBean<F, V> dataSource(F dataSource) {
+        this.setDataSource(dataSource);
         return this;
     }
 
@@ -391,6 +400,15 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
     }
 
     @Override
+    public F getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(F dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
     public int hashCode() {
         int hash = 3;
         hash = 43 * hash + Objects.hashCode(this.id);
@@ -408,7 +426,7 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FormMemberBean<?> other = (FormMemberBean<?>) obj;
+        final FormMemberBean other = (FormMemberBean) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -428,6 +446,7 @@ public class FormMemberBean<V> implements IdentifiableFieldSet, FormMember<V>, S
                 ", numberOfLines=" + numberOfLines + ", type=" + type + 
                 ", optional=" + optional + ", multiChoice=" + multiChoice + 
                 ", multiValue=" + multiValue + ", form=" + (form==null?null:form.getName()) +
+                ", dataSource=" + dataSource +
                 ", referencedFormHref=" + referencedFormHref + 
                 ", referencedForm=" + (referencedForm == null ? null : referencedForm.getName()) + '}';
     }

@@ -25,28 +25,24 @@ import java.util.stream.Collectors;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:22:32 PM
  */
-public class FormBean implements IdentifiableFieldSet, Form, Serializable{
+public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     
     private Form parent;
     private String id;
     private String name;
     private String label;
-    private List<String> datePatterns;
-    private List<String> timePatterns;
-    private List<String> datetimePatterns;
     private List<FormMember> formFields;
+    private S dataSource;
 
     public FormBean() { }
     
-    public FormBean(Form form) { 
+    public FormBean(Form<S> form) { 
         this.parent = form.getParent();
         this.id = form.getId();
         this.name = form.getName();
         this.label = form.getLabel();
-        this.datePatterns = form.getDatePatterns();
-        this.timePatterns = form.getTimePatterns();
-        this.datetimePatterns = form.getDatetimePatterns();
         this.formFields = form.getMembers();
+        this.dataSource = form.getDataSource();
     }
 
     // We override this here because some templating engines cannot 
@@ -65,8 +61,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
     public boolean isAnyFieldSet() {
         return (this.getParent() != null || this.getId() != null ||
                 this.getName() != null || this.getLabel() != null ||
-                this.getDatePatterns() != null || this.getTimePatterns() != null || 
-                this.getDatetimePatterns() != null || this.getMembers() != null);
+                this.getMembers() != null);
     }
     
     @Override
@@ -74,9 +69,6 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         Objects.requireNonNull(this.getId());
         Objects.requireNonNull(this.getName());
         Objects.requireNonNull(this.getLabel());
-        Objects.requireNonNull(this.getDatePatterns());
-        Objects.requireNonNull(this.getTimePatterns());
-        Objects.requireNonNull(this.getDatetimePatterns());
         Objects.requireNonNull(this.getMembers());
     }
     
@@ -87,7 +79,22 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
 
     @Override
     public Optional<FormMember> getMember(String name) {
-        return this.getMembers().stream().filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
+        return this.getMembers().stream()
+                .filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
+    }
+
+    @Override
+    public List<FormMember> getHiddenMembers() {
+        return this.getMembers().stream()
+                .filter((ff) -> StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FormMember> getNonHiddenMembers() {
+        return this.getMembers().stream()
+                .filter((ff) -> ! StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
+                .collect(Collectors.toList());
     }
     
     @Override
@@ -125,43 +132,33 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
      // builder methods
      ///////////////////////////////////
 
-    public FormBean parent(Form form) {
+    public FormBean<S> parent(Form form) {
         this.setParent(form);
         return this;
     }
     
-    public FormBean id(String id) {
+    public FormBean<S> id(String id) {
         this.setId(id);
         return this;
     }
 
-    public FormBean name(String name) {
+    public FormBean<S> name(String name) {
         this.setName(name);
         return this;
     }
 
-    public FormBean displayName(String displayName) {
+    public FormBean<S> displayName(String displayName) {
         this.setLabel(displayName);
         return this;
     }
 
-    public FormBean formFields(List<FormMember> formFields) {
+    public FormBean<S> formFields(List<FormMember> formFields) {
         this.setFormFields(formFields);
         return this;
     }
 
-    public FormBean datePatterns(List<String> patterns) {
-        this.setDatePatterns(patterns);
-        return this;
-    }
-
-    public FormBean timePatterns(List<String> patterns) {
-        this.setTimePatterns(patterns); 
-        return this;
-    }
-
-    public FormBean datetimePatterns(List<String> patterns) {
-        this.setDatetimePatterns(patterns);
+    public FormBean<S> dataSource(S dataSource) {
+        this.setDataSource(dataSource);
         return this;
     }
 
@@ -206,30 +203,12 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
     }
 
     @Override
-    public List<String> getDatePatterns() {
-        return datePatterns;
+    public S getDataSource() {
+        return dataSource;
     }
 
-    public void setDatePatterns(List<String> datePatterns) {
-        this.datePatterns = datePatterns;
-    }
-
-    @Override
-    public List<String> getTimePatterns() {
-        return timePatterns;
-    }
-
-    public void setTimePatterns(List<String> timePatterns) {
-        this.timePatterns = timePatterns;
-    }
-
-    @Override
-    public List<String> getDatetimePatterns() {
-        return datetimePatterns;
-    }
-
-    public void setDatetimePatterns(List<String> datetimePatterns) {
-        this.datetimePatterns = datetimePatterns;
+    public void setDataSource(S dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -272,6 +251,7 @@ public class FormBean implements IdentifiableFieldSet, Form, Serializable{
         builder.append(this.getClass().getName()).append("{\n");
         builder.append("ID: ").append(this.getId());
         builder.append(", parent: ").append(parent==null?null:parent.getName());
+        builder.append(", dataSource: ").append(dataSource);
         builder.append("\nfield names : ").append(this.getMemberNames());
         builder.append("\n}");
         return builder.toString();

@@ -10,16 +10,16 @@ import java.util.Optional;
  * NUROX Ltd PROPRIETARY/CONFIDENTIAL. Use is subject to license 
  * terms found at http://www.looseboxes.com/legal/licenses/software.html
  */
-public interface Form extends Identifiable {
+public interface Form<S> extends Identifiable {
     
-    class Builder extends FormBuilderImpl{}
+    class Builder<S, F, V> extends FormBuilderImpl<S, F, V>{ }
     
     /**
      * @return A new builder with this Form's values applied via the
      * {@link com.bc.webform.Builder#apply(java.lang.Object)} method.
      * @see #builder() 
      */
-    default FormBuilder building() {
+    default FormBuilder<S, ?, ?> building() {
         return builder().apply(this);
     }
     
@@ -27,7 +27,7 @@ public interface Form extends Identifiable {
      * @return A new builder.
      * @see #building() 
      */
-    default FormBuilder builder() {
+    default FormBuilder<S, ?, ?> builder() {
         return new FormBuilderImpl();
     }
 
@@ -58,6 +58,10 @@ public interface Form extends Identifiable {
 
     Optional<FormMember> getMember(String name);
     
+    List<FormMember> getHiddenMembers();
+    
+    List<FormMember> getNonHiddenMembers();
+    
     List<String> getMemberNames();
     
     List<String> getRequiredMemberNames();
@@ -65,10 +69,6 @@ public interface Form extends Identifiable {
     List<String> getOptionalMemberNames();
     
     List<String> getFileTypeMemberNames();
-
-    List<String> getDatePatterns();
-
-    List<String> getTimePatterns();
-
-    List<String> getDatetimePatterns();
+    
+    S getDataSource();
 }

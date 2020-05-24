@@ -21,7 +21,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
@@ -47,18 +46,21 @@ public class FormInputContextForJpaEntity extends FormInputContextForPojo{
         super(formInputTypeProvider, formInputValueProvider);
     }
 
-    @Override
-    public String getName(Object source, Field field) {
-        final Class fieldType = field.getType();
-        final Table table = (Table)fieldType.getAnnotation(Table.class);
-        final String name;
-        if(table == null) {
-            name = field.getName(); 
-        }else{
-            name = table.name();
-        }    
-        return name;
-    }
+// Use field.getName() so we can update the Bean#fieldName
+// No need for the Column annotation    
+//    @Override
+//    public String getName(Object source, Field field) {
+        // The field name is either 
+        // 1. The value of the name property of the Column annotation
+        // 2. Or the value of field.getName()
+        // The value of the name property of the field.getType() table annotation
+        // is not applicable.
+        
+//        final Column column = field.getAnnotation(Column.class);
+//        final String nameFromCol = column == null ? null : column.name();
+//        final String result = nameFromCol == null ? field.getName() : nameFromCol;
+//        return result;
+//    }
 
     @Override
     public boolean isOptional(Object source, Field field) {

@@ -18,4 +18,7 @@ public interface FormInputContext<S, F, V> extends
 
     @Override
     V getValue(S dataSource, F dataSourceField);
+    
+    @Override
+    boolean setValue(S dataSource, F dataSourceField, V fieldValue);
 } 

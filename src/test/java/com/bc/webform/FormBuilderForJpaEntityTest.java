@@ -17,12 +17,12 @@ public class FormBuilderForJpaEntityTest
     @Override
     public void buildNonValid(FormBuilder<Object, Field, Object> builder) {
         this.buildValid(builder);
-        builder.formDataSource(null);
+        builder.dataSource(null);
     }
 
     @Override
     public void buildValid(FormBuilder<Object, Field, Object> builder) {
         builder.applyDefaults(this.getRandomFormName());
-        builder.formDataSource(new Blog());
+        builder.dataSource(new Blog());
     }
 }

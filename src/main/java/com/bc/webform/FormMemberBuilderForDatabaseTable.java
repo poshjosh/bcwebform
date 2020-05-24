@@ -22,7 +22,7 @@ public class FormMemberBuilderForDatabaseTable extends FormMemberBuilderImpl<Str
     private EntityManagerFactory entityManagerFactory;
     
     @Override
-    public FormMember<Object> build() {
+    public FormMember<String, Object> build() {
         try{
             
             if(this.getFormInputContext() == null) {
@@ -43,7 +43,7 @@ public class FormMemberBuilderForDatabaseTable extends FormMemberBuilderImpl<Str
     @Override
     public int initMaxLength() {
         if(this.maxLength == -1) {
-            final String columName = this.getDataSourceField();
+            final String columName = this.getDataSource();
             this.maxLength = this.getTableMetadata(entityManagerFactory)
                     .getColumnDisplaySize(columName);
         }
@@ -79,7 +79,7 @@ public class FormMemberBuilderForDatabaseTable extends FormMemberBuilderImpl<Str
 
         final MetaDataAccess metaDataAccess = new MetaDataAccessImpl(emf);
         
-        final String tableName = this.getFormDataSource();
+        final String tableName = this.getForm().getDataSource();
         
         final TableMetadata tableMetadata = new TableMetadataImpl(
                 metaDataAccess, null, null, tableName);

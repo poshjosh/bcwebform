@@ -14,7 +14,7 @@ public class FormMemberBuilderForPojo extends FormMemberBuilderImpl<Object, Fiel
     public FormMemberBuilderForPojo() { }
 
     @Override
-    public FormMember<Object> build() {
+    public FormMember<Field, Object> build() {
         
         if(this.getFormInputContext() == null) {
             this.formInputContext(new FormInputContextForPojo());

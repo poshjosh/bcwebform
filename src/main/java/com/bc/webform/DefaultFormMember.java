@@ -16,7 +16,6 @@
 
 package com.bc.webform;
 
-import com.bc.webform.functions.FormMemberAdviceProvider;
 import com.bc.webform.functions.IdFromName;
 import com.bc.webform.functions.LabelFromName;
 import java.io.Serializable;
@@ -28,7 +27,7 @@ import java.util.Objects;
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 3:02:13 PM
  */
-public class DefaultFormMember<V> implements FormMember<V>, Serializable {
+public class DefaultFormMember<F, V> implements FormMember<F, V>, Serializable {
 
     private final Form form;
     private final String id;
@@ -36,7 +35,6 @@ public class DefaultFormMember<V> implements FormMember<V>, Serializable {
     private final String label;
     private final V value;
     private final int size;
-    private final String advice;
 
     public DefaultFormMember(Form form, String name) {
         this(form, new IdFromName().apply(name), name, new LabelFromName().apply(name), null, 35);
@@ -49,11 +47,10 @@ public class DefaultFormMember<V> implements FormMember<V>, Serializable {
         this.label = Objects.requireNonNull(label);
         this.value = value;
         this.size = size;
-        this.advice = new FormMemberAdviceProvider().apply(this);
     }
 
     @Override
-    public FormMember<V> withValue(V value) {
+    public FormMember<F, V> withValue(V value) {
         return new DefaultFormMember(form, id, name, label, value, size);
     }
 
@@ -79,7 +76,7 @@ public class DefaultFormMember<V> implements FormMember<V>, Serializable {
 
     @Override
     public String getAdvice() {
-        return advice;
+        return null;
     }
 
     @Override
@@ -145,5 +142,10 @@ public class DefaultFormMember<V> implements FormMember<V>, Serializable {
     @Override
     public boolean isFormReference() {
         return this.getReferencedForm() != null;
+    }
+
+    @Override
+    public F getDataSource() {
+        return null;
     }
 }

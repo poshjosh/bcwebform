@@ -25,7 +25,7 @@ public enum BlogType {
     private String name;
     
     private BlogType() {
-        this.id = (short)(this.ordinal() + 1);
+        this.id = (short)(this.ordinal());
     }
 
     public Short getId() {

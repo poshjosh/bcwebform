@@ -42,4 +42,9 @@ public class FormInputContextForPojo implements FormInputContext<Object, Field, 
     public Object getValue(Object dataSource, Field dataSourceField) {
         return this.formInputValueProvider.getValue(dataSource, dataSourceField);
     }
+
+    @Override
+    public boolean setValue(Object dataSource, Field dataSourceField, Object fieldValue) {
+        return this.formInputValueProvider.setValue(dataSource, dataSourceField, fieldValue);
+    }
 }

@@ -18,42 +18,31 @@ package com.bc.webform;
 
 import com.bc.webform.functions.IdFromName;
 import com.bc.webform.functions.LabelFromName;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:57:25 PM
  */
-public class DefaultForm implements Form {
+public class DefaultForm<S> implements Form<S> {
 
     private final Form parent;
     private final String id;
     private final String name;
     private final String displayName;
-    private final List<String> datePatterns;
-    private final List<String> timePatterns;
-    private final List<String> datetimePatterns;
 
     public DefaultForm(String name) {
-        this(new IdFromName().apply(name), name, new LabelFromName().apply(name), 
-                Arrays.asList("yyyy-MM-dd", "MM/dd/yyyy", "MM dd yyyy", "MM-dd-yyyy"), 
-                Arrays.asList("HH:mm", "HH:mm:ss"),
-                Arrays.asList("yyyy-MM-dd'T'HH:mm", "MM/dd/yyyy HH:mm", "MM dd yyyy HH:mm", "MM-dd-yyyy HH:mm",
-                        "yyyy-MM-dd'T'HH:mm:ss", "MM/dd/yyyy HH:mm:ss", "MM dd yyyy HH:mm:ss", "MM-dd-yyyy HH:mm:ss",
-                        "EEE MMM dd kk:mm:ss yyyy"));//"EEE MMM dd kk:mm:ss z yyyy"));
+        this(new IdFromName().apply(name), name, new LabelFromName().apply(name));
     }
 
-    public DefaultForm(String id, String name, String displayName, List<String> datePatterns, List<String> timePatterns, List<String> datetimePatterns) {
+    public DefaultForm(String id, String name, String displayName) {
         this.parent = null;
         this.id = Objects.requireNonNull(id);
         this.name = Objects.requireNonNull(name);
         this.displayName = Objects.requireNonNull(displayName);
-        this.datePatterns = Collections.unmodifiableList(datePatterns);
-        this.timePatterns = Collections.unmodifiableList(timePatterns);
-        this.datetimePatterns = Collections.unmodifiableList(datetimePatterns);
     }
 
     @Override
@@ -62,23 +51,48 @@ public class DefaultForm implements Form {
     }
 
     @Override
-    public List<String> getMemberNames() {
-        return Collections.EMPTY_LIST;
+    public List<FormMember> getHiddenMembers() {
+        return this.getMembers().stream()
+                .filter((ff) -> StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public List<FormMember> getNonHiddenMembers() {
+        return this.getMembers().stream()
+                .filter((ff) -> ! StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getMemberNames() {
+        return this.getMembers().stream()
+                .map((ff) -> ff.getName())
+                .collect(Collectors.toList());
+    }
+    
     @Override
     public List<String> getRequiredMemberNames() {
-        return Collections.EMPTY_LIST;
+        return this.getMembers().stream()
+                .filter((ff) -> !ff.isOptional())
+                .map((ff) -> ff.getName())
+                .collect(Collectors.toList());
     }
-
+    
     @Override
     public List<String> getOptionalMemberNames() {
-        return Collections.EMPTY_LIST;
+        return this.getMembers().stream()
+                .filter((ff) -> ff.isOptional())
+                .map((ff) -> ff.getName())
+                .collect(Collectors.toList());
     }
-
+    
     @Override
     public List<String> getFileTypeMemberNames() {
-        return Collections.EMPTY_LIST;
+        return this.getMembers().stream()
+                .filter((ff) -> StandardFormFieldTypes.FILE.equalsIgnoreCase(ff.getType()))
+                .map((ff) -> ff.getName())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -107,17 +121,7 @@ public class DefaultForm implements Form {
     }
 
     @Override
-    public List<String> getDatePatterns() {
-        return datePatterns;
-    }
-
-    @Override
-    public List<String> getTimePatterns() {
-        return timePatterns;
-    }
-
-    @Override
-    public List<String> getDatetimePatterns() {
-        return datetimePatterns;
+    public S getDataSource() {
+        return null;
     }
 }
