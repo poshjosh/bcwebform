@@ -8,7 +8,7 @@ import com.bc.webform.FormMember;
  */
 
 @FunctionalInterface
-public interface FormFieldTest extends Predicate<FormMember>{
+public interface FormMemberTest extends Predicate<FormMember>{
  
     @Override
     boolean test(FormMember formField);

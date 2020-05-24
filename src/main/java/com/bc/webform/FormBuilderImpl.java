@@ -1,7 +1,7 @@
 package com.bc.webform;
 
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
-import com.bc.webform.functions.FieldNameMatchesFormParentName;
+import com.bc.webform.functions.FormMemberNameMatchesParentFormName;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +45,7 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
                     Objects.requireNonNull(delegate.getDataSource());
             
             if(formFieldTest == null) {
-                formFieldTest = new FieldNameMatchesFormParentName().negate();
+                formFieldTest = new FormMemberNameMatchesParentFormName().negate();
             }
             
             if(formFieldComparator == null){

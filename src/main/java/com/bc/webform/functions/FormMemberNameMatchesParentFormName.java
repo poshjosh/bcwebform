@@ -8,22 +8,22 @@ import com.bc.webform.FormMember;
 /**
  * @author hp
  */
-public class FieldNameMatchesFormParentName implements FormFieldTest{
+public class FormMemberNameMatchesParentFormName implements FormMemberTest{
     
-    private static final Logger LOG = Logger.getLogger(FieldNameMatchesFormParentName.class.getName());
+    private static final Logger LOG = Logger.getLogger(FormMemberNameMatchesParentFormName.class.getName());
     
-    public FieldNameMatchesFormParentName() { }
+    public FormMemberNameMatchesParentFormName() { }
 
     @Override
-    public boolean test(FormMember formField) {
+    public boolean test(FormMember formMember) {
         
-        final String formParentName = this.getFormParentName(formField);
+        final String formParentName = this.getFormParentName(formMember);
 
-        final boolean accept = formField.getName().equalsIgnoreCase(formParentName);
+        final boolean accept = formMember.getName().equalsIgnoreCase(formParentName);
 
         final Level level = accept ? Level.FINE : Level.FINER;
 
-        LOG.log(level, () -> "Form field: " + formField.getName() +
+        LOG.log(level, () -> "Form field: " + formMember.getName() +
                 " has a name matching it's parent form's name, i.e: " + formParentName);
 
         return accept;
