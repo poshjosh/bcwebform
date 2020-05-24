@@ -53,43 +53,43 @@ public interface StandardFormFieldTypes {
     String PASSWORD = "password";
     String TEXT = "text";
     
-    default boolean isRadioType(String type) {
+    static boolean isRadioType(String type) {
         return RADIO.equalsIgnoreCase(type);
     }
     
-    default boolean isCheckboxType(String type) {
+    static boolean isCheckboxType(String type) {
         return CHECKBOX.equalsIgnoreCase(type);
     }
     
-    default boolean isDateType(String type) {
+    static boolean isDateType(String type) {
         return DATE.equalsIgnoreCase(type);
     }
     
-    default boolean isDatetimeType(String type) {
+    static boolean isDatetimeType(String type) {
         return DATETIME.equalsIgnoreCase(type);
     }
     
-    default boolean isFileType(String type) {
+    static boolean isFileType(String type) {
         return FILE.equalsIgnoreCase(type);
     }
     
-    default boolean isHidden(String type) {
+    static boolean isHidden(String type) {
         return HIDDEN.equalsIgnoreCase(type);
     }
     
-    default boolean isNumberType(String type) {
+    static boolean isNumberType(String type) {
         return NUMBER.equalsIgnoreCase(type);
     }
     
-    default boolean isPasswordType(String type) {
+    static boolean isPasswordType(String type) {
         return PASSWORD.equalsIgnoreCase(type);
     }
     
-    default boolean isTextType(String type) {
+    static boolean isTextType(String type) {
         return TEXT.equalsIgnoreCase(type);
     }
 
-    default boolean isTimeType(String type) {
+    static boolean isTimeType(String type) {
         return TIME.equalsIgnoreCase(type);
     }
 }
