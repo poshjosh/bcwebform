@@ -73,11 +73,11 @@ public class FormInputContextForJpaEntity extends FormInputContextForPojo{
             return false;
         }
         final Column column = field.getAnnotation(Column.class);
-        if(column != null && !column.nullable()) {
+        if(column != null && ! column.nullable()) {
             return false;
         }
         final Basic basic = field.getAnnotation(Basic.class);
-        if(basic != null && !basic.optional()) {
+        if(basic != null && ! basic.optional()) {
             return false;
         }
         final Size size = field.getAnnotation(Size.class);
@@ -85,11 +85,11 @@ public class FormInputContextForJpaEntity extends FormInputContextForPojo{
             return false;
         }
         final ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-        if(manyToOne != null && manyToOne.optional()) {
+        if(manyToOne != null && ! manyToOne.optional()) {
             return false;
         }
         final OneToOne oneToOne = field.getAnnotation(OneToOne.class);
-        if(oneToOne != null && oneToOne.optional()) {
+        if(oneToOne != null && ! oneToOne.optional()) {
             return false;
         }
         return true;

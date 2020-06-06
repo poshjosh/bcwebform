@@ -25,7 +25,7 @@ public class FormInputContextForPojo implements FormInputContext<Object, Field, 
 
     @Override
     public boolean isOptional(Object formDataSource, Field dataSourceField) {
-        return false;
+        return true;
     }
 
     @Override
