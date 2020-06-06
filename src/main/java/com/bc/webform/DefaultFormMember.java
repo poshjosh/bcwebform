@@ -135,7 +135,7 @@ public class DefaultFormMember<F, V> implements FormMember<F, V>, Serializable {
     }
 
     @Override
-    public boolean isMultiValue() {
+    public boolean isMultiple() {
         return value instanceof Collection || value instanceof Map || value instanceof Object[]; 
     }
 

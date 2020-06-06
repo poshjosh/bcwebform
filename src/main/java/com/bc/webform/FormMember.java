@@ -118,7 +118,14 @@ public interface FormMember<F, V> extends Identifiable {
 
     boolean isMultiChoice();
     
-    boolean isMultiValue();
+    /**
+     * Specifies whether the user is allowed to enter more than one value.
+     * 
+     * @return <code>true</code> if the user is allowed more than one value
+     * otherwise returns <code>false</code>
+     * @see https://www.w3schools.com/tags/att_input_multiple.asp
+     */
+    boolean isMultiple();
 
     /**
      * @return <code>true</code> if this dataSource refers to a form with one/more other fields 

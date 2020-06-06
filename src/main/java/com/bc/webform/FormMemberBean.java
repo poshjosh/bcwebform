@@ -61,7 +61,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.referencedForm = f.getReferencedForm();
         this.optional = f.isOptional();
         this.multiChoice = f.isMultiChoice();
-        this.multiValue = f.isMultiValue();
+        this.multiValue = f.isMultiple();
         this.dataSource = f.getDataSource();
     }
 
@@ -86,7 +86,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 this.getNumberOfLines() != 0 || this.getType() != null ||
                 this.getForm() != null || this.getReferencedFormHref() != null ||
                 this.getReferencedForm() != null || this.isOptional() || 
-                this.isMultiChoice() || this.isMultiValue() ||
+                this.isMultiChoice() || this.isMultiple() ||
                 this.getDataSource() != null;
     }
     
@@ -377,7 +377,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     }
 
     @Override
-    public boolean isMultiValue() {
+    public boolean isMultiple() {
         return multiValue;
     }
 
