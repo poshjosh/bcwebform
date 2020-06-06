@@ -6,7 +6,6 @@ import com.bc.webform.functions.FormInputContextForDatabaseTable;
 import com.bc.webform.functions.FormInputTypeProvider;
 import com.bc.webform.functions.FormInputTypeProviderForDatabaseTable;
 import com.bc.webform.functions.IsPasswordField;
-import com.bc.webform.functions.MultiValueTestForDatabaseTable;
 import com.bc.webform.functions.TableMetadata;
 import com.bc.webform.functions.TableMetadataImpl;
 import java.util.function.Predicate;
@@ -29,8 +28,9 @@ public class FormMemberBuilderForDatabaseTable extends FormMemberBuilderImpl<Str
                 this.formInputContext(new IsPasswordField(), StandardFormFieldTypes.TEXT);
             }
 
-            if(this.getMultiValueTest() == null) {
-                this.multiValueTest(new MultiValueTestForDatabaseTable());
+            if(this.getMultipleInputTest() == null) {
+                // By default fields do not accept multiple inputs
+                this.multipleInputTest((formDataSource, dataSourceField) -> false);
             }
 
             return super.build();

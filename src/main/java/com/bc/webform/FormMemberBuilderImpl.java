@@ -2,13 +2,13 @@ package com.bc.webform;
 
 import com.bc.webform.functions.ReferencedFormContext;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
-import com.bc.webform.functions.IsMultiValueField;
 import com.bc.webform.functions.MultiChoiceContext;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.bc.webform.functions.FormInputContext;
+import com.bc.webform.functions.IsMultipleInput;
 
 /**
  * @author hp
@@ -21,7 +21,7 @@ public class FormMemberBuilderImpl<S, F, V>
     private FormMemberBean<F, V> delegate;
     private Form<S> form;
     private F dataSource;
-    private IsMultiValueField<S, F> multiValueTest;
+    private IsMultipleInput<S, F> multipleInputTest;
     private FormInputContext<S, F, V> formInputContext;
     private MultiChoiceContext<S, F> multiChoiceContext;
     private ReferencedFormContext<S, F> referencedFormContext;
@@ -100,7 +100,7 @@ public class FormMemberBuilderImpl<S, F, V>
 
         delegate.form(this.form)
                 .dataSource(this.dataSource)
-                .multiValue(this.multiValueTest.isMultiValue(formDataSource, dataSource))
+                .multiple(this.multipleInputTest.isMultiple(formDataSource, dataSource))
                 .value(value)
                 .multiChoice(multiChoice)
                 .choices(choices)
@@ -170,14 +170,14 @@ public class FormMemberBuilderImpl<S, F, V>
         return this;
     }
 
-    public IsMultiValueField<S, F> getMultiValueTest() {
-        return multiValueTest;
+    public IsMultipleInput<S, F> getMultipleInputTest() {
+        return multipleInputTest;
     }
 
     @Override
-    public FormMemberBuilderImpl<S, F, V> multiValueTest(
-            IsMultiValueField<S, F> multiValueTest) {
-        this.multiValueTest = multiValueTest;
+    public FormMemberBuilderImpl<S, F, V> multipleInputTest(
+            IsMultipleInput<S, F> multipleInputTest) {
+        this.multipleInputTest = multipleInputTest;
         return this;
     }
 

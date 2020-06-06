@@ -28,7 +28,7 @@ public class TestData {
         instance.setLabel("Sample Form Field - " + (count.incrementAndGet()));
         instance.setMaxLength(512);
         instance.setMultiChoice(multichoice);
-        instance.setMultiValue(false);
+        instance.setMultiple(false);
         instance.setName("SampleFormField_"+(count.incrementAndGet()));
         instance.setNumberOfLines(2);
         instance.setOptional(false);

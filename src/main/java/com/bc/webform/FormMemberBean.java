@@ -40,7 +40,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private Form referencedForm;
     private boolean optional;
     private boolean multiChoice;
-    private boolean multiValue;
+    private boolean multiple;
     private F dataSource;
     
     public FormMemberBean() { }
@@ -61,7 +61,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.referencedForm = f.getReferencedForm();
         this.optional = f.isOptional();
         this.multiChoice = f.isMultiChoice();
-        this.multiValue = f.isMultiple();
+        this.multiple = f.isMultiple();
         this.dataSource = f.getDataSource();
     }
 
@@ -195,8 +195,8 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
 
-    public FormMemberBean<F, V> multiValue(boolean multiValue) {
-        this.setMultiValue(multiValue);
+    public FormMemberBean<F, V> multiple(boolean multiple) {
+        this.setMultiple(multiple);
         return this;
     }
 
@@ -378,11 +378,11 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
 
     @Override
     public boolean isMultiple() {
-        return multiValue;
+        return multiple;
     }
 
-    public void setMultiValue(boolean multiValue) {
-        this.multiValue = multiValue;
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 
     @Override
@@ -445,7 +445,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 ", maxLength=" + maxLength + ", size=" + size + 
                 ", numberOfLines=" + numberOfLines + ", type=" + type + 
                 ", optional=" + optional + ", multiChoice=" + multiChoice + 
-                ", multiValue=" + multiValue + ", form=" + (form==null?null:form.getName()) +
+                ", multiValue=" + multiple + ", form=" + (form==null?null:form.getName()) +
                 ", dataSource=" + dataSource +
                 ", referencedFormHref=" + referencedFormHref + 
                 ", referencedForm=" + (referencedForm == null ? null : referencedForm.getName()) + '}';

@@ -1,9 +1,9 @@
 package com.bc.webform;
 
 import com.bc.webform.functions.ReferencedFormContext;
-import com.bc.webform.functions.IsMultiValueField;
 import com.bc.webform.functions.MultiChoiceContext;
 import com.bc.webform.functions.FormInputContext;
+import com.bc.webform.functions.IsMultipleInput;
 
 /**
  * 
@@ -42,8 +42,8 @@ public interface FormMemberBuilder<S, F, V> extends Builder<FormMember<F, V>>{
 
     FormMemberBuilder<S, F, V> form(Form form);
 
-    FormMemberBuilder<S, F, V> multiValueTest(
-            IsMultiValueField<S, F> multiValueTest);
+    FormMemberBuilder<S, F, V> multipleInputTest(
+            IsMultipleInput<S, F> multiValueTest);
     
     FormMemberBuilder<S, F, V> formInputContext(
             FormInputContext<S, F, V> fieldValueProvider);

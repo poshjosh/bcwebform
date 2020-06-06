@@ -1,9 +1,6 @@
 package com.bc.webform;
 
 import com.bc.webform.functions.FormInputContextForPojo;
-import com.bc.webform.functions.MultiValueTestForPojo;
-import com.bc.webform.functions.TypeTests;
-import com.bc.webform.functions.TypeTestsImpl;
 import java.lang.reflect.Field;
 
 /**
@@ -20,15 +17,11 @@ public class FormMemberBuilderForPojo extends FormMemberBuilderImpl<Object, Fiel
             this.formInputContext(new FormInputContextForPojo());
         }
         
-        if(this.getMultiValueTest() == null) {
-            this.multiValueTest(new TypeTestsImpl());
+        if(this.getMultipleInputTest() == null) {
+            // By default fields do not accept multiple inputs
+            this.multipleInputTest((formDataSource, dataSourceField) -> false);
         }
         
         return super.build(); 
-    }
-    
-    public FormMemberBuilderForPojo multiValueTest(TypeTests typeTests) {
-        this.multiValueTest(new MultiValueTestForPojo(typeTests));
-        return this;
     }
 }
