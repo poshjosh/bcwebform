@@ -9,11 +9,11 @@ import java.util.Objects;
 /**
  * @author hp
  */
-public class MultiChoiceContextForJpaEntity implements MultiChoiceContext<Object, Field>{
+public class MultiChoiceContextForPojo implements MultiChoiceContext<Object, Field>{
 
     private final TypeTests typeTests;
     
-    public MultiChoiceContextForJpaEntity(TypeTests typeTests) { 
+    public MultiChoiceContextForPojo(TypeTests typeTests) { 
         this.typeTests = Objects.requireNonNull(typeTests);
     }
 
@@ -21,7 +21,7 @@ public class MultiChoiceContextForJpaEntity implements MultiChoiceContext<Object
     public boolean isMultiChoice(Object source, Field field) {
         return typeTests.isEnumType(field.getType());
     }
-
+    
     @Override
     public Map getChoices(Object source, Field field) {
         final Class fieldType = field.getType();

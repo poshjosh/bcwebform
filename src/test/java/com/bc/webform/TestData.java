@@ -47,7 +47,7 @@ public class TestData {
     public FormBean newFormBeanWithTestData() {
         final FormBean instance = this.newFormBean();
         instance.setLabel("Sample Form");
-        instance.setFormFields(Arrays.asList(this.newFormFieldBeanWithTestData(instance, true)));
+        instance.setMembers(Arrays.asList(this.newFormFieldBeanWithTestData(instance, true)));
         instance.setId("sampleform");
         instance.setName("SampleForm");
         return instance;

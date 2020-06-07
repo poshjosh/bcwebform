@@ -1,10 +1,6 @@
 package com.bc.webform;
 
-import com.bc.webform.functions.FormInputContext;
 import com.bc.webform.functions.FormInputContextForJpaEntity;
-import com.bc.webform.functions.MultiChoiceContextForJpaEntity;
-import com.bc.webform.functions.TypeTests;
-import com.bc.webform.functions.TypeTestsImpl;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,24 +23,9 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
             this.formInputContext(new FormInputContextForJpaEntity());
         }
         
-        if(this.getMultiChoiceContext() == null) {
-            this.multiChoiceContext(new TypeTestsImpl());
-        }
-        
         return super.build();
     }
 
-    public FormMemberBuilderForJpaEntity multiChoiceContext(TypeTests typeTests) {
-        this.multiChoiceContext(new MultiChoiceContextForJpaEntity(typeTests));
-        return this;
-    }
-
-    @Override
-    public FormMemberBuilderImpl<Object, Field, Object> formInputContext(
-            FormInputContext<Object, Field, Object> fieldValueProvider) {
-        return super.formInputContext(fieldValueProvider);
-    }
-    
     @Override
     public int initMaxLength() {
         final Field field = this.getDataSource();

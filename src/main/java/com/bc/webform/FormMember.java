@@ -16,19 +16,40 @@ public interface FormMember<F, V> extends Identifiable {
 
     /**
      * @return A new builder with this Form's values applied via the
-     * {@link com.bc.webform.Builder#apply(java.lang.Object)} method.
+     * {@link com.bc.webform.FormMemberBuilder#apply(java.lang.Object)} method.
      * @see #builder() 
      */
-    default FormMemberBuilder building() {
-        return builder().apply(this);
+    default FormMemberBuilder<Object, F, V> building() {
+        return builder(Object.class).apply(this);
     }
     
     /**
+     * @param <S> The parameter type of the data source for the returned builder
+     * @param sourceType The type of the data source for the returned builder
+     * @return A new builder with this Form's values applied via the
+     * {@link com.bc.webform.FormMemberBuilder#apply(java.lang.Object)} method.
+     * @see #builder() 
+     */
+    default <S> FormMemberBuilder<S, F, V> building(Class<S> sourceType) {
+        return builder(sourceType).apply(this);
+    }
+
+    /**
+     * @return A new builder.
+     * @see #builder(java.lang.Class)  
+     */
+    default FormMemberBuilder<Object, F, V> builder() {
+        return this.builder(Object.class);
+    }
+    
+    /**
+     * @param <S> The parameter type of the data source for the returned builder
+     * @param sourceType The type of the data source for the returned builder
      * @return A new builder.
      * @see #building() 
      */
-    default FormMemberBuilder builder() {
-        return new FormMemberBuilderImpl();
+    default <S> FormMemberBuilder<S, F, V> builder(Class<S> sourceType) {
+        return new FormMemberBuilderImpl<>();
     }
     
     // We override this here because some templating engines cannot 
