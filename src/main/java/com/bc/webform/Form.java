@@ -15,19 +15,23 @@ public interface Form<S> extends Identifiable {
     class Builder<S, F, V> extends FormBuilderImpl<S, F, V>{ }
     
     /**
+     * @param <F> The parameter type of the data source fields for the returned builder
+     * @param fieldType The type of the data source fields for the returned builder
      * @return A new builder with this Form's values applied via the
-     * {@link com.bc.webform.Builder#apply(java.lang.Object)} method.
-     * @see #builder() 
+     * {@link com.bc.webform.FormBuilder#apply(java.lang.Object)} method.
+     * @see #builder(java.lang.Class) 
      */
-    default FormBuilder<S, ?, ?> building() {
-        return builder().apply(this);
+    default <F> FormBuilder<S, F, Object> building(Class<F> fieldType) {
+        return builder(fieldType).apply(this);
     }
     
     /**
+     * @param <F> The parameter type of the data source fields for the returned builder
+     * @param fieldType The type of the data source fields for the returned builder
      * @return A new builder.
-     * @see #building() 
+     * @see #building(java.lang.Class) 
      */
-    default FormBuilder<S, ?, ?> builder() {
+    default <F> FormBuilder<S, F, Object> builder(Class<F> fieldType) {
         return new FormBuilderImpl();
     }
 
@@ -56,19 +60,9 @@ public interface Form<S> extends Identifiable {
 
     List<FormMember> getMembers();
 
-    Optional<FormMember> getMember(String name);
-    
-    List<FormMember> getHiddenMembers();
-    
-    List<FormMember> getNonHiddenMembers();
+    Optional<FormMember> getMemberOptional(String name);
     
     List<String> getMemberNames();
-    
-    List<String> getRequiredMemberNames();
-    
-    List<String> getOptionalMemberNames();
-    
-    List<String> getFileTypeMemberNames();
     
     S getDataSource();
 }

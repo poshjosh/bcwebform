@@ -72,7 +72,7 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
                     .sorted(this.formMemberComparator)
                     .collect(Collectors.toList());
 
-            delegate.setFormFields(fieldList);
+            delegate.setMembers(fieldList);
 
             this.building(delegate);
             

@@ -46,51 +46,13 @@ public class DefaultForm<S> implements Form<S> {
     }
 
     @Override
-    public Optional<FormMember> getMember(String name) {
+    public Optional<FormMember> getMemberOptional(String name) {
         return Optional.empty();
-    }
-
-    @Override
-    public List<FormMember> getHiddenMembers() {
-        return this.getMembers().stream()
-                .filter((ff) -> StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FormMember> getNonHiddenMembers() {
-        return this.getMembers().stream()
-                .filter((ff) -> ! StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
-                .collect(Collectors.toList());
     }
 
     @Override
     public List<String> getMemberNames() {
         return this.getMembers().stream()
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<String> getRequiredMemberNames() {
-        return this.getMembers().stream()
-                .filter((ff) -> !ff.isOptional())
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<String> getOptionalMemberNames() {
-        return this.getMembers().stream()
-                .filter((ff) -> ff.isOptional())
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<String> getFileTypeMemberNames() {
-        return this.getMembers().stream()
-                .filter((ff) -> StandardFormFieldTypes.FILE.equalsIgnoreCase(ff.getType()))
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }

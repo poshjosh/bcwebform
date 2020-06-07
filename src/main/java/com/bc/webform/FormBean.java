@@ -31,7 +31,7 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     private String id;
     private String name;
     private String label;
-    private List<FormMember> formFields;
+    private List<FormMember> members;
     private S dataSource;
 
     public FormBean() { }
@@ -41,7 +41,7 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
         this.id = form.getId();
         this.name = form.getName();
         this.label = form.getLabel();
-        this.formFields = form.getMembers();
+        this.members = form.getMembers();
         this.dataSource = form.getDataSource();
     }
 
@@ -78,52 +78,14 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     }
 
     @Override
-    public Optional<FormMember> getMember(String name) {
+    public Optional<FormMember> getMemberOptional(String name) {
         return this.getMembers().stream()
                 .filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
-    }
-
-    @Override
-    public List<FormMember> getHiddenMembers() {
-        return this.getMembers().stream()
-                .filter((ff) -> StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FormMember> getNonHiddenMembers() {
-        return this.getMembers().stream()
-                .filter((ff) -> ! StandardFormFieldTypes.HIDDEN.equals(ff.getType()))
-                .collect(Collectors.toList());
     }
     
     @Override
     public List<String> getMemberNames() {
         return this.getMembers().stream()
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<String> getRequiredMemberNames() {
-        return this.getMembers().stream()
-                .filter((ff) -> !ff.isOptional())
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<String> getOptionalMemberNames() {
-        return this.getMembers().stream()
-                .filter((ff) -> ff.isOptional())
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public List<String> getFileTypeMemberNames() {
-        return this.getMembers().stream()
-                .filter((ff) -> StandardFormFieldTypes.FILE.equalsIgnoreCase(ff.getType()))
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }
@@ -152,8 +114,8 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
         return this;
     }
 
-    public FormBean<S> formFields(List<FormMember> formFields) {
-        this.setFormFields(formFields);
+    public FormBean<S> members(List<FormMember> members) {
+        this.setMembers(members);
         return this;
     }
 
@@ -213,11 +175,11 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
 
     @Override
     public List<FormMember> getMembers() {
-        return formFields;
+        return members;
     }
 
-    public void setFormFields(List<FormMember> formFields) {
-        this.formFields = formFields;
+    public void setMembers(List<FormMember> members) {
+        this.members = members;
     }
 
     @Override
