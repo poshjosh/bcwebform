@@ -111,9 +111,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
 
     @Override
     public FormMember<F, V> withValue(V value) {
-        final FormMemberBean<F, V> copy = this.copy();
-        copy.setValue(value);
-        return copy;
+        return this.writableCopy().value(value);
     }
     
     ////////////////////////////////////////////

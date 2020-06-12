@@ -19,81 +19,21 @@ package com.bc.webform;
 import com.bc.webform.functions.IdFromName;
 import com.bc.webform.functions.LabelFromName;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:57:25 PM
  */
-public class DefaultForm<S> implements Form<S> {
-
-    private final Form parent;
-    private final String id;
-    private final String name;
-    private final String displayName;
+public class DefaultForm<S> extends FormBean<S> {
 
     public DefaultForm(String name) {
         this(new IdFromName().apply(name), name, new LabelFromName().apply(name));
     }
 
-    public DefaultForm(String id, String name, String displayName) {
-        this.parent = null;
-        this.id = Objects.requireNonNull(id);
-        this.name = Objects.requireNonNull(name);
-        this.displayName = Objects.requireNonNull(displayName);
-    }
-
-    @Override
-    public Form copy() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public FormBean writableCopy() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Optional<FormMember> getMemberOptional(String name) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<String> getMemberNames() {
-        return this.getMembers().stream()
-                .map((ff) -> ff.getName())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<FormMember> getMembers() {
-        return Collections.EMPTY_LIST;
-    }
-
-    @Override
-    public Form getParent() {
-        return parent;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getLabel() {
-        return displayName;
-    }
-
-    @Override
-    public S getDataSource() {
-        return null;
+    public DefaultForm(String id, String name, String label) {
+        this.setId(Objects.requireNonNull(id));
+        this.setName(Objects.requireNonNull(name));
+        this.setLabel(Objects.requireNonNull(label));
+        this.setMembers(Collections.EMPTY_LIST);
     }
 }

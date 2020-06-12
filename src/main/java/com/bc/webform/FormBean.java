@@ -17,6 +17,7 @@
 package com.bc.webform;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -84,13 +85,15 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     
     @Override
     public Optional<FormMember> getMemberOptional(String name) {
-        return this.getMembers().stream()
+        final List<FormMember> formMembers = this.getMembers();
+        return formMembers.isEmpty() ? Optional.empty() : formMembers.stream()
                 .filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
     }
     
     @Override
     public List<String> getMemberNames() {
-        return this.getMembers().stream()
+        final List<FormMember> formMembers = this.getMembers();
+        return formMembers.isEmpty() ? Collections.EMPTY_LIST : formMembers.stream()
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }
