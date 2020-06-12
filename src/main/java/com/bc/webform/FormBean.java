@@ -54,7 +54,7 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
      */
     @Override
     public String getDisplayName() {
-        return Form.super.getDisplayName(); //To change body of generated methods, choose Tools | Templates.
+        return Form.super.getDisplayName();
     }
 
     @Override
@@ -74,9 +74,14 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     
     @Override
     public FormBean copy() {
-        return new FormBean(this);
+        return this.writableCopy();
     }
 
+    @Override
+    public FormBean writableCopy() {
+        return new FormBean(this);
+    }
+    
     @Override
     public Optional<FormMember> getMemberOptional(String name) {
         return this.getMembers().stream()

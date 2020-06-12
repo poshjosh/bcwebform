@@ -46,6 +46,16 @@ public class DefaultForm<S> implements Form<S> {
     }
 
     @Override
+    public Form copy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FormBean writableCopy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public Optional<FormMember> getMemberOptional(String name) {
         return Optional.empty();
     }

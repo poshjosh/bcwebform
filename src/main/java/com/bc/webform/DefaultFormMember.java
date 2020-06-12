@@ -50,6 +50,16 @@ public class DefaultFormMember<F, V> implements FormMember<F, V>, Serializable {
     }
 
     @Override
+    public FormMember<F, V> copy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FormMemberBean<F, V> writableCopy() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public FormMember<F, V> withValue(V value) {
         return new DefaultFormMember(form, id, name, label, value, size);
     }

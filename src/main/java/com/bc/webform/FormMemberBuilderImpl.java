@@ -49,7 +49,7 @@ public class FormMemberBuilderImpl<S, F, V>
             }
             
             // Always return a copy to shield us from any, after the fact, 
-            // changes to the original
+            // changes to the original, via builder methos
             //
             final FormMember<F, V> result = buildFormField().copy();
             

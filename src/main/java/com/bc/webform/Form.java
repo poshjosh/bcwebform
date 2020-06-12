@@ -34,6 +34,10 @@ public interface Form<S> extends Identifiable {
     default <F> FormBuilder<S, F, Object> builder(Class<F> fieldType) {
         return new FormBuilderImpl();
     }
+    
+    Form copy();
+    
+    FormBean writableCopy();
 
     // We override this here because some templating engines cannot 
     // access it from the super type

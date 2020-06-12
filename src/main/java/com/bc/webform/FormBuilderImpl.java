@@ -77,7 +77,7 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
             this.building(delegate);
             
             // Always return a copy to shield us from any, after the fact, 
-            // changes to the original
+            // changes to the original, via builder methods
             //
             final Form result = delegate.copy();
 
