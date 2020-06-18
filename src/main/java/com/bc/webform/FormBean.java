@@ -17,6 +17,7 @@
 package com.bc.webform;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +45,32 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
         this.label = form.getLabel();
         this.members = form.getMembers();
         this.dataSource = form.getDataSource();
+    }
+    
+    public FormBean replaceMember(FormMember formMember) {
+        if(this.members == null || this.members.isEmpty()) {
+            throw this.newMemberNotFoundException(name);
+        }
+        final List<FormMember> membersUpdate = new ArrayList<>(this.members.size());
+        boolean updated = false;
+        final String idToUpdate = formMember.getId();
+        for(FormMember member : this.members) {
+            if(idToUpdate.equals(member.getId())) {
+                membersUpdate.add(formMember);
+                updated = true;
+            }else{
+                membersUpdate.add(member);
+            }
+        }
+        if( ! updated) {
+            throw this.newMemberNotFoundException(idToUpdate);
+        }
+        return this.members(membersUpdate);
+    }
+    
+    private RuntimeException newMemberNotFoundException(String name) {
+        return new IllegalArgumentException(
+                "Member named: " + name + " not found in: " + this);
     }
 
     // We override this here because some templating engines cannot 
