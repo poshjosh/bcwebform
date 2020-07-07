@@ -33,16 +33,17 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private String advice;
     private V value;
     private Map choices;
-    private int maxLength;
-    private int size;
-    private int numberOfLines;
+    private int maxLength = -1;
+    private int size = -1;
+    private int numberOfLines = -1;
     private String type;
     private Form form;
     private String referencedFormHref;
     private Form referencedForm;
-    private boolean optional;
-    private boolean multiChoice;
-    private boolean multiple;
+    private Boolean disabled;
+    private Boolean optional;
+    private Boolean multiChoice;
+    private Boolean multiple;
     private F dataSource;
     
     public FormMemberBean() { }
@@ -61,6 +62,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.form = f.getForm();
         this.referencedFormHref = f.getReferencedFormHref();
         this.referencedForm = f.getReferencedForm();
+        this.disabled = f.isDisabled();
         this.optional = f.isOptional();
         this.multiChoice = f.isMultiChoice();
         this.multiple = f.isMultiple();
@@ -81,15 +83,15 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     
     @Override
     public boolean isAnyFieldSet() {
-        return this.getId() != null || this.getName() != null ||
-                this.getLabel() != null || this.getAdvice() != null ||
-                this.getValue() != null ||this.getChoices() != null ||
-                this.getMaxLength() != 0 || this.getSize() != 0 ||
-                this.getNumberOfLines() != 0 || this.getType() != null ||
+        return this.id != null || this.name != null ||
+                this.label != null || this.advice != null ||
+                this.value != null ||this.getChoices() != null ||
+                this.getMaxLength() != -1 || this.getSize() != -1 ||
+                this.getNumberOfLines() != -1 || this.getType() != null ||
                 this.getForm() != null || this.getReferencedFormHref() != null ||
-                this.getReferencedForm() != null || this.isOptional() || 
-                this.isMultiChoice() || this.isMultiple() ||
-                this.getDataSource() != null;
+                this.getReferencedForm() != null || this.isDisabled() != null ||
+                this.isOptional() != null || this.isMultiChoice() != null || 
+                this.isMultiple() != null || this.getDataSource() != null;
     }
     
     @Override
@@ -185,6 +187,11 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
     
+    public FormMemberBean<F, V> disabled(Boolean disabled) {
+        this.setDisabled(disabled);
+        return this;
+    }
+
     public FormMemberBean<F, V> optional(boolean optional) {
         this.setOptional(optional);
         return this;
@@ -274,7 +281,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
 
     @Override
     public int getMaxLength() {
-        return maxLength;
+        return maxLength == -1 ? 0 : maxLength;
     }
 
     public void setMaxLength(int maxLength) {
@@ -283,7 +290,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
 
     @Override
     public int getSize() {
-        return size;
+        return size == -1 ? 0 : size;
     }
 
     public void setSize(int size) {
@@ -292,7 +299,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
 
     @Override
     public int getNumberOfLines() {
-        return numberOfLines;
+        return numberOfLines == -1 ? 0 : numberOfLines;
     }
 
     public void setNumberOfLines(int numberOfLines) {
@@ -362,40 +369,49 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     public void setReferencedForm(Form referencedForm) {
         this.referencedForm = referencedForm;
     }
-
+    
     @Override
-    public boolean isOptional() {
-        return optional;
+    public Boolean isDisabled() {
+        return disabled == null ? Boolean.FALSE : disabled;
     }
 
-    public void setOptional(boolean optional) {
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    @Override
+    public Boolean isOptional() {
+        return optional == null ? Boolean.TRUE : optional;
+    }
+
+    public void setOptional(Boolean optional) {
         this.optional = optional;
     }
 
     @Override
-    public boolean isRequired() {
-        return ! optional;
+    public Boolean isRequired() {
+        return ! this.isOptional();
     }
 
-    public void setRequired(boolean required) {
-        this.optional = ! required;
+    public void setRequired(Boolean required) {
+        this.setOptional( ! required);
     }
 
     @Override
-    public boolean isMultiple() {
-        return multiple;
+    public Boolean isMultiple() {
+        return multiple == null ? Boolean.FALSE : multiple;
     }
 
-    public void setMultiple(boolean multiple) {
+    public void setMultiple(Boolean multiple) {
         this.multiple = multiple;
     }
 
     @Override
-    public boolean isMultiChoice() {
-        return multiChoice;
+    public Boolean isMultiChoice() {
+        return multiChoice == null ? Boolean.FALSE : multiChoice;
     }
 
-    public void setMultiChoice(boolean multiChoice) {
+    public void setMultiChoice(Boolean multiChoice) {
         this.multiChoice = multiChoice;
     }
 

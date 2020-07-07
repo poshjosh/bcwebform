@@ -110,7 +110,7 @@ public interface FormMember<F, V> extends Identifiable {
     /**
      * If a form represents a <code>Person</code> and one of the fields of the 
      * form is <code>primaryAddress</code>, it is possible for this dataSource
- to refer to a form also and the <code>primaryAddress</code> form is the
+     * to refer to a form also and the <code>primaryAddress</code> form is the
      * referenced form.
      * 
      * Use this method to display the referenced form in the browser. When the
@@ -126,7 +126,7 @@ public interface FormMember<F, V> extends Identifiable {
     /**
      * If a form represents a <code>Person</code> and one of the fields of the 
      * form is <code>primaryAddress</code>, it is possible for this dataSource
- to refer to a form also and the <code>primaryAddress</code> form is the
+     * to refer to a form also and the <code>primaryAddress</code> form is the
      * referenced form.
      * 
      * Use this method to display the referenced form in-line. However, it is
@@ -138,12 +138,14 @@ public interface FormMember<F, V> extends Identifiable {
      * @see #getReferencedFormHref() 
      */
     Form getReferencedForm();
-
-    boolean isOptional();
     
-    boolean isRequired();
+    Boolean isDisabled();
 
-    boolean isMultiChoice();
+    Boolean isOptional();
+    
+    Boolean isRequired();
+
+    Boolean isMultiChoice();
     
     /**
      * Specifies whether the user is allowed to enter more than one value.
@@ -152,7 +154,7 @@ public interface FormMember<F, V> extends Identifiable {
      * otherwise returns <code>false</code>
      * @see https://www.w3schools.com/tags/att_input_multiple.asp
      */
-    boolean isMultiple();
+    Boolean isMultiple();
 
     /**
      * @return <code>true</code> if this dataSource refers to a form with one/more other fields 
