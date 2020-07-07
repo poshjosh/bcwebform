@@ -1,5 +1,7 @@
 package com.bc.webform;
 
+import com.bc.webform.form.member.FormMemberBean;
+import com.bc.webform.form.member.FormMember;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

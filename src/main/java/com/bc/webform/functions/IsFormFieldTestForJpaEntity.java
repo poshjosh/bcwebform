@@ -16,6 +16,7 @@
 
 package com.bc.webform.functions;
 
+import com.bc.webform.TypeTests;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Objects;

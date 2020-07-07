@@ -1,5 +1,8 @@
 package com.bc.webform;
 
+import com.bc.webform.form.DefaultForm;
+import com.bc.webform.form.FormBuilder;
+import com.bc.webform.form.Form;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;

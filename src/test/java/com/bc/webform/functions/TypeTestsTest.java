@@ -1,5 +1,7 @@
 package com.bc.webform.functions;
 
+import com.bc.webform.TypeTests;
+import com.bc.webform.TypeTestsImpl;
 import com.bc.webform.domain.Blog;
 import com.bc.webform.domain.BlogType;
 import java.util.Collection;

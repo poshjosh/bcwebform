@@ -16,6 +16,8 @@
 
 package com.bc.webform.functions;
 
+import com.bc.webform.TableMetadataImpl;
+import com.bc.webform.TableMetadata;
 import com.bc.db.meta.access.MetaDataAccess;
 import com.bc.db.meta.access.MetaDataAccessImpl;
 import java.util.Map;

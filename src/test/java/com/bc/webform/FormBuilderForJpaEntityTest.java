@@ -1,5 +1,7 @@
 package com.bc.webform;
 
+import com.bc.webform.form.FormBuilderForJpaEntity;
+import com.bc.webform.form.FormBuilder;
 import com.bc.webform.domain.Blog;
 import java.lang.reflect.Field;
 

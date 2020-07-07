@@ -1,5 +1,6 @@
 package com.bc.webform;
 
+import com.bc.webform.form.FormBean;
 import org.junit.Test;
 
 /**
