@@ -85,13 +85,13 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     public boolean isAnyFieldSet() {
         return this.id != null || this.name != null ||
                 this.label != null || this.advice != null ||
-                this.value != null ||this.getChoices() != null ||
-                this.getMaxLength() != -1 || this.getSize() != -1 ||
-                this.getNumberOfLines() != -1 || this.getType() != null ||
-                this.getForm() != null || this.getReferencedFormHref() != null ||
-                this.getReferencedForm() != null || this.isDisabled() != null ||
-                this.isOptional() != null || this.isMultiChoice() != null || 
-                this.isMultiple() != null || this.getDataSource() != null;
+                this.value != null ||this.choices != null ||
+                this.maxLength != -1 || this.size != -1 ||
+                this.numberOfLines != -1 || this.type != null ||
+                this.form != null || this.referencedFormHref != null ||
+                this.referencedForm != null || this.disabled != null ||
+                this.optional != null || this.multiChoice != null || 
+                this.multiple != null || this.dataSource != null;
     }
     
     @Override
