@@ -42,9 +42,10 @@ public abstract class AbstractFormBuilderTest<S, F, V> {
     public void build_whenCalledTwice_shouldBeIdempotent() {
         try{
         System.out.println("build_whenCalledTwice_shouldBeIdempotent");
-        final FormBuilder<S, F, V> instance = this.getInstance();
+        FormBuilder<S, F, V> instance = this.getInstance();
         this.buildValid(instance);
         final Form expResult = instance.build();
+        instance = instance.copy();
         this.buildValid(instance);
         final Form result = instance.build();
         assertEquals(expResult, result);

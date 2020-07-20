@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.bc.webform.functions.IsMultipleInput;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author hp
@@ -23,40 +26,68 @@ public class FormMemberBuilderImpl<S, F, V>
     private FormInputContext<S, F, V> formInputContext;
     private MultiChoiceContext<S, F> multiChoiceContext;
     private ReferencedFormContext<S, F> referencedFormContext;
+    
+    private boolean buildAttempted;
 
     public FormMemberBuilderImpl() {
         this.delegate = new FormMemberBean<>();
+    }
+    
+    @Override
+    public FormMemberBuilderImpl<S, F, V> copy() {
+        // Both delegate and dataSource are not included in copy as
+        // they contain transient data
+        //
+        return new FormMemberBuilderImpl()
+                .form(form)
+                .multipleInputTest(multipleInputTest)
+                .formInputContext(formInputContext)
+                .multiChoiceContext(multiChoiceContext)
+                .referencedFormContext(referencedFormContext);
+    }
+
+    public List<FormMember<F, V>> build(Set<F> sourceSet) {
+        
+        final List<FormMember<F, V>> fieldList = sourceSet.stream().map((fieldSource) -> {
+
+            return this.form(this.form)
+                    .dataSource(fieldSource)
+                    .build();
+
+        }).collect(Collectors.toList());
+        
+        return fieldList;
     }
 
     @Override
     public FormMember<F, V> build() {
 
-        try{
-
-            Objects.requireNonNull(delegate);
-            Objects.requireNonNull(form);
-            Objects.requireNonNull(form.getDataSource());
-            Objects.requireNonNull(dataSource);
-            
-            if(multiChoiceContext == null) {
-                multiChoiceContext = MultiChoiceContext.NO_OP;
-            }
-            
-            if(referencedFormContext == null) {
-                referencedFormContext = ReferencedFormContext.NO_OP;
-            }
-            
-            // Always return a copy to shield us from any, after the fact, 
-            // changes to the original, via builder methos
-            //
-            final FormMember<F, V> result = buildFormField().copy();
-            
-            return result;
-            
-        }finally{
+        this.requireBuildNotAttempted();
         
-            this.delegate = new FormMemberBean();
+        Objects.requireNonNull(delegate);
+        Objects.requireNonNull(form);
+        Objects.requireNonNull(form.getDataSource());
+        Objects.requireNonNull(dataSource);
+
+        if(multiChoiceContext == null) {
+            multiChoiceContext = MultiChoiceContext.NO_OP;
         }
+
+        if(referencedFormContext == null) {
+            referencedFormContext = ReferencedFormContext.NO_OP;
+        }
+
+        // Always return a copy to shield us from any, after the fact, 
+        // changes to the original, via builder methos
+        //
+        return buildFormField();
+    }
+    
+    private void requireBuildNotAttempted() {
+        if(this.buildAttempted) {
+            throw new IllegalStateException("build() method may only be called once");
+        }
+        this.buildAttempted = true;
     }
     
     public FormMemberBean<F, V> buildFormField() {

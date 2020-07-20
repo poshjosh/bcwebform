@@ -9,11 +9,8 @@ import java.lang.reflect.Field;
  */
 public class FormMemberBuilderForPojo extends FormMemberBuilderImpl<Object, Field, Object>{
 
-    public FormMemberBuilderForPojo() { }
-
-    @Override
-    public FormMember<Field, Object> build() {
-        
+    public FormMemberBuilderForPojo() { 
+    
         if(this.getFormInputContext() == null) {
             this.formInputContext(new FormInputContextForPojo());
         }
@@ -26,8 +23,6 @@ public class FormMemberBuilderForPojo extends FormMemberBuilderImpl<Object, Fiel
         if(this.getMultiChoiceContext() == null) {
             this.multiChoiceContext(new TypeTestsImpl());
         }
-        
-        return super.build(); 
     }
 
     public FormMemberBuilderForPojo multiChoiceContext(TypeTests typeTests) {

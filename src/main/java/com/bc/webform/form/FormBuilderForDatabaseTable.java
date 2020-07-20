@@ -2,6 +2,7 @@ package com.bc.webform.form;
 
 import com.bc.webform.form.member.FormMemberBuilderForDatabaseTable;
 import com.bc.webform.functions.IsFormFieldTestForDatabaseTable;
+import java.util.Objects;
 import java.util.function.BiPredicate;
 import javax.persistence.EntityManagerFactory;
 
@@ -10,10 +11,11 @@ import javax.persistence.EntityManagerFactory;
  */
 public class FormBuilderForDatabaseTable extends FormBuilderImpl<String, String, Object>{
 
-    private EntityManagerFactory entityManagerFactory;
-    
-    @Override
-    public Form build() {
+    private final EntityManagerFactory entityManagerFactory;
+
+    public FormBuilderForDatabaseTable(EntityManagerFactory entityManagerFactory) {
+        
+        this.entityManagerFactory = Objects.requireNonNull(entityManagerFactory);
         
         if(this.getSourceFieldsProvider() == null) {
             this.sourceFieldsProvider(
@@ -22,11 +24,8 @@ public class FormBuilderForDatabaseTable extends FormBuilderImpl<String, String,
         
         if(this.getFormMemberBuilder() == null) {
             this.formMemberBuilder(
-                    new FormMemberBuilderForDatabaseTable()
-                            .entityManagerFactory(entityManagerFactory));
+                    new FormMemberBuilderForDatabaseTable(entityManagerFactory));
         }
-        
-        return super.build(); 
     }
     
     public FormBuilderForDatabaseTable sourceFieldsProvider(
@@ -40,11 +39,5 @@ public class FormBuilderForDatabaseTable extends FormBuilderImpl<String, String,
 
     public EntityManagerFactory getEntityManagerFactory() {
         return entityManagerFactory;
-    }
-
-    public FormBuilderForDatabaseTable entityManagerFactory(
-            EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
-        return this;
     }
 }

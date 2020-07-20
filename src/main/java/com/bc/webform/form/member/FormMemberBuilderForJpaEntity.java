@@ -13,16 +13,11 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
     
     private static final Logger LOG = Logger.getLogger(FormMemberBuilderForJpaEntity.class.getName());
     
-    public FormMemberBuilderForJpaEntity() { }
-
-    @Override
-    public FormMember<Field, Object> build() {
-        
+    public FormMemberBuilderForJpaEntity() { 
+    
         if(this.getFormInputContext() == null) {
             this.formInputContext(new FormInputContextForJpaEntity());
         }
-        
-        return super.build();
     }
 
     @Override

@@ -30,6 +30,9 @@ public interface FormBuilder<S, F, V> extends Builder<Form<S>>{
 
     @Override
     Form<S> build();
+
+    @Override
+    FormBuilder<S, F, V> copy();
     
     /**
      * Apply default values.

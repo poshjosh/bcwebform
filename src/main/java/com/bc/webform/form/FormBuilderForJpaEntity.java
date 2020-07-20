@@ -10,8 +10,7 @@ import com.bc.webform.TypeTestsImpl;
  */
 public class FormBuilderForJpaEntity extends FormBuilderForPojo{
 
-    @Override
-    public Form build() {
+    public FormBuilderForJpaEntity() {
         
         if(this.getFormMemberBuilder() == null) {
             this.formMemberBuilder(new FormMemberBuilderForJpaEntity());
@@ -20,8 +19,6 @@ public class FormBuilderForJpaEntity extends FormBuilderForPojo{
         if(this.getSourceFieldsProvider() == null) {
             this.sourceFieldsProvider(new TypeTestsImpl());
         }
-        
-        return super.build(); 
     }
 
     public FormBuilderForJpaEntity sourceFieldsProvider(TypeTests typeTests) {

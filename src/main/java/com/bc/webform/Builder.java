@@ -23,7 +23,7 @@ public interface Builder<T> {
 
     T build();
     
-//    Builder<T> reset();
-    
     Builder<T> apply(T t);
+
+    Builder<T> copy();
 }

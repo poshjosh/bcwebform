@@ -91,7 +91,7 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     public boolean isAnyFieldSet() {
         return (this.getParent() != null || this.getId() != null ||
                 this.getName() != null || this.getLabel() != null ||
-                this.getMembers() != null);
+                this.getMembers() != null || this.getDataSource() != null);
     }
     
     @Override

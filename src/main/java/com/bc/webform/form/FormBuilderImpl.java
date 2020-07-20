@@ -1,8 +1,8 @@
 package com.bc.webform.form;
 
+import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
 import com.bc.webform.form.member.FormMember;
 import com.bc.webform.form.member.FormMemberBuilder;
-import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -28,65 +28,77 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     private Predicate<FormMember<F, V>> formMemberTest;
     
     private Comparator<FormMember<F, V>> formMemberComparator;
+    
+    private boolean buildAttempted;
 
     public FormBuilderImpl() { 
         delegate = new FormBean();
+    }
+
+    @Override
+    public FormBuilder<S, F, V> copy() {
+        // Both delegate and dataSource are not included in copy as
+        // they contain transient data
+        //
+        return new FormBuilderImpl()
+                .formMemberBuilder(formMemberBuilder.copy())
+                .formMemberComparator(formMemberComparator)
+                .formMemberTest(formMemberTest)
+                .sourceFieldsProvider(sourceFieldsProvider);
     }
     
     @Override
     public Form build() {
         
-        try{
-            
-            Objects.requireNonNull(delegate);
-            Objects.requireNonNull(sourceFieldsProvider);
-            Objects.requireNonNull(formMemberBuilder);
-            final S formDataSource = 
-                    Objects.requireNonNull(delegate.getDataSource());
-            
-            if(this.getFormMemberTest() == null) {
-                this.formMemberTest(new FormMemberNameMatchesParentFormName().negate());
-            }
-            
-            if(this.getFormMemberComparator() == null){
-                this.formMemberComparator(new PreferMandatory());
-            }
-            
-            delegate.checkRequiredFieldsAreSet();
-            
-            LOG.log(Level.FINE, () -> "Form data source: " + 
-                    (formDataSource == null ? null : formDataSource.getClass().getSimpleName()) + 
-                    ", form: name=" + delegate.getName() + ", parent name=" + 
-                    (delegate.getParent()==null?null:delegate.getParent().getName()));            
+        this.requireBuildNotAttempted();
+        
+        Objects.requireNonNull(delegate);
+        Objects.requireNonNull(sourceFieldsProvider);
+        Objects.requireNonNull(formMemberBuilder);
+        final S formDataSource = 
+                Objects.requireNonNull(delegate.getDataSource());
 
-            final Set<F> sourceSet = sourceFieldsProvider.apply(delegate, formDataSource);
-
-            final List fieldList = sourceSet.stream().map((fieldSource) -> {
-
-                return formMemberBuilder
-                        .form(delegate)
-                        .dataSource(fieldSource)
-                        .build();
-
-            }).filter(this.formMemberTest)
-                    .sorted(this.formMemberComparator)
-                    .collect(Collectors.toList());
-
-            delegate.setMembers(fieldList);
-
-            this.building(delegate);
-            
-            // Always return a copy to shield us from any, after the fact, 
-            // changes to the original, via builder methods
-            //
-            final Form result = delegate.copy();
-
-            return result;
-
-        }finally{
-            
-            this.delegate = new FormBean();
+        if(this.getFormMemberTest() == null) {
+            this.formMemberTest(new FormMemberNameMatchesParentFormName().negate());
         }
+
+        if(this.getFormMemberComparator() == null){
+            this.formMemberComparator(new PreferMandatory());
+        }
+
+        delegate.checkRequiredFieldsAreSet();
+
+        LOG.log(Level.FINE, () -> "Form data source: " + 
+                (formDataSource == null ? null : formDataSource.getClass().getSimpleName()) + 
+                ", form: name=" + delegate.getName() + ", parent name=" + 
+                (delegate.getParent()==null?null:delegate.getParent().getName()));            
+
+        final Set<F> sourceSet = sourceFieldsProvider.apply(delegate, formDataSource);
+
+        final List fieldList = sourceSet.stream().map((fieldSource) -> {
+
+            return formMemberBuilder
+                    .copy() // Each builder should be used to build one and only one form member
+                    .form(delegate)
+                    .dataSource(fieldSource)
+                    .build();
+
+        }).filter(this.formMemberTest)
+                .sorted(this.formMemberComparator)
+                .collect(Collectors.toList());
+
+        delegate.setMembers(fieldList);
+
+        this.building(delegate);
+
+        return delegate;
+    }
+    
+    private void requireBuildNotAttempted() {
+        if(this.buildAttempted) {
+            throw new IllegalStateException("build() method may only be called once");
+        }
+        this.buildAttempted = true;
     }
     
     protected FormBean building(FormBean builder) {

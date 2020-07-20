@@ -16,8 +16,7 @@ public class FormBuilderForPojo extends FormBuilderImpl<Object, Field, Object>{
         }
     }
 
-    @Override
-    public Form build() {
+    public FormBuilderForPojo() {
         
         if(this.getFormMemberTest() == null) {
             this.formMemberTest(new FormMemberTypeMatchesParentFormType().negate());
@@ -30,8 +29,6 @@ public class FormBuilderForPojo extends FormBuilderImpl<Object, Field, Object>{
         if(this.getSourceFieldsProvider() == null) {
             this.sourceFieldsProvider(new AcceptAll());
         }
-        
-        return super.build();
     }
 
     public FormBuilderForPojo sourceFieldsProvider(Predicate<Field> isFormField) {

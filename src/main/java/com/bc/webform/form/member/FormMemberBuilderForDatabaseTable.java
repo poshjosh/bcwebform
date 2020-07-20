@@ -6,6 +6,7 @@ import com.bc.webform.StandardFormFieldTypes;
 import com.bc.webform.functions.IsPasswordField;
 import com.bc.webform.TableMetadata;
 import com.bc.webform.TableMetadataImpl;
+import java.util.Objects;
 import java.util.function.Predicate;
 import javax.persistence.EntityManagerFactory;
 
@@ -16,25 +17,19 @@ public class FormMemberBuilderForDatabaseTable extends FormMemberBuilderImpl<Str
 
     private int maxLength = -1;
     
-    private EntityManagerFactory entityManagerFactory;
-    
-    @Override
-    public FormMember<String, Object> build() {
-        try{
-            
-            if(this.getFormInputContext() == null) {
-                this.formInputContext(new IsPasswordField(), StandardFormFieldTypes.TEXT);
-            }
+    private final EntityManagerFactory entityManagerFactory;
 
-            if(this.getMultipleInputTest() == null) {
-                // By default fields do not accept multiple inputs
-                this.multipleInputTest((formDataSource, dataSourceField) -> false);
-            }
-
-            return super.build();
+    public FormMemberBuilderForDatabaseTable(EntityManagerFactory entityManagerFactory) {
+        
+        this.entityManagerFactory = Objects.requireNonNull(entityManagerFactory);
             
-        }finally{
-            this.maxLength = -1;
+        if(this.getFormInputContext() == null) {
+            this.formInputContext(new IsPasswordField(), StandardFormFieldTypes.TEXT);
+        }
+
+        if(this.getMultipleInputTest() == null) {
+            // By default fields do not accept multiple inputs
+            this.multipleInputTest((formDataSource, dataSourceField) -> false);
         }
     }
     
@@ -88,11 +83,5 @@ public class FormMemberBuilderForDatabaseTable extends FormMemberBuilderImpl<Str
 
     public EntityManagerFactory getEntityManagerFactory() {
         return entityManagerFactory;
-    }
-
-    public FormMemberBuilderForDatabaseTable entityManagerFactory(
-            EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
-        return this;
     }
 }
