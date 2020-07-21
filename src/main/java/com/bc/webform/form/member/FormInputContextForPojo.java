@@ -29,6 +29,11 @@ public class FormInputContextForPojo implements FormInputContext<Object, Field, 
     }
 
     @Override
+    public String getDataType(Object formDataSource, Field dataSourceField) {
+        return this.formInputTypeProvider.getDataType(formDataSource, dataSourceField);
+    }
+
+    @Override
     public String getType(Object formDataSource, Field dataSourceField) {
         return this.formInputTypeProvider.getType(formDataSource, dataSourceField);
     }

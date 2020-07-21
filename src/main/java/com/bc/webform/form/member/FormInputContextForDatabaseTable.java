@@ -27,6 +27,11 @@ public class FormInputContextForDatabaseTable implements FormInputContext<String
     }
 
     @Override
+    public String getDataType(String formDataSource, String dataSourceField) {
+        return this.formInputTypeProvider.getDataType(formDataSource, dataSourceField);
+    }
+
+    @Override
     public String getType(String tableName, String columnName) {
         return this.formInputTypeProvider.getType(tableName, columnName);
     }
