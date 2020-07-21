@@ -17,26 +17,6 @@ public interface FormMember<F, V> extends Identifiable {
     class Builder<S, F, V> extends FormMemberBuilderImpl<S, F, V>{ }
 
     /**
-     * @return A new builder with this Form's values applied via the
-     * {@link com.bc.webform.FormMemberBuilder#apply(java.lang.Object)} method.
-     * @see #builder() 
-     */
-    default FormMemberBuilder<Object, F, V> building() {
-        return builder(Object.class).apply(this);
-    }
-    
-    /**
-     * @param <S> The parameter type of the data source for the returned builder
-     * @param sourceType The type of the data source for the returned builder
-     * @return A new builder with this Form's values applied via the
-     * {@link com.bc.webform.FormMemberBuilder#apply(java.lang.Object)} method.
-     * @see #builder() 
-     */
-    default <S> FormMemberBuilder<S, F, V> building(Class<S> sourceType) {
-        return builder(sourceType).apply(this);
-    }
-
-    /**
      * @return A new builder.
      * @see #builder(java.lang.Class)  
      */
@@ -96,6 +76,15 @@ public interface FormMember<F, V> extends Identifiable {
     int getSize();
     
     int getNumberOfLines();
+    
+    /**
+     * The data type, different from {@link #getType()}. 
+     * 
+     * May refer to a specific object type not covered by HTML specs.
+     * 
+     * @return The data type
+     */
+    String getDataType();
 
     /**
      * @return The input type. E.g <code>date,datetime-local,file,hidden,number,password,text</code> amongst others

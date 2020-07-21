@@ -37,6 +37,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private int size = -1;
     private int numberOfLines = -1;
     private String type;
+    private String dataType;
     private Form form;
     private String referencedFormHref;
     private Form referencedForm;
@@ -59,6 +60,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.size = f.getSize();
         this.numberOfLines = f.getNumberOfLines();
         this.type = f.getType();
+        this.dataType = f.getDataType();
         this.form = f.getForm();
         this.referencedFormHref = f.getReferencedFormHref();
         this.referencedForm = f.getReferencedForm();
@@ -88,6 +90,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 this.value != null ||this.choices != null ||
                 this.maxLength != -1 || this.size != -1 ||
                 this.numberOfLines != -1 || this.type != null ||
+                this.dataType != null ||
                 this.form != null || this.referencedFormHref != null ||
                 this.referencedForm != null || this.disabled != null ||
                 this.optional != null || this.multiChoice != null || 
@@ -172,6 +175,11 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
     
+    public FormMemberBean<F, V> dataType(String dataType) {
+        this.setDataType(dataType);
+        return this;
+    }
+
     public FormMemberBean<F, V> form(Form form) {
         this.setForm(form);
         return this;
@@ -313,6 +321,15 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     @Override
@@ -465,6 +482,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 ", value=" + value + ", choices=" + (choices==null?null:choices.size()) + 
                 ", maxLength=" + maxLength + ", size=" + size + 
                 ", numberOfLines=" + numberOfLines + ", type=" + type + 
+                ", dataType=" + dataType +
                 ", optional=" + optional + ", multiChoice=" + multiChoice + 
                 ", multiValue=" + multiple + ", form=" + (form==null?null:form.getName()) +
                 ", dataSource=" + dataSource +

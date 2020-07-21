@@ -19,17 +19,6 @@ public interface Form<S> extends Identifiable {
     /**
      * @param <F> The parameter type of the data source fields for the returned builder
      * @param fieldType The type of the data source fields for the returned builder
-     * @return A new builder with this Form's values applied via the
-     * {@link com.bc.webform.FormBuilder#apply(java.lang.Object)} method.
-     * @see #builder(java.lang.Class) 
-     */
-    default <F> FormBuilder<S, F, Object> building(Class<F> fieldType) {
-        return builder(fieldType).apply(this);
-    }
-    
-    /**
-     * @param <F> The parameter type of the data source fields for the returned builder
-     * @param fieldType The type of the data source fields for the returned builder
      * @return A new builder.
      * @see #building(java.lang.Class) 
      */

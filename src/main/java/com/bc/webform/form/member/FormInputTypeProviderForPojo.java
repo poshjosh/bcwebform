@@ -30,6 +30,11 @@ public class FormInputTypeProviderForPojo
         this.passwordFieldTest = Objects.requireNonNull(passwordInputTest);
         this.resultIfNone = resultIfNone;
     }
+
+    @Override
+    public String getDataType(Object formDataSource, Field dataSourceField) {
+        return dataSourceField.getType().getSimpleName();
+    }
     
     @Override
     public String getType(Object source, Field field) {

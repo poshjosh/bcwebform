@@ -138,7 +138,8 @@ public class FormMemberBuilderImpl<S, F, V>
                 .optional(this.formInputContext.isOptional(formDataSource, dataSource))
                 .referencedFormHref(referencedFormHref)
                 .referencedForm(referencedForm)
-                .type(this.formInputContext.getType(formDataSource, dataSource));
+                .type(this.formInputContext.getType(formDataSource, dataSource))
+                .dataType(formInputContext.getDataType(formDataSource, dataSource));
 
         delegate.checkRequiredFieldsAreSet();
         

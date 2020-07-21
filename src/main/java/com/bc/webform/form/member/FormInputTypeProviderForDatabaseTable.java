@@ -41,4 +41,16 @@ public class FormInputTypeProviderForDatabaseTable
         }
         return type;
     }
+
+    @Override
+    public String getDataType(String tableName, String columnName) {
+        final Class type;
+        if(this.passwordFieldTest.test(columnName)) {
+            type = String.class; 
+        }else{
+            final int sqlDataType = this.tableMetadata.getColumnDataType(columnName);
+            type = super.getClass(sqlDataType);
+        }
+        return type.getSimpleName();
+    }
 }

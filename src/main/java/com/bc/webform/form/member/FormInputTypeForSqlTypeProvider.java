@@ -17,7 +17,11 @@
 package com.bc.webform.form.member;
 
 import com.bc.webform.StandardFormFieldTypes;
+import java.math.BigDecimal;
 import java.sql.Types;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -36,6 +40,54 @@ public class FormInputTypeForSqlTypeProvider implements Function<Integer, String
     
     public FormInputTypeForSqlTypeProvider(String resultIfNone) {
         this.resultIfNone = resultIfNone;
+    }
+    
+    //@TODO consult specifications and confirm these values
+    public Class getClass(int sqlType) {
+        final Class result;
+        switch(sqlType) {
+            case Types.CHAR:
+            case Types.NCHAR:
+            case Types.VARCHAR:
+            case Types.LONGVARCHAR:
+            case Types.LONGNVARCHAR:
+                 result = String.class; break;
+            case Types.DATE: 
+                result = LocalDateTime.class; break;
+            case Types.TIMESTAMP:
+                result = LocalDateTime.class; break;
+            case Types.TIMESTAMP_WITH_TIMEZONE:
+                result = ZonedDateTime.class; break;
+            case Types.TIME:
+                result = LocalTime.class; break;
+            case Types.TIME_WITH_TIMEZONE:
+                result = ZonedDateTime.class; break;
+            case Types.BIT:
+            case Types.BOOLEAN:
+                result = Boolean.class; break;
+//            case Types.TINYINT:    
+            case Types.SMALLINT: 
+                result = Short.class; break;
+            case Types.INTEGER: 
+                result = Integer.class; break;
+            case Types.BIGINT: 
+                result = Long.class; break;
+            case Types.REAL: 
+            case Types.DECIMAL: 
+                result = BigDecimal.class; break;
+            case Types.FLOAT: 
+                result = Float.class; break;
+            case Types.DOUBLE: 
+                result = Double.class; break;
+            case Types.NUMERIC:
+                result = Number.class; break;
+            default:
+                result = Object.class;
+        }
+        
+        LOG.finer(() -> "SQL Type: " + sqlType + ", output: " + result);
+        
+        return result;
     }
     
     @Override
