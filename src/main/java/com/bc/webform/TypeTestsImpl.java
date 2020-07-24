@@ -27,6 +27,18 @@ public class TypeTestsImpl implements TypeTests{
         this.domainTypeTest = Objects.requireNonNull(isDomainType);
         this.enumTypeTest = Objects.requireNonNull(isEnumType);
     }
+    
+    public TypeTests withContainerTest(Predicate<Class> isContainerType) {
+        return new TypeTestsImpl(isContainerType, this.domainTypeTest, this.enumTypeTest);
+    }
+
+    public TypeTests withDomainTest(Predicate<Class> isDomainType) {
+        return new TypeTestsImpl(this.containerTypeTest, isDomainType, this.enumTypeTest);
+    }
+    
+    public TypeTests withEnumTest(Predicate<Class> isEnumType) {
+        return new TypeTestsImpl(this.containerTypeTest, this.domainTypeTest, isEnumType);
+    }
 
     @Override
     public boolean isContainerType(Class type) {

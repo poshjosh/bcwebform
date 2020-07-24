@@ -12,12 +12,15 @@ import javax.validation.constraints.Size;
 public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
     
     private static final Logger LOG = Logger.getLogger(FormMemberBuilderForJpaEntity.class.getName());
-    
+
     public FormMemberBuilderForJpaEntity() { 
+        this(new FormInputContextForJpaEntity());
+    }
     
-        if(this.getFormInputContext() == null) {
-            this.formInputContext(new FormInputContextForJpaEntity());
-        }
+    public FormMemberBuilderForJpaEntity(
+            FormInputContext<Object, Field, Object> formInputContext) { 
+    
+        this.formInputContext(formInputContext);
     }
 
     @Override

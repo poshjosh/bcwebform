@@ -1,8 +1,9 @@
 package com.bc.webform.form.member;
 
 import com.bc.webform.Identifiable;
+import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
-import java.util.Map;
+import java.util.List;
 
 
 /**
@@ -69,7 +70,7 @@ public interface FormMember<F, V> extends Identifiable {
      * Choices are represented by &lt;select&gt; HTML element
      * @return Map of the choices, usually id=display_value mappings.
      */
-    Map getChoices();
+    List<SelectOption> getChoices();
 
     int getMaxLength();
         

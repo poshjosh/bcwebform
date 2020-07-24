@@ -17,9 +17,10 @@
 package com.bc.webform.form.member;
 
 import com.bc.webform.IdentifiableFieldSet;
+import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -32,7 +33,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private String label;
     private String advice;
     private V value;
-    private Map choices;
+    private List<SelectOption> choices;
     private int maxLength = -1;
     private int size = -1;
     private int numberOfLines = -1;
@@ -150,7 +151,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
 
-    public FormMemberBean<F, V> choices(Map choices) {
+    public FormMemberBean<F, V> choices(List<SelectOption> choices) {
         this.setChoices(choices);
         return this;
     }
@@ -279,11 +280,11 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
      * @return Map of the choices, usually id=display_value mappings.
      */
     @Override
-    public Map getChoices() {
+    public List<SelectOption> getChoices() {
         return choices;
     }
 
-    public void setChoices(Map choices) {
+    public void setChoices(List<SelectOption> choices) {
         this.choices = choices;
     }
 

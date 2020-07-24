@@ -17,7 +17,6 @@
 package com.bc.webform.form.member;
 
 import com.bc.webform.StandardFormFieldTypes;
-import com.bc.webform.form.member.FormMemberBean;
 import com.bc.webform.form.Form;
 import com.bc.webform.functions.IdFromName;
 import com.bc.webform.functions.LabelFromName;
@@ -43,7 +42,7 @@ public class DefaultFormMember<F, V> extends FormMemberBean<F, V>{
         this.setValue(value);
         this.setSize(size);
         this.setMultiChoice(false);
-        this.setChoices(Collections.EMPTY_MAP);
+        this.setChoices(Collections.EMPTY_LIST);
         this.setMaxLength(-1);
         this.setNumberOfLines(-1);
         this.setType(StandardFormFieldTypes.TEXT);

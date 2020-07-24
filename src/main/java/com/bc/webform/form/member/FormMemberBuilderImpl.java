@@ -1,8 +1,8 @@
 package com.bc.webform.form.member;
 
+import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
-import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -111,7 +111,7 @@ public class FormMemberBuilderImpl<S, F, V>
         final boolean multiChoice = this.multiChoiceContext
                 .isMultiChoice(formDataSource, dataSource);
         
-        final Map choices = ! multiChoice ? null : 
+        final List<SelectOption> choices = ! multiChoice ? null : 
                 multiChoiceContext.getChoices(formDataSource, dataSource);
 
         final boolean mayDisplayReference = 
