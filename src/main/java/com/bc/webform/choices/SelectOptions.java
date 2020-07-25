@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,7 @@ public final class SelectOptions {
     }
 
     private static <V> String print(V value, Locale locale, BiFunction<V, Locale, String> printer) {
+        Objects.requireNonNull(value);
         return printer == null ? value.toString() : printer.apply(value, locale);
     }
 
