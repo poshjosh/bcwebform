@@ -9,12 +9,12 @@ import java.util.Optional;
  */
 public interface ReferencedFormContext<S, F> extends IsReferencedTypeField<S, F>{
     
-    ReferencedFormContext NO_OP = (frm, src, fld) -> null;
+    ReferencedFormContext NO_OP = (form, dataSourceField) -> Optional.empty();
 
     @Override
-    default boolean isReferencedType(S formDataSource, F dataSourceField) {
+    default boolean isReferencedType(Form<S> form, F dataSourceField) {
         return false;
     }
     
-    Optional<String> getReferencedFormHref(Form form, S formDataSource, F dataSourceField);
+    Optional<String> getReferencedFormHref(Form<S> form, F dataSourceField);
 }

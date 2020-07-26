@@ -117,11 +117,10 @@ public class FormMemberBuilderImpl<S, F, V>
         final boolean mayDisplayReference = 
                 value == null && 
                 ! this.hasParent(this.form) && 
-                this.referencedFormContext.isReferencedType(formDataSource, dataSource);
+                this.referencedFormContext.isReferencedType(form, dataSource);
 
         final String referencedFormHref = ! mayDisplayReference ? null : 
-                this.referencedFormContext.getReferencedFormHref(
-                        this.form, formDataSource, dataSource).orElse(null);
+                this.referencedFormContext.getReferencedFormHref(form, dataSource).orElse(null);
 
         delegate.form(this.form)
                 .dataSource(this.dataSource)

@@ -1,6 +1,7 @@
 package com.bc.webform.functions;
 
 import com.bc.webform.TypeTests;
+import com.bc.webform.form.Form;
 import java.lang.reflect.Field;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -20,7 +21,7 @@ public class IsReferencedTypeFieldImpl implements IsReferencedTypeField<Object, 
     }
     
     @Override
-    public boolean isReferencedType(Object declaringInstance, Field field) {
+    public boolean isReferencedType(Form<Object> form, Field field) {
         final boolean output;
         final Class fieldType = field.getType();
         if(typeTests.isEnumType(fieldType)) {
