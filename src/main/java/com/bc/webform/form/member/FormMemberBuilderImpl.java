@@ -119,10 +119,6 @@ public class FormMemberBuilderImpl<S, F, V>
                 ! this.hasParent(this.form) && 
                 this.referencedFormContext.isReferencedType(formDataSource, dataSource);
 
-        final Form referencedForm = ! mayDisplayReference ? null : 
-                this.referencedFormContext.createReferencedForm(
-                        this.form, formDataSource, dataSource).orElse(null);
-        
         final String referencedFormHref = ! mayDisplayReference ? null : 
                 this.referencedFormContext.getReferencedFormHref(
                         this.form, formDataSource, dataSource).orElse(null);
@@ -137,7 +133,6 @@ public class FormMemberBuilderImpl<S, F, V>
                 .numberOfLines(numberOfLines)
                 .optional(this.formInputContext.isOptional(formDataSource, dataSource))
                 .referencedFormHref(referencedFormHref)
-                .referencedForm(referencedForm)
                 .type(this.formInputContext.getType(formDataSource, dataSource))
                 .dataType(formInputContext.getDataType(formDataSource, dataSource));
 
