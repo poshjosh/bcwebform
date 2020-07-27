@@ -49,6 +49,10 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
         this.dataSource = form.getDataSource();
     }
     
+    public Optional<Object> getValueOptional(String name) {
+        return getMemberOptional(name).map((member) -> member.getValue());
+    }
+    
     public FormBean replaceMember(FormMember formMember) {
         if(this.members == null || this.members.isEmpty()) {
             throw this.newMemberNotFoundException(name);
@@ -247,12 +251,15 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append(this.getClass().getName()).append("{\n");
-        builder.append("ID: ").append(this.getId());
+        builder.append(this.getClass().getName()).append("{");
+        builder.append("id: ").append(this.getId());
         builder.append(", parent: ").append(parent==null?null:parent.getName());
         builder.append(", dataSource: ").append(dataSource);
-        builder.append("\nfield names : ").append(this.getMemberNames());
-        builder.append("\n}");
+        final String fields = members == null ? null : members.stream()
+                .map((member) -> member.getName() + " = " + member.getValue())
+                .collect(Collectors.joining(", "));
+        builder.append(", fields : ").append(fields);
+        builder.append("}");
         return builder.toString();
     }
 }
