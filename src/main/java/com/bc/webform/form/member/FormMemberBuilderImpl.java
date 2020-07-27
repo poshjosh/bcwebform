@@ -7,11 +7,20 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.bc.webform.functions.IsMultipleInput;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Build and instance of {@link com.bc.webform.form.member.FormMember} for
+ * a {@link com.bc.webform.form.Form}.
+ * 
+ * <b>Note</b> If you return an instance of {@link com.bc.webform.choices.SelectOption}
+ * from {@link com.bc.webform.form.member.FormInputContext#getValue(java.lang.Object, java.lang.Object) FormInputContext#getValue},
+ * then the returned value is used to populated a single item list of choices
+ * for the related {@link com.bc.webform.form.member.FormMember}.
+ * 
  * @author hp
  */
 public class FormMemberBuilderImpl<S, F, V> 
@@ -105,18 +114,23 @@ public class FormMemberBuilderImpl<S, F, V>
         LOG.log(Level.FINER, () -> "MaxLen: " + maxLen + 
                 ", lineMaxLen: " + lineMaxLen + ", numOfLines: " + numberOfLines);
 
-        final V value = this.formInputContext
+        final V rawValue = this.formInputContext
                 .getValue(formDataSource, dataSource);
         
-        final boolean multiChoice = this.multiChoiceContext
-                .isMultiChoice(formDataSource, dataSource);
+        final V value = this.getValue(rawValue);
+        
+        final List<SelectOption> choicesFromValue = getChoicesFromValue(rawValue, null);
+        
+        final boolean multiChoice = choicesFromValue != null ||
+                multiChoiceContext.isMultiChoice(formDataSource, dataSource);
         
         final List<SelectOption> choices = ! multiChoice ? null : 
+                choicesFromValue != null ? choicesFromValue : 
                 multiChoiceContext.getChoices(formDataSource, dataSource);
 
         final boolean mayDisplayReference = 
                 value == null && 
-                ! this.hasParent(this.form) && 
+//                ! this.hasParent(this.form) && 
                 this.referencedFormContext.isReferencedType(form, dataSource);
 
         final String referencedFormHref = ! mayDisplayReference ? null : 
@@ -140,6 +154,34 @@ public class FormMemberBuilderImpl<S, F, V>
         return this.building(delegate);
     }
     
+    private V getValue(V rawValue) {
+        V value;
+        if(rawValue instanceof SelectOption) {
+            final SelectOption option = (SelectOption)rawValue;
+            try{
+                value = (V)(option).getValue();
+            }catch(ClassCastException e) {
+                LOG.log(Level.WARNING, "" + option + " can not be cast to type of: " + dataSource, e);
+                value = rawValue;
+            }
+        }else{
+            value = rawValue;
+        }
+        return value;
+    }
+
+    private List<SelectOption> getChoicesFromValue(
+            V rawValue, List<SelectOption> resultIfNone) {
+        final List<SelectOption> choicesFromValue;
+        if(rawValue instanceof SelectOption) {
+            final SelectOption option = (SelectOption)rawValue;
+            choicesFromValue = Collections.singletonList(option);
+        }else{
+            choicesFromValue = resultIfNone;
+        }
+        return choicesFromValue;
+    }
+
     protected FormMemberBean<F, V> building(FormMemberBean<F, V> builder) {
         return builder;
     }
