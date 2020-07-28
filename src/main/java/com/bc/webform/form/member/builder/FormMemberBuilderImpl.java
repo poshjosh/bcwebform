@@ -1,8 +1,14 @@
-package com.bc.webform.form.member;
+package com.bc.webform.form.member.builder;
 
 import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
+import com.bc.webform.form.member.DefaultFormMember;
+import com.bc.webform.form.member.FormInputContext;
+import com.bc.webform.form.member.FormMember;
+import com.bc.webform.form.member.FormMemberBean;
+import com.bc.webform.form.member.MultiChoiceContext;
+import com.bc.webform.form.member.ReferencedFormContext;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;

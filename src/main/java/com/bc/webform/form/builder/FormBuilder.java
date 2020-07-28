@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.bc.webform.form;
+package com.bc.webform.form.builder;
 
 import com.bc.webform.Builder;
 import com.bc.webform.form.member.FormMember;
-import com.bc.webform.form.member.FormMemberBuilder;
+import com.bc.webform.form.member.builder.FormMemberBuilder;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
+import com.bc.webform.form.Form;
+import com.bc.webform.form.SourceFieldsProvider;
 import java.util.Comparator;
 import java.util.function.Predicate;
 

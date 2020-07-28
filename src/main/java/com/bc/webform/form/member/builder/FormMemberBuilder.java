@@ -1,7 +1,11 @@
-package com.bc.webform.form.member;
+package com.bc.webform.form.member.builder;
 
 import com.bc.webform.Builder;
 import com.bc.webform.form.Form;
+import com.bc.webform.form.member.FormInputContext;
+import com.bc.webform.form.member.FormMember;
+import com.bc.webform.form.member.MultiChoiceContext;
+import com.bc.webform.form.member.ReferencedFormContext;
 import com.bc.webform.functions.IsMultipleInput;
 
 /**

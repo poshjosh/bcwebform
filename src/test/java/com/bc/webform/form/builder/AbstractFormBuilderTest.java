@@ -1,7 +1,7 @@
-package com.bc.webform;
+package com.bc.webform.form.builder;
 
 import com.bc.webform.form.DefaultForm;
-import com.bc.webform.form.FormBuilder;
+import com.bc.webform.form.builder.FormBuilder;
 import com.bc.webform.form.Form;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

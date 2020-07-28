@@ -1,6 +1,10 @@
-package com.bc.webform.form.member;
+package com.bc.webform.form.member.builder;
 
 import com.bc.webform.TypeTestsImpl;
+import com.bc.webform.form.member.FormInputContext;
+import com.bc.webform.form.member.FormInputContextForJpaEntity;
+import com.bc.webform.form.member.MultiChoiceContext;
+import com.bc.webform.form.member.MultiChoiceContextForPojo;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;

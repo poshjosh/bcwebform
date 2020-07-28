@@ -1,4 +1,4 @@
-package com.bc.webform.form.member;
+package com.bc.webform.form.member.builder;
 
 import com.bc.db.meta.access.MetaDataAccess;
 import com.bc.db.meta.access.MetaDataAccessImpl;
@@ -6,6 +6,9 @@ import com.bc.webform.StandardFormFieldTypes;
 import com.bc.webform.functions.IsPasswordField;
 import com.bc.webform.TableMetadata;
 import com.bc.webform.TableMetadataImpl;
+import com.bc.webform.form.member.FormInputContextForDatabaseTable;
+import com.bc.webform.form.member.FormInputTypeProvider;
+import com.bc.webform.form.member.FormInputTypeProviderForDatabaseTable;
 import java.util.Objects;
 import java.util.function.Predicate;
 import javax.persistence.EntityManagerFactory;

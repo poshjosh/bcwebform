@@ -1,6 +1,8 @@
-package com.bc.webform.form;
+package com.bc.webform.form.builder;
 
-import com.bc.webform.form.member.FormMemberBuilderForPojo;
+import com.bc.webform.form.FormMemberTypeMatchesParentFormType;
+import com.bc.webform.form.SourceFieldsProviderForPojo;
+import com.bc.webform.form.member.builder.FormMemberBuilderForPojo;
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
 

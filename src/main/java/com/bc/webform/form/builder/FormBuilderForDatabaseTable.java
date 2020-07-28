@@ -1,6 +1,7 @@
-package com.bc.webform.form;
+package com.bc.webform.form.builder;
 
-import com.bc.webform.form.member.FormMemberBuilderForDatabaseTable;
+import com.bc.webform.form.SourceFieldsProviderForDatabaseTable;
+import com.bc.webform.form.member.builder.FormMemberBuilderForDatabaseTable;
 import com.bc.webform.functions.IsFormFieldTestForDatabaseTable;
 import java.util.Objects;
 import java.util.function.BiPredicate;

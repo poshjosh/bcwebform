@@ -1,10 +1,10 @@
-package com.bc.webform.form;
+package com.bc.webform.form.builder;
 
-import com.bc.webform.form.member.FormMemberBuilderForJpaEntity;
+import com.bc.webform.form.member.builder.FormMemberBuilderForJpaEntity;
 import com.bc.webform.functions.IsFormFieldTestForJpaEntity;
 import com.bc.webform.TypeTests;
 import com.bc.webform.TypeTestsImpl;
-import com.bc.webform.form.member.FormMemberBuilder;
+import com.bc.webform.form.member.builder.FormMemberBuilder;
 import java.lang.reflect.Field;
 
 /**

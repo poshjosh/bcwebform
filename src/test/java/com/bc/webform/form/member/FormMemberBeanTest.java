@@ -1,5 +1,7 @@
-package com.bc.webform;
+package com.bc.webform.form.member;
 
+import com.bc.webform.FieldSetTest;
+import com.bc.webform.TestData;
 import com.bc.webform.form.member.FormMemberBean;
 import com.bc.webform.form.member.FormMember;
 import org.junit.Test;

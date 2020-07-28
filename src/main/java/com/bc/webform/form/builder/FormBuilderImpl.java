@@ -1,8 +1,14 @@
-package com.bc.webform.form;
+package com.bc.webform.form.builder;
 
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
+import com.bc.webform.form.DefaultForm;
+import com.bc.webform.form.Form;
+import com.bc.webform.form.FormBean;
+import com.bc.webform.form.FormMemberNameMatchesParentFormName;
+import com.bc.webform.form.PreferMandatory;
+import com.bc.webform.form.SourceFieldsProvider;
 import com.bc.webform.form.member.FormMember;
-import com.bc.webform.form.member.FormMemberBuilder;
+import com.bc.webform.form.member.builder.FormMemberBuilder;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;

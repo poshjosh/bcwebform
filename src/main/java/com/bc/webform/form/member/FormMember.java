@@ -1,5 +1,7 @@
 package com.bc.webform.form.member;
 
+import com.bc.webform.form.member.builder.FormMemberBuilder;
+import com.bc.webform.form.member.builder.FormMemberBuilderImpl;
 import com.bc.webform.Identifiable;
 import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;

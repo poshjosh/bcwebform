@@ -1,7 +1,7 @@
-package com.bc.webform;
+package com.bc.webform.form.builder;
 
-import com.bc.webform.form.FormBuilderForJpaEntity;
-import com.bc.webform.form.FormBuilder;
+import com.bc.webform.form.builder.FormBuilderForJpaEntity;
+import com.bc.webform.form.builder.FormBuilder;
 import com.bc.webform.domain.Blog;
 import java.lang.reflect.Field;
 
