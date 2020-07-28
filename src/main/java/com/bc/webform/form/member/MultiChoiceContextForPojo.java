@@ -22,7 +22,7 @@ public class MultiChoiceContextForPojo implements MultiChoiceContext<Object, Fie
     private final Locale locale;
 
     public MultiChoiceContextForPojo(TypeTests typeTests) {
-        this(typeTests, EnumType.STRING, null, Locale.getDefault());
+        this(typeTests, EnumType.STRING, (en, loc) -> en.toString(), Locale.getDefault());
     }
     
     public MultiChoiceContextForPojo(
@@ -32,7 +32,7 @@ public class MultiChoiceContextForPojo implements MultiChoiceContext<Object, Fie
             Locale locale) {
         this.typeTests = Objects.requireNonNull(typeTests);
         this.enumType = Objects.requireNonNull(enumType);
-        this.printer = printer;
+        this.printer = Objects.requireNonNull(printer);
         this.locale = Objects.requireNonNull(locale);
     }
 
@@ -68,5 +68,17 @@ public class MultiChoiceContextForPojo implements MultiChoiceContext<Object, Fie
 
     public TypeTests getTypeTests() {
         return typeTests;
+    }
+
+    public EnumType getEnumType() {
+        return enumType;
+    }
+
+    public BiFunction<Enum, Locale, Object> getPrinter() {
+        return printer;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }
