@@ -76,7 +76,7 @@ public class MultiChoiceContextForPojo implements MultiChoiceContext<Object, Fie
         if(this.typeTests.isDomainType(fieldType)){
             return this.getFieldValueChoice(source, field, fieldValue)
                     .map((option) -> Collections.singletonList(option))
-                    .orElse(null);
+                    .orElse(Collections.EMPTY_LIST);
         }
         throw new IllegalArgumentException();
     }
