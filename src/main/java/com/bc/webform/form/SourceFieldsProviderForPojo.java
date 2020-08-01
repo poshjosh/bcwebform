@@ -1,6 +1,5 @@
 package com.bc.webform.form;
 
-import com.bc.webform.form.Form;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,19 +50,19 @@ public class SourceFieldsProviderForPojo implements SourceFieldsProvider<Object,
         
             ++depth;
             
-            if(LOG.isLoggable(Level.FINE)) {
+            final Field [] fields = objectType.getDeclaredFields();
+
+            if(LOG.isLoggable(Level.FINER)) {
                 
                 final int d = depth;
                 
-                LOG.log(Level.FINE, () -> "Depth: " + d + ", object: " + 
+                LOG.log(Level.FINER, () -> "Depth: " + d + ", object: " + 
                         source.getClass().getSimpleName() + 
                         ", form: name=" + form.getName() + ", parent name=" + 
                         (form.getParent()==null?null:form.getParent().getName()));            
-            }
-            
-            final Field [] fields = objectType.getDeclaredFields();
 
-            LOG.log(Level.FINE, "Declared fields: {0}", (Arrays.toString(fields)));
+                LOG.log(Level.FINER, "Declared fields: {0}", (Arrays.toString(fields)));
+            }
             
             result.addAll(
                     Arrays.asList(fields).stream()
