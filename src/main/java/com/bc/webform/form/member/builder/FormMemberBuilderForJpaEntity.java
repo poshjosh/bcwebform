@@ -42,7 +42,7 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
         }
         final int n = maxLen;
         
-        LOG.log(Level.FINER, () -> getForm().getDataSource().getClass().getName() + 
+        LOG.log(Level.FINEST, () -> getForm().getDataSource().getClass().getName() + 
                 '.' + field.getName() + ".maxLength = " + n);
         return maxLen;
     }

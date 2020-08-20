@@ -27,7 +27,7 @@ public class FormMemberTypeMatchesParentFormType
         final boolean accept = parentFormType != null && 
                 parentFormType.equals(formMemberType);
 
-        final Level level = accept ? Level.FINE : Level.FINER;
+        final Level level = accept ? Level.FINE : Level.FINEST;
 
         LOG.log(level, () -> "Form field: " + formMember.getName() +
                 " has a type " + formMemberType + 

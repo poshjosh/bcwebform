@@ -19,7 +19,7 @@ public class IsContainerType implements Predicate<Class>{
 //                || Object[].class.isAssignableFrom(type)
         );
         
-        LOG.finer(() -> "Container type: " + output + ", type: " + type);
+        LOG.finest(() -> "Container type: " + output + ", type: " + type);
         
         return output;
     }

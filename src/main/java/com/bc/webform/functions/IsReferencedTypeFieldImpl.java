@@ -31,7 +31,7 @@ public class IsReferencedTypeFieldImpl implements IsReferencedTypeField<Object, 
         }else{
             output = false;
         }
-        LOG.log(Level.FINER, "Field: {0}, is reference type: {1}",
+        LOG.log(Level.FINEST, "Field: {0}, is reference type: {1}",
                 new Object[]{field.getName(), output});
         return output;
     }

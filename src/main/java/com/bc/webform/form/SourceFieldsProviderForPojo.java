@@ -52,16 +52,16 @@ public class SourceFieldsProviderForPojo implements SourceFieldsProvider<Object,
             
             final Field [] fields = objectType.getDeclaredFields();
 
-            if(LOG.isLoggable(Level.FINER)) {
+            if(LOG.isLoggable(Level.FINEST)) {
                 
                 final int d = depth;
                 
-                LOG.log(Level.FINER, () -> "Depth: " + d + ", object: " + 
+                LOG.log(Level.FINEST, () -> "Depth: " + d + ", object: " + 
                         source.getClass().getSimpleName() + 
                         ", form: name=" + form.getName() + ", parent name=" + 
                         (form.getParent()==null?null:form.getParent().getName()));            
 
-                LOG.log(Level.FINER, "Declared fields: {0}", (Arrays.toString(fields)));
+                LOG.log(Level.FINEST, "Declared fields: {0}", (Arrays.toString(fields)));
             }
             
             result.addAll(

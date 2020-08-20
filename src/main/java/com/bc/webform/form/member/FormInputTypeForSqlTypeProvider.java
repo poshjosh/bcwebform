@@ -85,7 +85,7 @@ public class FormInputTypeForSqlTypeProvider implements Function<Integer, String
                 result = Object.class;
         }
         
-        LOG.finer(() -> "SQL Type: " + sqlType + ", output: " + result);
+        LOG.finest(() -> "SQL Type: " + sqlType + ", output: " + result);
         
         return result;
     }
@@ -125,7 +125,7 @@ public class FormInputTypeForSqlTypeProvider implements Function<Integer, String
                 result = resultIfNone;
         }
         
-        LOG.finer(() -> "SQL Type: " + sqlType + ", output: " + result);
+        LOG.finest(() -> "SQL Type: " + sqlType + ", output: " + result);
         
         return result;
     }

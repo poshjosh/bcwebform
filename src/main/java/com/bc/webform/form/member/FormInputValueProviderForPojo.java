@@ -22,8 +22,8 @@ public class FormInputValueProviderForPojo
             value = this.getValueViaMethod(declaringInstance, field);
         }
         final Class declaringClass = field.getDeclaringClass();
-        if(LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "{0}.{1} = {2}", 
+        if(LOG.isLoggable(Level.FINEST)) {
+            LOG.log(Level.FINEST, "{0}.{1} = {2}", 
                     new Object[]{
                         declaringClass.getSimpleName(), field.getName(), value});
         }
@@ -37,8 +37,8 @@ public class FormInputValueProviderForPojo
             success = this.setValueViaMethod(declaringInstance, field, value);
         }
         final Class declaringClass = field.getDeclaringClass();
-        if(LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "Success: {0}, setting {1}.{2} = {3}", 
+        if(LOG.isLoggable(Level.FINEST)) {
+            LOG.log(Level.FINEST, "Success: {0}, setting {1}.{2} = {3}", 
                     new Object[]{
                     success, declaringClass.getSimpleName(), field.getName(), value});
         }
@@ -54,8 +54,8 @@ public class FormInputValueProviderForPojo
                     field.setAccessible(true);
                 }
                 fieldValue = field.get(declaringInstance);
-                if(LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, "Retreived value: {0}, from field: {1}", 
+                if(LOG.isLoggable(Level.FINEST)) {
+                    LOG.log(Level.FINEST, "Retreived value: {0}, from field: {1}", 
                             new Object[]{fieldValue, field});
                 }
             }catch(IllegalArgumentException | IllegalAccessException e) {
@@ -79,8 +79,8 @@ public class FormInputValueProviderForPojo
                 }
                 field.set(declaringInstance, value);
                 success = true;
-                if(LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, "Success: {0}, setting {1}.{2} = {3}", 
+                if(LOG.isLoggable(Level.FINEST)) {
+                    LOG.log(Level.FINEST, "Success: {0}, setting {1}.{2} = {3}", 
                             new Object[]{
                             success, field.getDeclaringClass().getSimpleName(), field.getName(), value});
                 }
@@ -106,8 +106,8 @@ public class FormInputValueProviderForPojo
                             .getValue(objectType, declaringInstance, methods, field.getName());
                 }catch(RuntimeException ignored) { }
             }
-            if(LOG.isLoggable(Level.FINER)) {
-                LOG.log(Level.FINER, 
+            if(LOG.isLoggable(Level.FINEST)) {
+                LOG.log(Level.FINEST, 
                         "Retreived from associated method, value: {0}, field: {1}", 
                         new Object[]{methodValue, field});
             }
@@ -127,8 +127,8 @@ public class FormInputValueProviderForPojo
                     success = true;
                 }catch(RuntimeException ignored) { }
             }
-            if(LOG.isLoggable(Level.FINER)) {
-                LOG.log(Level.FINER, 
+            if(LOG.isLoggable(Level.FINEST)) {
+                LOG.log(Level.FINEST, 
                         "Success: {0}, setting value: {1} of field: {2}", 
                         new Object[]{success, value, field});
             }

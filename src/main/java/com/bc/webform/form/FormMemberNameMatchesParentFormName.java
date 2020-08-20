@@ -22,7 +22,7 @@ public class FormMemberNameMatchesParentFormName<F, V> implements FormMemberTest
 
         final boolean accept = formMember.getName().equalsIgnoreCase(formParentName);
 
-        final Level level = accept ? Level.FINE : Level.FINER;
+        final Level level = accept ? Level.FINE : Level.FINEST;
 
         LOG.log(level, () -> "Form field: " + formMember.getName() +
                 " has a name matching it's parent form's name, i.e: " + formParentName);

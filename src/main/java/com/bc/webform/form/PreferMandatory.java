@@ -33,8 +33,8 @@ public class PreferMandatory<F, V> implements Comparator<FormMember<F, V>>, Seri
 
         final boolean rhsOptional = rhs.isOptional();
 
-        if(LOG.isLoggable(Level.FINER)){
-            LOG.log(Level.FINER, "Optional: {0}, lhs: {1}\nOptional: {2}, rhs: {3}", 
+        if(LOG.isLoggable(Level.FINEST)){
+            LOG.log(Level.FINEST, "Optional: {0}, lhs: {1}\nOptional: {2}, rhs: {3}", 
                     new Object[]{lhsOptional, lhs, rhsOptional, rhs});
         }
         
