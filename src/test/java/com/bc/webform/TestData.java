@@ -36,7 +36,7 @@ public class TestData {
         instance.setName("SampleFormField_"+(count.incrementAndGet()));
         instance.setNumberOfLines(2);
         instance.setOptional(false);
-        instance.setReferencedForm(null);
+        instance.setFormReference(Boolean.FALSE);
         instance.setRequired(!instance.isOptional());
         instance.setSize(35);
         instance.setType("sampleType");

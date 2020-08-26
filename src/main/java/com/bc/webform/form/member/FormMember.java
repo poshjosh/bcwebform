@@ -99,38 +99,6 @@ public interface FormMember<F, V> extends Identifiable {
      */
     Form getForm();
     
-    /**
-     * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>, it is possible for this dataSource
-     * to refer to a form also and the <code>primaryAddress</code> form is the
-     * referenced form.
-     * 
-     * Use this method to display the referenced form in the browser. When the
-     * reference form completes, it should return to the form which led to it
-     * in the first place.
-     * 
-     * @return A link to the form which encapsulates this form dataSource or <code>null</code>
-     * @see #isFormReference() 
-     * @see #getReferencedForm() 
-     */
-    String getReferencedFormHref();
-
-    /**
-     * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>, it is possible for this dataSource
-     * to refer to a form also and the <code>primaryAddress</code> form is the
-     * referenced form.
-     * 
-     * Use this method to display the referenced form in-line. However, it is
-     * recommended to display the referenced form in a different process via
-     * {@link #getReferencedFormHref()}. 
-     * 
-     * @return The form which encapsulates this form dataSource or <code>null</code>
-     * @see #isFormReference() 
-     * @see #getReferencedFormHref() 
-     */
-    Form getReferencedForm();
-    
     Boolean isDisabled();
 
     Boolean isOptional();
@@ -149,10 +117,20 @@ public interface FormMember<F, V> extends Identifiable {
     Boolean isMultiple();
 
     /**
-     * @return <code>true</code> if this dataSource refers to a form with one/more other fields 
+     * If a form represents a <code>Person</code> and one of the fields of the 
+     * form is <code>primaryAddress</code>, it is possible for this field
+     * to refer to a form also and the <code>primaryAddress</code> form is the
+     * referenced form.
+     * 
+     * Use this method to display the referenced form in the browser. When the
+     * reference form completes, it should return to the form which led to it
+     * in the first place.
+     * 
+     * @return A link to the form which encapsulates this form field or <code>null</code>
+     * @see #isFormReference() 
      * @see #getReferencedForm() 
      */
-    boolean isFormReference();
+    Boolean isFormReference();
     
     F getDataSource();
 }

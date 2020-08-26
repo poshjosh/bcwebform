@@ -126,13 +126,10 @@ public class FormMemberBuilderImpl<S, F, V>
         final List<SelectOption> choices = ! multiChoice ? null : 
                 multiChoiceContext.getChoices(formDataSource, dataSource, value);
 
-        final boolean mayDisplayReference = 
-                value == null && 
+        final boolean isReferenceType = 
+//                value == null && 
 //                ! this.hasParent(this.form) && 
                 this.referencedFormContext.isReferencedType(form, dataSource);
-
-        final String referencedFormHref = ! mayDisplayReference ? null : 
-                this.referencedFormContext.getReferencedFormHref(form, dataSource).orElse(null);
 
         delegate.form(this.form)
                 .dataSource(this.dataSource)
@@ -143,7 +140,7 @@ public class FormMemberBuilderImpl<S, F, V>
                 .maxLength(maxLen)
                 .numberOfLines(numberOfLines)
                 .optional(this.formInputContext.isOptional(formDataSource, dataSource))
-                .referencedFormHref(referencedFormHref)
+                .formReference(isReferenceType)
                 .type(this.formInputContext.getType(formDataSource, dataSource))
                 .dataType(formInputContext.getDataType(formDataSource, dataSource));
 

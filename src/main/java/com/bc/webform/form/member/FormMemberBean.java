@@ -41,8 +41,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private String type;
     private String dataType;
     private Form form;
-    private String referencedFormHref;
-    private Form referencedForm;
+    private Boolean formReference;
     private Boolean disabled;
     private Boolean optional;
     private Boolean multiChoice;
@@ -64,8 +63,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.type = f.getType();
         this.dataType = f.getDataType();
         this.form = f.getForm();
-        this.referencedFormHref = f.getReferencedFormHref();
-        this.referencedForm = f.getReferencedForm();
+        this.formReference = f.isFormReference();
         this.disabled = f.isDisabled();
         this.optional = f.isOptional();
         this.multiChoice = f.isMultiChoice();
@@ -94,8 +92,8 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 this.maxLength != -1 || this.size != -1 ||
                 this.numberOfLines != -1 || this.type != null ||
                 this.dataType != null ||
-                this.form != null || this.referencedFormHref != null ||
-                this.referencedForm != null || this.disabled != null ||
+                this.form != null || this.formReference != null ||
+                this.disabled != null ||
                 this.optional != null || this.multiChoice != null || 
                 this.multiple != null || this.dataSource != null;
     }
@@ -188,16 +186,6 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
 
-    public FormMemberBean<F, V> referencedFormHref(String referencedFormHref) {
-        this.setReferencedFormHref(referencedFormHref);
-        return this;
-    }
-    
-    public FormMemberBean<F, V> referencedForm(Form referencedForm) {
-        this.setReferencedForm(referencedForm);
-        return this;
-    }
-    
     public FormMemberBean<F, V> disabled(Boolean disabled) {
         this.setDisabled(disabled);
         return this;
@@ -343,52 +331,6 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     public void setForm(Form form) {
         this.form = form;
     }
-
-    /**
-     * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>, it is possible for this field
-     * to refer to a form also and the <code>primaryAddress</code> form is the
-     * referenced form.
-     * 
-     * Use this method to display the referenced form in the browser. When the
-     * reference form completes, it should return to the form which led to it
-     * in the first place.
-     * 
-     * @return A link to the form which encapsulates this form field or <code>null</code>
-     * @see #isFormReference() 
-     * @see #getReferencedForm() 
-     */
-    @Override
-    public String getReferencedFormHref() {
-        return referencedFormHref;
-    }
-
-    public void setReferencedFormHref(String referencedFormHref) {
-        this.referencedFormHref = referencedFormHref;
-    }
-
-    /**
-     * If a form represents a <code>Person</code> and one of the fields of the 
-     * form is <code>primaryAddress</code>, it is possible for this field
-     * to refer to a form also and the <code>primaryAddress</code> form is the
-     * referenced form.
-     * 
-     * Use this method to display the referenced form in-line. However, it is
-     * recommended to display the referenced form in a different process via
-     * {@link #getReferencedFormHref()}. 
-     * 
-     * @return The form which encapsulates this form field or <code>null</code>
-     * @see #isFormReference() 
-     * @see #getReferencedFormHref() 
-     */
-    @Override
-    public Form getReferencedForm(){
-        return referencedForm;
-    }
-
-    public void setReferencedForm(Form referencedForm) {
-        this.referencedForm = referencedForm;
-    }
     
     @Override
     public Boolean isDisabled() {
@@ -434,10 +376,33 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     public void setMultiChoice(Boolean multiChoice) {
         this.multiChoice = multiChoice;
     }
+    
+    public FormMemberBean<F, V> formReference(Boolean arg) {
+        this.setFormReference(arg);
+        return this;
+    }
 
+    /**
+     * If a form represents a <code>Person</code> and one of the fields of the 
+     * form is <code>primaryAddress</code>, it is possible for this field
+     * to refer to a form also and the <code>primaryAddress</code> form is the
+     * referenced form.
+     * 
+     * Use this method to display the referenced form in the browser. When the
+     * reference form completes, it should return to the form which led to it
+     * in the first place.
+     * 
+     * @return A link to the form which encapsulates this form field or <code>null</code>
+     * @see #isFormReference() 
+     * @see #getReferencedForm() 
+     */
     @Override
-    public boolean isFormReference() {
-        return this.referencedForm != null;
+    public Boolean isFormReference() {
+        return this.formReference;
+    }
+
+    public void setFormReference(Boolean formReference) {
+        this.formReference = formReference;
     }
 
     @Override
@@ -489,7 +454,6 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 ", optional=" + optional + ", multiChoice=" + multiChoice + 
                 ", multiValue=" + multiple + ", form=" + (form==null?null:form.getName()) +
                 ", dataSource=" + dataSource +
-                ", referencedFormHref=" + referencedFormHref + 
-                ", referencedForm=" + (referencedForm == null ? null : referencedForm.getName()) + '}';
+                ", formReference=" + formReference + '}';
     }
 }
