@@ -99,8 +99,14 @@ public interface FormMember<F, V> extends Identifiable {
      */
     Form getForm();
     
-    Boolean isDisabled();
+    Boolean isReadOnly();
 
+    /**
+     * @return <code>true</code> if the input should be <code>readonly</code> 
+     * when it has a value, otherwise return <code>false</code>
+     */
+    Boolean isReadOnlyValue();
+    
     Boolean isOptional();
     
     Boolean isRequired();

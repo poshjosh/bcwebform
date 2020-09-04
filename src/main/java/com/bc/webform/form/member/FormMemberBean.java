@@ -42,7 +42,8 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private String dataType;
     private Form form;
     private Boolean formReference;
-    private Boolean disabled;
+    private Boolean readOnly;
+    private Boolean readOnlyValue;
     private Boolean optional;
     private Boolean multiChoice;
     private Boolean multiple;
@@ -64,7 +65,8 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.dataType = f.getDataType();
         this.form = f.getForm();
         this.formReference = f.isFormReference();
-        this.disabled = f.isDisabled();
+        this.readOnly = f.isReadOnly();
+        this.readOnlyValue = f.isReadOnlyValue();
         this.optional = f.isOptional();
         this.multiChoice = f.isMultiChoice();
         this.multiple = f.isMultiple();
@@ -93,7 +95,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
                 this.numberOfLines != -1 || this.type != null ||
                 this.dataType != null ||
                 this.form != null || this.formReference != null ||
-                this.disabled != null ||
+                this.readOnly != null || this.readOnlyValue != null ||
                 this.optional != null || this.multiChoice != null || 
                 this.multiple != null || this.dataSource != null;
     }
@@ -187,7 +189,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     }
 
     public FormMemberBean<F, V> disabled(Boolean disabled) {
-        this.setDisabled(disabled);
+        this.setReadOnly(disabled);
         return this;
     }
 
@@ -333,12 +335,21 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     }
     
     @Override
-    public Boolean isDisabled() {
-        return disabled == null ? Boolean.FALSE : disabled;
+    public Boolean isReadOnly() {
+        return readOnly == null ? Boolean.FALSE : readOnly;
     }
 
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+    public void setReadOnly(Boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
+    @Override
+    public Boolean isReadOnlyValue() {
+        return readOnlyValue;
+    }
+
+    public void setReadOnlyValue(Boolean readOnlyValue) {
+        this.readOnlyValue = readOnlyValue;
     }
 
     @Override
@@ -439,20 +450,15 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return true;
     }
 
-//    @Override
-//    public String toString() {
-//        return "FormMember{" + name + '=' + value + '}';
-//    }
-
     @Override
     public String toString() {
-        return "FormField{" + "name=" + name + ", advice=" + advice + 
-                ", value=" + value + ", choices=" + (choices==null?null:choices.size()) + 
-                ", maxLength=" + maxLength + ", size=" + size + 
-                ", numberOfLines=" + numberOfLines + ", type=" + type + 
-                ", dataType=" + dataType +
+        return "FormMemberBean{" + "name=" + name + ", value=" + value + 
+                ", choices=" + (choices==null?null:choices.size()) + 
+                ", advice=" + advice + ", maxLength=" + maxLength + ", size=" + size + 
+                ", numberOfLines=" + numberOfLines + ", type=" + type + ", dataType=" + dataType +
+                ", readOnly=" + readOnly + ", readOnlyValue=" + readOnlyValue +
                 ", optional=" + optional + ", multiChoice=" + multiChoice + 
-                ", multiValue=" + multiple + ", form=" + (form==null?null:form.getName()) +
+                ", multiple=" + multiple + ", form=" + (form==null?null:form.getName()) +
                 ", dataSource=" + dataSource +
                 ", formReference=" + formReference + '}';
     }
