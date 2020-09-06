@@ -24,6 +24,7 @@ import com.bc.webform.form.Form;
 import com.bc.webform.form.SourceFieldsProvider;
 import java.util.Comparator;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 4:51:00 PM
@@ -32,9 +33,6 @@ public interface FormBuilder<S, F, V> extends Builder<Form<S>>{
 
     @Override
     Form<S> build();
-
-    @Override
-    FormBuilder<S, F, V> copy();
     
     /**
      * Apply default values.
@@ -60,7 +58,7 @@ public interface FormBuilder<S, F, V> extends Builder<Form<S>>{
     FormBuilder<S, F, V> sourceFieldsProvider(
             SourceFieldsProvider<S, F> sourceFieldsProvider);
 
-    FormBuilder<S, F, V> formMemberBuilder(FormMemberBuilder<S, F, V> formFieldBuilder);
+    FormBuilder<S, F, V> formMemberBuilderProvider(Supplier<FormMemberBuilder<S, F, V>> formFieldBuilderProvider);
 
     FormBuilder<S, F, V> formMemberTest(Predicate<FormMember<F, V>> test);
     

@@ -1,10 +1,6 @@
 package com.bc.webform.form.member.builder;
 
-import com.bc.webform.TypeTestsImpl;
-import com.bc.webform.form.member.FormInputContext;
 import com.bc.webform.form.member.FormInputContextForJpaEntity;
-import com.bc.webform.form.member.MultiChoiceContext;
-import com.bc.webform.form.member.MultiChoiceContextForPojo;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,14 +14,16 @@ public class FormMemberBuilderForJpaEntity extends FormMemberBuilderForPojo{
     
     private static final Logger LOG = Logger.getLogger(FormMemberBuilderForJpaEntity.class.getName());
 
-    public FormMemberBuilderForJpaEntity() { 
-        this(new FormInputContextForJpaEntity(), new MultiChoiceContextForPojo(new TypeTestsImpl()));
-    }
-    
-    public FormMemberBuilderForJpaEntity(
-            FormInputContext<Object, Field, Object> formInputContext,
-            MultiChoiceContext<Object, Field> multiChoiceContext) { 
-        super(formInputContext, multiChoiceContext);
+    public FormMemberBuilderForJpaEntity() { }
+
+    @Override
+    protected void preBuild() {
+        
+        if(this.getFormInputContext() == null) {
+            this.formInputContext(new FormInputContextForJpaEntity());
+        }
+        
+        super.preBuild();
     }
 
     @Override

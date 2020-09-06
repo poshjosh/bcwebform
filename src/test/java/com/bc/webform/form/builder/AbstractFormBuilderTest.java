@@ -1,7 +1,6 @@
 package com.bc.webform.form.builder;
 
 import com.bc.webform.form.DefaultForm;
-import com.bc.webform.form.builder.FormBuilder;
 import com.bc.webform.form.Form;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -45,7 +44,7 @@ public abstract class AbstractFormBuilderTest<S, F, V> {
         FormBuilder<S, F, V> instance = this.getInstance();
         this.buildValid(instance);
         final Form expResult = instance.build();
-        instance = instance.copy();
+        instance = this.getInstance();
         this.buildValid(instance);
         final Form result = instance.build();
         assertEquals(expResult, result);

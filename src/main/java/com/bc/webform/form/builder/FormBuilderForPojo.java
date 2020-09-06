@@ -18,19 +18,22 @@ public class FormBuilderForPojo extends FormBuilderImpl<Object, Field, Object>{
         }
     }
 
-    public FormBuilderForPojo() {
+    @Override
+    protected void preBuild() {
         
         if(this.getFormMemberTest() == null) {
             this.formMemberTest(new FormMemberTypeMatchesParentFormType().negate());
         }
         
-        if(this.getFormMemberBuilder() == null) {
-            this.formMemberBuilder(new FormMemberBuilderForPojo());
+        if(this.getFormMemberBuilderProvider() == null) {
+            this.formMemberBuilderProvider(() -> new FormMemberBuilderForPojo());
         }
         
         if(this.getSourceFieldsProvider() == null) {
             this.sourceFieldsProvider(new AcceptAll());
         }
+        
+        super.preBuild();
     }
 
     public FormBuilderForPojo sourceFieldsProvider(Predicate<Field> isFormField) {

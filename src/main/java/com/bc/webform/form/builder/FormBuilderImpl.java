@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * @author hp
@@ -29,7 +30,7 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
     
     private SourceFieldsProvider<S, F> sourceFieldsProvider;
     
-    private FormMemberBuilder<S, F, V> formMemberBuilder;
+    private Supplier<FormMemberBuilder<S, F, V>> formMemberBuilderProvider;
     
     private Predicate<FormMember<F, V>> formMemberTest;
     
@@ -41,38 +42,42 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
         delegate = new FormBean();
     }
 
-    @Override
-    public FormBuilder<S, F, V> copy() {
-        // Both delegate and dataSource are not included in copy as
-        // they contain transient data
-        //
-        return new FormBuilderImpl()
-                .formMemberBuilder(formMemberBuilder.copy())
-                .formMemberComparator(formMemberComparator)
-                .formMemberTest(formMemberTest)
-                .sourceFieldsProvider(sourceFieldsProvider);
-    }
+    /**
+     * Always call super
+     */
+    protected void preBuild() { }
     
-    @Override
-    public Form build() {
-        
-        this.requireBuildNotAttempted();
-        
-        Objects.requireNonNull(delegate);
-        Objects.requireNonNull(sourceFieldsProvider);
-        Objects.requireNonNull(formMemberBuilder);
-        final S formDataSource = 
-                Objects.requireNonNull(delegate.getDataSource());
-
+    protected void initDefaults() {
         if(this.getFormMemberTest() == null) {
             this.formMemberTest(new FormMemberNameMatchesParentFormName().negate());
         }
-
         if(this.getFormMemberComparator() == null){
             this.formMemberComparator(new PreferMandatory());
         }
-
+    }
+    
+    protected void validate() {
+        Objects.requireNonNull(delegate);
+        Objects.requireNonNull(delegate.getDataSource());
+        Objects.requireNonNull(sourceFieldsProvider);
+        Objects.requireNonNull(formMemberBuilderProvider);
+        
         delegate.checkRequiredFieldsAreSet();
+    }
+    
+    @Override
+    public final Form build() {
+
+        this.requireBuildNotAttempted();
+        
+        this.preBuild();
+        
+        this.initDefaults();
+        
+        this.validate();
+        
+        final S formDataSource = 
+                Objects.requireNonNull(delegate.getDataSource());
 
         LOG.log(Level.FINE, () -> "Form data source: " + 
                 (formDataSource == null ? null : formDataSource.getClass().getSimpleName()) + 
@@ -83,8 +88,8 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
 
         final List fieldList = sourceSet.stream().map((fieldSource) -> {
 
-            return formMemberBuilder
-                    .copy() // Each builder should be used to build one and only one form member
+            return formMemberBuilderProvider
+                    .get() // Each builder should be used to build one and only one form member
                     .form(delegate)
                     .dataSource(fieldSource)
                     .build();
@@ -164,13 +169,13 @@ public class FormBuilderImpl<S, F, V> implements FormBuilder<S, F, V>{
         return this;
     }
 
-    public FormMemberBuilder getFormMemberBuilder() {
-        return formMemberBuilder;
+    public Supplier<FormMemberBuilder<S, F, V>> getFormMemberBuilderProvider() {
+        return formMemberBuilderProvider;
     }
 
     @Override
-    public FormBuilderImpl<S, F, V> formMemberBuilder(FormMemberBuilder<S, F, V> formFieldBuilder) {
-        this.formMemberBuilder = formFieldBuilder;
+    public FormBuilderImpl<S, F, V> formMemberBuilderProvider(Supplier<FormMemberBuilder<S, F, V>> formFieldBuilderProvider) {
+        this.formMemberBuilderProvider = formFieldBuilderProvider;
         return this;
     }
 

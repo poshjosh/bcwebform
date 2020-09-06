@@ -17,15 +17,19 @@ public class FormBuilderForDatabaseTable extends FormBuilderImpl<String, String,
     public FormBuilderForDatabaseTable(EntityManagerFactory entityManagerFactory) {
         
         this.entityManagerFactory = Objects.requireNonNull(entityManagerFactory);
+    }
+
+    @Override
+    protected void preBuild() {
         
         if(this.getSourceFieldsProvider() == null) {
             this.sourceFieldsProvider(
                     new IsFormFieldTestForDatabaseTable(entityManagerFactory));
         }
         
-        if(this.getFormMemberBuilder() == null) {
-            this.formMemberBuilder(
-                    new FormMemberBuilderForDatabaseTable(entityManagerFactory));
+        if(this.getFormMemberBuilderProvider() == null) {
+            this.formMemberBuilderProvider(
+                    () -> new FormMemberBuilderForDatabaseTable(entityManagerFactory));
         }
     }
     

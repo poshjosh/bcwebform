@@ -4,29 +4,33 @@ import com.bc.webform.form.member.builder.FormMemberBuilderForJpaEntity;
 import com.bc.webform.functions.IsFormFieldTestForJpaEntity;
 import com.bc.webform.TypeTests;
 import com.bc.webform.TypeTestsImpl;
-import com.bc.webform.form.member.builder.FormMemberBuilder;
-import java.lang.reflect.Field;
 
 /**
  * @author hp
  */
 public class FormBuilderForJpaEntity extends FormBuilderForPojo{
 
-    public FormBuilderForJpaEntity() {
-        this(new FormMemberBuilderForJpaEntity(), new TypeTestsImpl());
+    public FormBuilderForJpaEntity() { 
+        this(new TypeTestsImpl());
     }
     
-    public FormBuilderForJpaEntity(
-            FormMemberBuilder<Object, Field, Object> formMemberBuilder,
-            TypeTests typeTests) {
-        
-        this.formMemberBuilder(formMemberBuilder);
-        
+    public FormBuilderForJpaEntity(TypeTests typeTests) {
         this.sourceFieldsProvider(typeTests);
     }
 
     public FormBuilderForJpaEntity sourceFieldsProvider(TypeTests typeTests) {
         this.sourceFieldsProvider(new IsFormFieldTestForJpaEntity(typeTests));
         return this;
+    }
+
+    @Override
+    protected void preBuild() {
+        
+        if(this.getFormMemberBuilderProvider() == null) {
+            
+            this.formMemberBuilderProvider(() -> new FormMemberBuilderForJpaEntity());
+        }
+        
+        super.preBuild();
     }
 }

@@ -1,8 +1,10 @@
 # bcwebform
-Use bcwebform to create dynamic web forms
 
-# Create the form bean
+### Use bcwebform to create dynamic web forms
 
+### Create the form bean
+
+```java
         final Person entity = new Person();
 
         final DefaultForm defaultForm = new DefaultForm(tableName);
@@ -14,11 +16,14 @@ Use bcwebform to create dynamic web forms
                 .fieldsCreator(new CreateFormFieldFromAnnotatedPersistenceEntity())
                 .fieldsComparator(comparator)
                 .fieldDataSource(entity).build();
+```
 
-# The form is a bean to be used in a web page   
+### The form is a bean to be used in a web page   
 
-    #  form.formFields refer to a collection for FormFields each of which could be used as below (in a jsp tag).
+`form.formFields` refer to a collection for form fields each of which could be 
+used as below (in a jsp tag).
 
+```xml
             <div class="bwf_row">
                 <span class="bwf_column_0">
                   ${formField.label}<c:if test="${formField.required}"><font class="bwf_heavy_red">*</font></c:if>
@@ -123,4 +128,4 @@ Use bcwebform to create dynamic web forms
                     </span>
                 </span>
             </div>
-
+```

@@ -20,9 +20,6 @@ public interface FormMemberBuilder<S, F, V> extends Builder<FormMember<F, V>>{
     @Override
     FormMember<F, V> build();
 
-    @Override
-    public FormMemberBuilder<S, F, V> copy();
-
     /**
      * Apply default values.
      * 

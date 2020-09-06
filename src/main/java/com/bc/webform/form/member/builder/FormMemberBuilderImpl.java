@@ -46,19 +46,6 @@ public class FormMemberBuilderImpl<S, F, V>
     public FormMemberBuilderImpl() {
         this.delegate = new FormMemberBean<>();
     }
-    
-    @Override
-    public FormMemberBuilderImpl<S, F, V> copy() {
-        // Both delegate and dataSource are not included in copy as
-        // they contain transient data
-        //
-        return new FormMemberBuilderImpl()
-                .form(form)
-                .multipleInputTest(multipleInputTest)
-                .formInputContext(formInputContext)
-                .multiChoiceContext(multiChoiceContext)
-                .referencedFormContext(referencedFormContext);
-    }
 
     public List<FormMember<F, V>> build(Set<F> sourceSet) {
         
@@ -72,28 +59,36 @@ public class FormMemberBuilderImpl<S, F, V>
         
         return fieldList;
     }
-
-    @Override
-    public FormMember<F, V> build() {
-
-        this.requireBuildNotAttempted();
-        
+    
+    protected void initDefaults() {
+        if(multiChoiceContext == null) {
+            multiChoiceContext = MultiChoiceContext.NO_OP;
+        }
+        if(referencedFormContext == null) {
+            referencedFormContext = ReferencedFormContext.NO_OP;
+        }
+    }
+    
+    protected void preBuild() {}
+    
+    protected void validate() {
         Objects.requireNonNull(delegate);
         Objects.requireNonNull(form);
         Objects.requireNonNull(form.getDataSource());
         Objects.requireNonNull(dataSource);
+    }
 
-        if(multiChoiceContext == null) {
-            multiChoiceContext = MultiChoiceContext.NO_OP;
-        }
+    @Override
+    public final FormMember<F, V> build() {
 
-        if(referencedFormContext == null) {
-            referencedFormContext = ReferencedFormContext.NO_OP;
-        }
+        this.requireBuildNotAttempted();
+        
+        this.preBuild();
+        
+        this.initDefaults();
+        
+        this.validate();
 
-        // Always return a copy to shield us from any, after the fact, 
-        // changes to the original, via builder methos
-        //
         return buildFormField();
     }
     

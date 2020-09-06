@@ -24,6 +24,4 @@ public interface Builder<T> {
     T build();
     
     Builder<T> apply(T t);
-
-    Builder<T> copy();
 }
