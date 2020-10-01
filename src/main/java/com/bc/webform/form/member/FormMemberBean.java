@@ -18,7 +18,6 @@ package com.bc.webform.form.member;
 
 import com.bc.webform.IdentifiableFieldSet;
 import com.bc.webform.WebformUtil;
-import com.bc.webform.choices.SelectOption;
 import com.bc.webform.choices.SelectOptionBean;
 import com.bc.webform.form.Form;
 import com.bc.webform.form.FormBean;
@@ -26,7 +25,6 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 10:53:17 AM
@@ -75,18 +73,6 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.multiChoice = f.isMultiChoice();
         this.multiple = f.isMultiple();
         this.dataSource = f.getDataSource();
-    }
-
-    // We override this here because some templating engines cannot 
-    // access it from the super type
-    /**
-     * Alias for {@link #getLabel() }
-     * @return The display name
-     * @see #getLabel() 
-     */
-    @Override
-    public String getDisplayName() {
-        return FormMember.super.getDisplayName();
     }
     
     @Override
@@ -152,7 +138,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
 
-    public FormMemberBean<F, V> choices(List<SelectOption> choices) {
+    public FormMemberBean<F, V> choices(List<SelectOptionBean> choices) {
         this.setChoices(choices);
         return this;
     }
@@ -275,10 +261,8 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return choices;
     }
 
-    public void setChoices(List<SelectOption> choices) {
-        this.choices = choices == null ? null : 
-                choices.isEmpty() ? Collections.EMPTY_LIST :
-                (List<SelectOptionBean>)choices.stream().map(WebformUtil::toBean).collect(Collectors.toList());
+    public void setChoices(List<SelectOptionBean> choices) {
+        this.choices = choices;
     }
 
     @Override

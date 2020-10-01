@@ -13,11 +13,6 @@ public class SelectOptionBean<V> implements SelectOption<V>, Serializable{
 
     public SelectOptionBean() { }
     
-    public SelectOptionBean(V value, String textToDisplay) {
-        this.value = Objects.requireNonNull(value);
-        this.text = Objects.requireNonNull(textToDisplay);
-    }
-
     @Override
     public V getValue() {
         return value;

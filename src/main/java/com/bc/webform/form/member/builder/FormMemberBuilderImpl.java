@@ -2,6 +2,7 @@ package com.bc.webform.form.member.builder;
 
 import com.bc.webform.WebformUtil;
 import com.bc.webform.choices.SelectOption;
+import com.bc.webform.choices.SelectOptionBean;
 import com.bc.webform.form.Form;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
 import com.bc.webform.form.FormBean;
@@ -133,7 +134,7 @@ public class FormMemberBuilderImpl<S, F, V>
                 .multiple(this.multipleInputTest.isMultiple(formDataSource, dataSource))
                 .value(value)
                 .multiChoice(multiChoice)
-                .choices(choices)
+                .choices(choices == null ? null : (List<SelectOptionBean>)choices.stream().map(WebformUtil::toBean).collect(Collectors.toList()))
                 .maxLength(maxLen)
                 .numberOfLines(numberOfLines)
                 .optional(this.formInputContext.isOptional(formDataSource, dataSource))

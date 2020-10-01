@@ -1,5 +1,6 @@
 package com.bc.webform.choices;
 
+import com.bc.webform.WebformUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,6 +84,6 @@ public final class SelectOptions {
     }
 
     public static <V> SelectOption<V> from(V value, String displayValue) {
-        return new SelectOptionBean<>(value, displayValue);
+        return WebformUtil.toSelectOption(value, displayValue);
     }
 }

@@ -84,18 +84,6 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
                 "Member named: " + name + " not found in: " + this);
     }
 
-    // We override this here because some templating engines cannot 
-    // access it from the super type
-    /**
-     * Alias for {@link #getLabel() }
-     * @return The display name
-     * @see #getLabel() 
-     */
-    @Override
-    public String getDisplayName() {
-        return Form.super.getDisplayName();
-    }
-
     @Override
     public boolean isAnyFieldSet() {
         return (this.getParent() != null || this.getId() != null ||

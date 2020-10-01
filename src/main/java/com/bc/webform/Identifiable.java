@@ -9,15 +9,5 @@ public interface Identifiable {
     
     String getName();
     
-    /**
-     * Alias for {@link #getLabel() }
-     * @return The display name
-     * @see #getLabel() 
-     */
-    default String getDisplayName() {
-        return this.getLabel();
-    }
-    
     String getLabel();
-
 }

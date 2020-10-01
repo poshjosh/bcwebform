@@ -30,18 +30,6 @@ public interface Form<S> extends Identifiable {
     
     Form copy();
 
-    // We override this here because some templating engines cannot 
-    // access it from the super type
-    /**
-     * Alias for {@link #getLabel() }
-     * @return The display name
-     * @see #getLabel() 
-     */
-    @Override
-    public default String getDisplayName() {
-        return Identifiable.super.getDisplayName();
-    }
-
     @Override
     public String getLabel();
 

@@ -17,7 +17,14 @@ public final class WebformUtil {
     public static <V> SelectOptionBean<V> toBean(SelectOption<V> option) {
         return option == null ? null :
                 option instanceof SelectOptionBean ? (SelectOptionBean)option :
-                new SelectOptionBean(option.getValue(), option.getText());
+                toSelectOption(option.getValue(), option.getText());
+    }
+    
+    public static <V> SelectOptionBean toSelectOption(V value, String text) {
+        SelectOptionBean<V> bean = new SelectOptionBean<>();
+        bean.setValue(value);
+        bean.setText(text);
+        return bean;
     }
     
     public static <F, V> FormMemberBean<F, V> toBean(FormMember<F, V> formMember) {
