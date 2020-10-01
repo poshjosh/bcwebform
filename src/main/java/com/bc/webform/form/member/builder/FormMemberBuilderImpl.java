@@ -1,5 +1,6 @@
 package com.bc.webform.form.member.builder;
 
+import com.bc.webform.WebformUtil;
 import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
@@ -175,8 +176,7 @@ public class FormMemberBuilderImpl<S, F, V>
     
     @Override
     public FormMemberBuilderImpl<S, F, V> apply(FormMember<F, V> formField) {
-        delegate = formField == null ? null : 
-                formField instanceof FormMemberBean ? (FormMemberBean)formField : new FormMemberBean(formField);
+        delegate = WebformUtil.toBean(formField);
         return this;
     }
     
@@ -186,8 +186,7 @@ public class FormMemberBuilderImpl<S, F, V>
     
     @Override
     public FormMemberBuilderImpl<S, F, V> form(Form form) {
-        this.form = form == null ? null : 
-                form instanceof FormBean ? (FormBean)form : new FormBean(form);
+        this.form = WebformUtil.toBean(form);
         return this;
     }
 

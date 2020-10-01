@@ -53,9 +53,9 @@ public interface Form<S> extends Identifiable {
     
     Form<S> getParent();
 
-    List<FormMember> getMembers();
+    <M extends FormMember> List<M> getMembers();
 
-    Optional<FormMember> getMemberOptional(String name);
+    <M extends FormMember> Optional<M> getMemberOptional(String name);
     
     List<String> getMemberNames();
     

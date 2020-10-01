@@ -68,9 +68,10 @@ public interface FormMember<F, V> extends Identifiable {
 
     /**
      * Choices are represented by &lt;select&gt; HTML element
+     * @param <C> The type of each choice in the list of choices
      * @return Map of the choices, usually id=display_value mappings.
      */
-    List<SelectOption> getChoices();
+    <C extends SelectOption> List<C> getChoices();
 
     int getMaxLength();
         

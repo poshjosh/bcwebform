@@ -18,6 +18,8 @@ package com.bc.webform.form;
 
 import com.bc.webform.form.member.FormMember;
 import com.bc.webform.IdentifiableFieldSet;
+import com.bc.webform.WebformUtil;
+import com.bc.webform.form.member.FormMemberBean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,17 +33,17 @@ import java.util.stream.Collectors;
  */
 public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     
-    private Form parent;
+    private FormBean parent;
     private String id;
     private String name;
     private String label;
-    private List<FormMember> members;
+    private List<FormMemberBean> members;
     private S dataSource;
 
     public FormBean() { }
     
     public FormBean(Form<S> form) { 
-        this.parent = form.getParent();
+        this.parent = WebformUtil.toBean(form == null ? null : form.getParent());
         this.id = form.getId();
         this.name = form.getName();
         this.label = form.getLabel();
@@ -54,15 +56,18 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     }
     
     public FormBean replaceMember(FormMember formMember) {
+        
+        FormMemberBean replacement = WebformUtil.toBean(formMember);
+        
         if(this.members == null || this.members.isEmpty()) {
             throw this.newMemberNotFoundException(name);
         }
-        final List<FormMember> membersUpdate = new ArrayList<>(this.members.size());
+        final List<FormMemberBean> membersUpdate = new ArrayList<>(this.members.size());
         boolean updated = false;
-        final String idToUpdate = formMember.getId();
-        for(FormMember member : this.members) {
+        final String idToUpdate = replacement.getId();
+        for(FormMemberBean member : this.members) {
             if(idToUpdate.equals(member.getId())) {
-                membersUpdate.add(formMember);
+                membersUpdate.add(replacement);
                 updated = true;
             }else{
                 membersUpdate.add(member);
@@ -112,15 +117,15 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     }
     
     @Override
-    public Optional<FormMember> getMemberOptional(String name) {
-        final List<FormMember> formMembers = this.getMembers();
+    public Optional<FormMemberBean> getMemberOptional(String name) {
+        final List<FormMemberBean> formMembers = this.getMembers();
         return formMembers.isEmpty() ? Optional.empty() : formMembers.stream()
                 .filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
     }
     
     @Override
     public List<String> getMemberNames() {
-        final List<FormMember> formMembers = this.getMembers();
+        final List<FormMemberBean> formMembers = this.getMembers();
         return formMembers.isEmpty() ? Collections.EMPTY_LIST : formMembers.stream()
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
@@ -150,7 +155,7 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
         return this;
     }
 
-    public FormBean<S> members(List<FormMember> members) {
+    public FormBean<S> members(List<FormMemberBean> members) {
         this.setMembers(members);
         return this;
     }
@@ -165,12 +170,12 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     ///////////////////////////////////
     
     @Override
-    public Form getParent() {
+    public FormBean getParent() {
         return parent;
     }
 
     public void setParent(Form parent) {
-        this.parent = parent;
+        this.parent = WebformUtil.toBean(parent);
     }
 
     @Override
@@ -210,11 +215,11 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     }
 
     @Override
-    public List<FormMember> getMembers() {
+    public List<FormMemberBean> getMembers() {
         return members;
     }
 
-    public void setMembers(List<FormMember> members) {
+    public void setMembers(List<FormMemberBean> members) {
         this.members = members;
     }
 

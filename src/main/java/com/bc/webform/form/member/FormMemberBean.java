@@ -17,13 +17,16 @@
 package com.bc.webform.form.member;
 
 import com.bc.webform.IdentifiableFieldSet;
+import com.bc.webform.WebformUtil;
 import com.bc.webform.choices.SelectOption;
+import com.bc.webform.choices.SelectOptionImpl;
 import com.bc.webform.form.Form;
 import com.bc.webform.form.FormBean;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Chinomso Bassey Ikwuagwu on Apr 4, 2019 10:53:17 AM
@@ -35,7 +38,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private String label;
     private String advice;
     private V value;
-    private List<SelectOption> choices;
+    private List<SelectOptionImpl> choices;
     private int maxLength = -1;
     private int size = -1;
     private int numberOfLines = -1;
@@ -64,8 +67,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.numberOfLines = f.getNumberOfLines();
         this.type = f.getType();
         this.dataType = f.getDataType();
-        this.form = f.getForm() == null ? null : 
-                f.getForm() instanceof FormBean ? (FormBean)f.getForm() : new FormBean(f.getForm());
+        this.form = WebformUtil.toBean(f.getForm());
         this.formReference = f.isFormReference();
         this.readOnly = f.isReadOnly();
         this.readOnlyValue = f.isReadOnlyValue();
@@ -269,12 +271,14 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
      * @return Map of the choices, usually id=display_value mappings.
      */
     @Override
-    public List<SelectOption> getChoices() {
+    public List<SelectOptionImpl> getChoices() {
         return choices;
     }
 
     public void setChoices(List<SelectOption> choices) {
-        this.choices = choices;
+        this.choices = choices == null ? null : 
+                choices.isEmpty() ? Collections.EMPTY_LIST :
+                (List<SelectOptionImpl>)choices.stream().map(WebformUtil::toBean).collect(Collectors.toList());
     }
 
     @Override
@@ -328,7 +332,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     }
 
     public void setForm(Form form) {
-        this.form = form == null ? null : form instanceof FormBean ? (FormBean)form : new FormBean(form);
+        this.form = WebformUtil.toBean(form);
     }
     
     @Override
