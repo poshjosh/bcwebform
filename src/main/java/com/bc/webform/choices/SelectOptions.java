@@ -83,6 +83,6 @@ public final class SelectOptions {
     }
 
     public static <V> SelectOption<V> from(V value, String displayValue) {
-        return new SelectOptionImpl<>(value, displayValue);
+        return new SelectOptionBean<>(value, displayValue);
     }
 }

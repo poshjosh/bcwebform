@@ -1,6 +1,6 @@
 package com.bc.webform;
 
-import com.bc.webform.choices.SelectOptionImpl;
+import com.bc.webform.choices.SelectOptionBean;
 import com.bc.webform.form.member.FormMemberBean;
 import com.bc.webform.form.FormBean;
 import com.bc.webform.form.Form;
@@ -23,7 +23,7 @@ public class TestData {
         final FormMemberBean instance = this.newFormFieldBean();
         instance.setAdvice("Sample advice");
         if(multichoice) {
-            instance.setChoices(Collections.singletonList(new SelectOptionImpl(1, "Choice 1")));
+            instance.setChoices(Collections.singletonList(new SelectOptionBean(1, "Choice 1")));
         }else{
             instance.setChoices(Collections.EMPTY_LIST);
         }

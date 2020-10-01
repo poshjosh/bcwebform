@@ -1,7 +1,7 @@
 package com.bc.webform;
 
 import com.bc.webform.choices.SelectOption;
-import com.bc.webform.choices.SelectOptionImpl;
+import com.bc.webform.choices.SelectOptionBean;
 import com.bc.webform.form.Form;
 import com.bc.webform.form.FormBean;
 import com.bc.webform.form.member.FormMember;
@@ -14,10 +14,10 @@ public final class WebformUtil {
     
     private WebformUtil() {}
     
-    public static <V> SelectOptionImpl<V> toBean(SelectOption<V> option) {
+    public static <V> SelectOptionBean<V> toBean(SelectOption<V> option) {
         return option == null ? null :
-                option instanceof SelectOptionImpl ? (SelectOptionImpl)option :
-                new SelectOptionImpl(option.getValue(), option.getText());
+                option instanceof SelectOptionBean ? (SelectOptionBean)option :
+                new SelectOptionBean(option.getValue(), option.getText());
     }
     
     public static <F, V> FormMemberBean<F, V> toBean(FormMember<F, V> formMember) {
