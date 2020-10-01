@@ -6,12 +6,14 @@ import java.util.Objects;
 /**
  * @author hp
  */
-public final class SelectOptionImpl<V> implements SelectOption<V>, Serializable{
+public class SelectOptionBean<V> implements SelectOption<V>, Serializable{
     
-    private final V value;
-    private final String text;
+    private V value;
+    private String text;
 
-    public SelectOptionImpl(V value, String textToDisplay) {
+    public SelectOptionBean() { }
+    
+    public SelectOptionBean(V value, String textToDisplay) {
         this.value = Objects.requireNonNull(value);
         this.text = Objects.requireNonNull(textToDisplay);
     }
@@ -21,9 +23,17 @@ public final class SelectOptionImpl<V> implements SelectOption<V>, Serializable{
         return value;
     }
 
+    public void setValue(V value) {
+        this.value = value;
+    }
+
     @Override
     public String getText() {
         return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
@@ -44,7 +54,7 @@ public final class SelectOptionImpl<V> implements SelectOption<V>, Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final SelectOptionImpl<?> other = (SelectOptionImpl<?>) obj;
+        final SelectOptionBean<?> other = (SelectOptionBean<?>) obj;
         if (!Objects.equals(this.value, other.value)) {
             return false;
         }
