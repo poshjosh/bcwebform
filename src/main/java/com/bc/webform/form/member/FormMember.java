@@ -38,8 +38,6 @@ public interface FormMember<F, V> extends Identifiable {
     }
     
     FormMember<F, V> copy();
-    
-    FormMemberBean<F, V> writableCopy();
 
     // We override this here because some templating engines cannot 
     // access it from the super type

@@ -3,6 +3,7 @@ package com.bc.webform.form.member.builder;
 import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
 import com.bc.webform.exceptions.ValuesOverwriteByDefaultException;
+import com.bc.webform.form.FormBean;
 import com.bc.webform.form.member.DefaultFormMember;
 import com.bc.webform.form.member.FormInputContext;
 import com.bc.webform.form.member.FormMember;
@@ -34,7 +35,7 @@ public class FormMemberBuilderImpl<S, F, V>
     private static final Logger LOG = Logger.getLogger(FormMemberBuilderImpl.class.getName());
     
     private FormMemberBean<F, V> delegate;
-    private Form<S> form;
+    private FormBean<S> form;
     private F dataSource;
     private IsMultipleInput<S, F> multipleInputTest;
     private FormInputContext<S, F, V> formInputContext;
@@ -174,7 +175,8 @@ public class FormMemberBuilderImpl<S, F, V>
     
     @Override
     public FormMemberBuilderImpl<S, F, V> apply(FormMember<F, V> formField) {
-        delegate = new FormMemberBean(formField);
+        delegate = formField == null ? null : 
+                formField instanceof FormMemberBean ? (FormMemberBean)formField : new FormMemberBean(formField);
         return this;
     }
     
@@ -184,7 +186,8 @@ public class FormMemberBuilderImpl<S, F, V>
     
     @Override
     public FormMemberBuilderImpl<S, F, V> form(Form form) {
-        this.form = form;
+        this.form = form == null ? null : 
+                form instanceof FormBean ? (FormBean)form : new FormBean(form);
         return this;
     }
 

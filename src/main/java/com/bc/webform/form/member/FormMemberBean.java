@@ -19,6 +19,7 @@ package com.bc.webform.form.member;
 import com.bc.webform.IdentifiableFieldSet;
 import com.bc.webform.choices.SelectOption;
 import com.bc.webform.form.Form;
+import com.bc.webform.form.FormBean;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +41,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     private int numberOfLines = -1;
     private String type;
     private String dataType;
-    private Form form;
+    private FormBean form;
     private Boolean formReference;
     private Boolean readOnly;
     private Boolean readOnlyValue;
@@ -63,7 +64,8 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         this.numberOfLines = f.getNumberOfLines();
         this.type = f.getType();
         this.dataType = f.getDataType();
-        this.form = f.getForm();
+        this.form = f.getForm() == null ? null : 
+                f.getForm() instanceof FormBean ? (FormBean)f.getForm() : new FormBean(f.getForm());
         this.formReference = f.isFormReference();
         this.readOnly = f.isReadOnly();
         this.readOnlyValue = f.isReadOnlyValue();
@@ -111,17 +113,12 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     
     @Override
     public FormMemberBean<F, V> copy() {
-        return this.writableCopy();
-    }
-    
-    @Override
-    public FormMemberBean<F, V> writableCopy() {
         return new FormMemberBean(this);
     }
 
     @Override
-    public FormMember<F, V> withValue(V value) {
-        return this.writableCopy().value(value);
+    public FormMemberBean<F, V> withValue(V value) {
+        return this.copy().value(value);
     }
     
     ////////////////////////////////////////////
@@ -183,7 +180,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this;
     }
 
-    public FormMemberBean<F, V> form(Form form) {
+    public FormMemberBean<F, V> form(FormBean form) {
         this.setForm(form);
         return this;
     }
@@ -326,12 +323,12 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     }
 
     @Override
-    public Form getForm() {
+    public FormBean getForm() {
         return form;
     }
 
     public void setForm(Form form) {
-        this.form = form;
+        this.form = form == null ? null : form instanceof FormBean ? (FormBean)form : new FormBean(form);
     }
     
     @Override

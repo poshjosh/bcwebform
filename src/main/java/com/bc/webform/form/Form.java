@@ -29,8 +29,6 @@ public interface Form<S> extends Identifiable {
     }
     
     Form copy();
-    
-    FormBean writableCopy();
 
     // We override this here because some templating engines cannot 
     // access it from the super type

@@ -108,11 +108,6 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     
     @Override
     public FormBean copy() {
-        return this.writableCopy();
-    }
-
-    @Override
-    public FormBean writableCopy() {
         return new FormBean(this);
     }
     
