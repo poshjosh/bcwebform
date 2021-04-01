@@ -71,7 +71,8 @@ public class FormInputTypeProviderForPojo
                     OffsetTime.class.isAssignableFrom(cls) ||
                     java.sql.Time.class.isAssignableFrom(cls)) {
                 result = StandardFormFieldTypes.TIME;
-            }else if(java.time.ZonedDateTime.class.isAssignableFrom(cls) ||
+            }else if(java.time.Instant.class.isAssignableFrom(cls) ||
+                    java.time.ZonedDateTime.class.isAssignableFrom(cls) ||
                     java.time.LocalDateTime.class.isAssignableFrom(cls) ||
                     java.time.OffsetDateTime.class.isAssignableFrom(cls) ||
                     java.sql.Timestamp.class.isAssignableFrom(cls)){
