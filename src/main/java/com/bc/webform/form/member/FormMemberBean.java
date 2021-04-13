@@ -22,7 +22,6 @@ import com.bc.webform.choices.SelectOptionBean;
 import com.bc.webform.form.Form;
 import com.bc.webform.form.FormBean;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,7 +79,7 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
         return this.id != null || this.name != null ||
                 this.label != null || this.advice != null ||
                 this.value != null || 
-                (this.choices != null && this.choices != Collections.EMPTY_LIST) ||
+                this.choices != null ||
                 this.maxLength != -1 || this.size != -1 ||
                 this.numberOfLines != -1 || this.type != null ||
                 this.dataType != null ||
