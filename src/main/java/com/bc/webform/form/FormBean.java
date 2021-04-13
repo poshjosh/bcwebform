@@ -43,7 +43,7 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     public FormBean() { }
     
     public FormBean(Form<S> form) { 
-        this.parent = WebformUtil.toBean(form == null ? null : form.getParent());
+        this.parent = WebformUtil.toBean(form.getParent());
         this.id = form.getId();
         this.name = form.getName();
         this.label = form.getLabel();
@@ -107,14 +107,14 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
     @Override
     public Optional<FormMemberBean> getMemberOptional(String name) {
         final List<FormMemberBean> formMembers = this.getMembers();
-        return formMembers.isEmpty() ? Optional.empty() : formMembers.stream()
+        return formMembers == null || formMembers.isEmpty() ? Optional.empty() : formMembers.stream()
                 .filter((ff) -> Objects.equals(ff.getName(), name)).findFirst();
     }
     
     @Override
     public List<String> getMemberNames() {
         final List<FormMemberBean> formMembers = this.getMembers();
-        return formMembers.isEmpty() ? Collections.EMPTY_LIST : formMembers.stream()
+        return formMembers == null || formMembers.isEmpty() ? Collections.EMPTY_LIST : formMembers.stream()
                 .map((ff) -> ff.getName())
                 .collect(Collectors.toList());
     }
