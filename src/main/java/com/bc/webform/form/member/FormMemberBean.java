@@ -378,18 +378,14 @@ public class FormMemberBean<F, V> implements IdentifiableFieldSet, FormMember<F,
     }
 
     /**
+     * Does this form member refer to a Form?
      * If a form represents a <code>Person</code> and one of the fields of the 
      * form is <code>primaryAddress</code>, it is possible for this field
      * to refer to a form also and the <code>primaryAddress</code> form is the
      * referenced form.
      * 
-     * Use this method to display the referenced form in the browser. When the
-     * reference form completes, it should return to the form which led to it
-     * in the first place.
-     * 
-     * @return A link to the form which encapsulates this form field or <code>null</code>
-     * @see #isFormReference() 
-     * @see #getReferencedForm() 
+     * @return REturns {@code true} if this form member refers to a Form, 
+     * otherwise returns {@code false}.
      */
     @Override
     public Boolean isFormReference() {
