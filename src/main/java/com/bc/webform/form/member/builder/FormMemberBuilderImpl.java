@@ -113,7 +113,7 @@ public class FormMemberBuilderImpl<S, F, V>
         
         final int maxLen = this.initMaxLength();
         final int lineMaxLen = this.initLineMaxLength();
-        final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
+        final int numberOfLines = maxLen <= lineMaxLen ? 1 : (maxLen / lineMaxLen) + 1;
         LOG.log(Level.FINEST, () -> "MaxLen: " + maxLen + 
                 ", lineMaxLen: " + lineMaxLen + ", numOfLines: " + numberOfLines);
 
