@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -236,18 +237,32 @@ public class FormBean<S> implements IdentifiableFieldSet, Form<S>, Serializable{
         return true;
     }
 
+    public String print() {
+        final StringBuilder builder = new StringBuilder();
+        appendString(builder, membersList -> membersList.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("\n")));
+        return builder.toString();
+    }
+
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append(this.getClass().getName()).append("{");
-        builder.append("id: ").append(this.getId());
-        builder.append(", parent: ").append(parent==null?null:parent.getName());
-        builder.append(", dataSource: ").append(dataSource);
-        final String fields = members == null ? null : members.stream()
-                .map((member) -> member.getName() + " = " + member.getValue())
-                .collect(Collectors.joining(", "));
-        builder.append(", fields : ").append(fields);
-        builder.append("}");
+        Function<FormMemberBean, String> memberMapper = member -> member.getName() + '=' + member.getValue();
+        appendString(builder, membersList -> membersList.stream()
+                .filter(member -> member != null)
+                .map(memberMapper)
+                .collect(Collectors.joining(",", "{", "}")));
         return builder.toString();
+    }
+
+    private String appendString(StringBuilder appendTo, Function<List<FormMemberBean>, Object> membersPrinter) {
+        appendTo.append(this.getClass().getName()).append("{");
+        appendTo.append("id: ").append(this.getId());
+        appendTo.append(", parent: ").append(parent==null?null:parent.getName());
+        appendTo.append(", dataSource: ").append(dataSource);
+        appendTo.append("\nmembers : ").append(members == null ? null : membersPrinter.apply(members));
+        appendTo.append("}");
+        return appendTo.toString();
     }
 }

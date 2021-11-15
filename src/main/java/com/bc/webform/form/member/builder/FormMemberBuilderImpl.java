@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Build and instance of {@link com.bc.webform.form.member.FormMember} for
+ * Build an instance of {@link com.bc.webform.form.member.FormMember} for
  * a {@link com.bc.webform.form.Form}.
  * 
  * <b>Note</b> If you return an instance of {@link com.bc.webform.choices.SelectOption}
@@ -113,7 +113,7 @@ public class FormMemberBuilderImpl<S, F, V>
         
         final int maxLen = this.initMaxLength();
         final int lineMaxLen = this.initLineMaxLength();
-        final int numberOfLines = maxLen <= lineMaxLen ? 1 : maxLen / lineMaxLen;
+        final int numberOfLines = maxLen <= lineMaxLen ? 1 : (maxLen / lineMaxLen) + 1;
         LOG.log(Level.FINEST, () -> "MaxLen: " + maxLen + 
                 ", lineMaxLen: " + lineMaxLen + ", numOfLines: " + numberOfLines);
 
@@ -161,7 +161,7 @@ public class FormMemberBuilderImpl<S, F, V>
      * This method should be the first method called. Calling the method 
      * after any value has been set will lead to IllegalStateException 
      * @param form The form to which the form dataSourceField being built is a member.
-     * @param name The name of the {@link com.bc.webform.DefaultFormMember DefaultFormMember} 
+     * @param name The name of the {@link com.bc.webform.DefaultFormMember DefaultFormMember}
      * to build and whose values will be used to update the current build.
      * @throws com.bc.webform.exceptions.ValuesOverwriteByDefaultException
      * @return this object
@@ -254,7 +254,7 @@ public class FormMemberBuilderImpl<S, F, V>
     }
 
     public int initLineMaxLength() {
-        return 128;
+        return 255;
     }
 
     public int initMaxLength() {
